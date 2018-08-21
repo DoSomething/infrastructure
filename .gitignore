@@ -1,2 +1,10 @@
+# Secrets
 .env
+
+# Terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+
+# macOS
 .DS_Store
