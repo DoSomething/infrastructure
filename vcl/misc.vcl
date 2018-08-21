@@ -7,9 +7,30 @@
 #
 
 table redirects {
-  # hostname --> new base URL
+  # Aurora:
+  "aurora.dosomething.org": "https://admin.dosomething.org",
+  "aurora-thor.dosomething.org": "https://admin-qa.dosomething.org",
+  "aurora-qa.dosomething.org": "https://admin-dev.dosomething.org",
+
+  # Data:
+  "data.dosomething.org": "https://dsdata.looker.com",
+
+  # Northstar:
+  "northstar.dosomething.org": "https://identity.dosomething.org",
+  "northstar-thor.dosomething.org": "https://identity-qa.dosomething.org",
+  "northstar-qa.dosomething.org": "https://identity-dev.dosomething.org",
+  "profile.dosomething.org": "https://identity.dosomething.org",
+
+  # Rogue:
+  "rogue.dosomething.org": "https://activity.dosomething.org",
+  "rogue-thor.dosomething.org": "https://activity-qa.dosomething.org",
+  "rogue-qa.dosomething.org": "https://activity-dev.dosomething.org",
+  
+  # etc:
   "api.dosomething.org": "https://graphql.dosomething.org",
 }
+
+
 
 sub vcl_recv {
 #FASTLY recv

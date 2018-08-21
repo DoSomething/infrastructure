@@ -9,6 +9,50 @@ resource "fastly_service_v1" "misc" {
     name = "api.dosomething.org"
   }
 
+  domain {
+    name = "northstar.dosomething.org"
+  }
+
+  domain {
+    name = "northstar-thor.dosomething.org"
+  }
+
+  domain {
+    name = "northstar-qa.dosomething.org"
+  }
+
+  domain {
+    name = "profile.dosomething.org"
+  }
+
+  domain {
+    name = "rogue.dosomething.org"
+  }
+
+  domain {
+    name = "rogue-thor.dosomething.org"
+  }
+
+  domain {
+    name = "rogue-qa.dosomething.org"
+  }
+
+  domain {
+    name = "aurora.dosomething.org"
+  }
+
+  domain {
+    name = "aurora-thor.dosomething.org"
+  }
+
+  domain {
+    name = "aurora-qa.dosomething.org"
+  }
+
+  domain {
+    name = "data.dosomething.org"
+  }
+
   # Note: Fastly requires at least one backend per service,
   # so our AWS HAProxy instance is included here.
   backend {
