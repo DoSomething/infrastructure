@@ -6,8 +6,17 @@
 # <https://docs.fastly.com/vcl/custom-vcl/creating-custom-vcl/>
 #
 
+table redirects {
+  # hostname --> new base URL
+  "api.dosomething.org": "https://graphql.dosomething.org",
+}
+
 sub vcl_recv {
 #FASTLY recv
+  if(table.lookup(redirects, req.http.host)) {
+    error 811;
+  }
+
   if (req.request != "HEAD" && req.request != "GET" && req.request != "FASTLYPURGE") {
     return(pass);
   }
@@ -73,6 +82,13 @@ sub vcl_deliver {
 
 sub vcl_error {
 #FASTLY error
+  if (obj.status == 811) {
+    set obj.status = 302;
+    set obj.http.Location = table.lookup(redirects, req.http.host) + req.url;
+    set obj.response = "Found";
+
+    return (deliver);
+  }
 }
 
 sub vcl_pass {
