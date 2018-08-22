@@ -53,6 +53,14 @@ resource "fastly_service_v1" "misc" {
     name = "data.dosomething.org"
   }
 
+  domain {
+    name = "www.teensforjeans.com"
+  }
+
+  domain {
+    name = "www.dosomethingtote.org"
+  }
+
   # Note: Fastly requires at least one backend per service,
   # so our AWS HAProxy instance is included here.
   backend {

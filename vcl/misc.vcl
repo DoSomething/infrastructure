@@ -28,6 +28,8 @@ table redirects {
   
   # etc:
   "api.dosomething.org": "https://graphql.dosomething.org",
+  "www.teensforjeans.com": "https://www.dosomething.org/us/campaigns/teens-jeans",
+  "www.dosomethingtote.org": "https://www.dosomething.org",
 }
 
 
