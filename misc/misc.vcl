@@ -6,6 +6,9 @@
 # <https://docs.fastly.com/vcl/custom-vcl/creating-custom-vcl/>
 #
 
+# ------------------------------------------------------------------------------------
+# Snippet: Redirects (INIT)
+# ------------------------------------------------------------------------------------
 table redirects {
   # Aurora:
   "aurora.dosomething.org": "https://admin.dosomething.org",
@@ -31,14 +34,19 @@ table redirects {
   "www.teensforjeans.com": "https://www.dosomething.org/us/campaigns/teens-jeans",
   "www.dosomethingtote.org": "https://www.dosomething.org",
 }
+# ------------------------------------------------------------------------------------
 
 
 
 sub vcl_recv {
 #FASTLY recv
+  # ------------------------------------------------------------------------------------
+  # Snippet: Trigger Redirect (RECV)
+  # ------------------------------------------------------------------------------------
   if(table.lookup(redirects, req.http.host)) {
     error 811;
   }
+  # ------------------------------------------------------------------------------------
 
   if (req.request != "HEAD" && req.request != "GET" && req.request != "FASTLYPURGE") {
     return(pass);
@@ -105,6 +113,9 @@ sub vcl_deliver {
 
 sub vcl_error {
 #FASTLY error
+  # ------------------------------------------------------------------------------------
+  # Snippet: Handle Redirect (ERROR)
+  # ------------------------------------------------------------------------------------
   if (obj.status == 811) {
     set obj.status = 302;
     set obj.http.Location = table.lookup(redirects, req.http.host) + req.url;
@@ -112,6 +123,7 @@ sub vcl_error {
 
     return (deliver);
   }
+  # ------------------------------------------------------------------------------------
 }
 
 sub vcl_pass {
