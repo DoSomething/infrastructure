@@ -4,6 +4,7 @@ provider "fastly" {
 
 resource "fastly_service_v1" "voting-app" {
   name = "Terraform: Voting App"
+  force_destroy = true
 
   domain {
     name = "www.celebsgonegood.com"
@@ -42,6 +43,7 @@ resource "fastly_service_v1" "voting-app" {
 
 resource "fastly_service_v1" "voting-app-qa" {
   name = "Terraform: Voting App (QA)"
+  force_destroy = true
 
   domain {
     name = "www.catsgonegood.com"
@@ -72,6 +74,7 @@ resource "fastly_service_v1" "voting-app-qa" {
 
 resource "fastly_service_v1" "misc" {
   name = "Terraform: Miscellaneous"
+  force_destroy = true
 
   domain {
     name = "api.dosomething.org"
