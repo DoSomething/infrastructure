@@ -4,6 +4,7 @@
 # Terraform
 .terraform
 *.tfstate
+terraform.tfvars
 *.tfstate.backup
 
 # macOS

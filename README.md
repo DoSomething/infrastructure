@@ -11,7 +11,7 @@ Install [Go](https://golang.org) 1.8+ and [Terraform](https://www.terraform.io) 
 terraform init
 
 # Set environment variables (found in Lastpass):
-cp .env.example .env && vi .env
+cp {example.,}terraform.tfvars && vi terraform.tfvars
 
 # Make changes, then plan them:
 terraform plan
