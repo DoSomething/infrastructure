@@ -5,7 +5,7 @@
 .terraform
 *.tfstate
 terraform.tfvars
-*.tfstate.backup
+*.backup
 
 # macOS
 .DS_Store
