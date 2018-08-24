@@ -45,7 +45,7 @@ resource "heroku_domain" "default" {
 
 resource "heroku_drain" "default" {
   app = "${heroku_app.graphql-dev.name}"
-  url = "syslog://${var.papertrail_qa_destination}"
+  url = "syslog+tls://${var.papertrail_qa_destination}"
 }
 
 resource "heroku_pipeline_coupling" "staging" {
