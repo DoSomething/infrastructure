@@ -8,6 +8,10 @@ fastly_api_key=
 heroku_email=
 heroku_api_key=
 
+# AWS (read-only IAM role):
+aws_access_key=
+aws_secret_key=
+
 # Papertrail:
 papertrail_prod_destination="logsN.papertrailapp.com:NNNNN"
 papertrail_qa_destination="logsN.papertrailapp.com:NNNNN"

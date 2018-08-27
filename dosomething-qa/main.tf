@@ -10,6 +10,7 @@ module "fastly" {
   graphql_name_qa="${module.graphql.name_qa}"
   graphql_domain_qa="${module.graphql.domain_qa}"
   graphql_backend_qa="${module.graphql.backend_qa}"
+  ashes_backend_staging="${module.ashes.backend_staging}"
 }
 
 module "graphql" {
@@ -17,4 +18,8 @@ module "graphql" {
 
   graphql_pipeline="${var.graphql_pipeline}"
   papertrail_destination="${var.papertrail_destination}"
+}
+
+module "ashes" {
+  source = "ashes"
 }
