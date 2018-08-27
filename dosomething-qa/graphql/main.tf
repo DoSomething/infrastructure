@@ -1,12 +1,5 @@
-variable "papertrail_qa_destination" {}
-
-# ----------------------------
-
-resource "heroku_pipeline" "graphql" {
-  name = "graphql"
-}
-
-# ----------------------------
+variable "graphql_pipeline" {}
+variable "papertrail_destination" {}
 
 resource "heroku_app" "graphql-dev" {
   name   = "dosomething-graphql-dev"
@@ -49,12 +42,12 @@ resource "heroku_domain" "graphql-dev" {
 
 resource "heroku_drain" "graphql-dev" {
   app = "${heroku_app.graphql-dev.name}"
-  url = "syslog+tls://${var.papertrail_qa_destination}"
+  url = "syslog+tls://${var.papertrail_destination}"
 }
 
 resource "heroku_pipeline_coupling" "graphql-dev" {
   app      = "${heroku_app.graphql-dev.name}"
-  pipeline = "${heroku_pipeline.graphql.id}"
+  pipeline = "${var.graphql_pipeline}"
   stage    = "development"
 }
 
@@ -101,12 +94,12 @@ resource "heroku_domain" "graphql-qa" {
 
 resource "heroku_drain" "graphql-qa" {
   app = "${heroku_app.graphql-qa.name}"
-  url = "syslog+tls://${var.papertrail_qa_destination}"
+  url = "syslog+tls://${var.papertrail_destination}"
 }
 
 resource "heroku_pipeline_coupling" "graphql-qa" {
   app      = "${heroku_app.graphql-qa.name}"
-  pipeline = "${heroku_pipeline.graphql.id}"
+  pipeline = "${var.graphql_pipeline}"
   stage    = "staging"
 }
 

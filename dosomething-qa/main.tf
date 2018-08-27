@@ -1,4 +1,5 @@
-variable "papertrail_qa_destination" {}
+variable "graphql_pipeline" {}
+variable "papertrail_destination" {}
 
 module "fastly" {
   source = "fastly"
@@ -14,6 +15,7 @@ module "fastly" {
 module "graphql" {
   source = "graphql"
 
-  papertrail_qa_destination="${var.papertrail_qa_destination}"
+  graphql_pipeline="${var.graphql_pipeline}"
+  papertrail_destination="${var.papertrail_destination}"
 }
 

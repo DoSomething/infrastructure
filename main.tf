@@ -2,6 +2,7 @@ variable "fastly_api_key" {}
 variable "heroku_email" {}
 variable "heroku_api_key" {}
 
+variable "papertrail_prod_destination" {}
 variable "papertrail_qa_destination" {}
 
 provider "fastly" {
@@ -15,10 +16,22 @@ provider "heroku" {
   api_key="${var.heroku_api_key}"
 }
 
+module "shared" {
+  source = "shared"
+}
+
+module "dosomething" {
+  source = "dosomething"
+
+  graphql_pipeline="${module.shared.graphql_pipeline}"
+  papertrail_destination="${var.papertrail_prod_destination}"
+}
+
 module "dosomething-qa" {
   source = "dosomething-qa"
 
-  papertrail_qa_destination="${var.papertrail_qa_destination}"
+  graphql_pipeline="${module.shared.graphql_pipeline}"
+  papertrail_destination="${var.papertrail_qa_destination}"
 }
 
 module "voting-app" {
