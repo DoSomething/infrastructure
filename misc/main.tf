@@ -1,5 +1,5 @@
 resource "fastly_service_v1" "misc" {
-  name = "Terraform: Miscellaneous"
+  name          = "Terraform: Miscellaneous"
   force_destroy = true
 
   domain {
@@ -62,13 +62,14 @@ resource "fastly_service_v1" "misc" {
   # so our AWS HAProxy instance is included here.
   backend {
     address = "54.172.90.245"
-    name = "HAProxy"
-    port = 80
+    name    = "HAProxy"
+    port    = 80
   }
 
   vcl {
     main = true
     name = "misc"
+
     # @TODO: Separate into snippets once Terraform adds support.
     content = "${file("${path.module}/misc.vcl")}"
   }

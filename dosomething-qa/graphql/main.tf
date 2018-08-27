@@ -10,23 +10,23 @@ resource "heroku_app" "graphql-dev" {
   }
 
   config_vars {
-    APP_ENV = "dev"
-    QUERY_ENV = "dev"
-    APP_URL = "https://graphql-dev.dosomething.org"
+    APP_ENV              = "dev"
+    QUERY_ENV            = "dev"
+    APP_URL              = "https://graphql-dev.dosomething.org"
     GRAPHQL_ENDPOINT_URL = "https://graphql-dev.dosomething.org/graphql"
   }
 
   buildpacks = [
-    "heroku/nodejs"
+    "heroku/nodejs",
   ]
 
   acm = true
 }
 
 resource "heroku_formation" "graphql-dev" {
-  app  = "${heroku_app.graphql-dev.name}"
-  type = "web"
-  size = "hobby"
+  app      = "${heroku_app.graphql-dev.name}"
+  type     = "web"
+  size     = "hobby"
   quantity = 1
 }
 
@@ -62,23 +62,23 @@ resource "heroku_app" "graphql-qa" {
   }
 
   config_vars {
-    APP_ENV = "qa"
-    QUERY_ENV = "qa"
-    APP_URL = "https://graphql-qa.dosomething.org"
+    APP_ENV              = "qa"
+    QUERY_ENV            = "qa"
+    APP_URL              = "https://graphql-qa.dosomething.org"
     GRAPHQL_ENDPOINT_URL = "https://graphql-qa.dosomething.org/graphql"
   }
 
   buildpacks = [
-    "heroku/nodejs"
+    "heroku/nodejs",
   ]
 
   acm = true
 }
 
 resource "heroku_formation" "graphql-qa" {
-  app  = "${heroku_app.graphql-qa.name}"
-  type = "web"
-  size = "hobby"
+  app      = "${heroku_app.graphql-qa.name}"
+  type     = "web"
+  size     = "hobby"
   quantity = 1
 }
 

@@ -1,23 +1,23 @@
 resource "aws_instance" "staging" {
-  ami = "ami-cde952a6"
+  ami           = "ami-cde952a6"
   instance_type = "m4.large"
 
   disable_api_termination = true
-  ebs_optimized = true
+  ebs_optimized           = true
 
   tags = {
     Application = "Phoenix-Ashes"
-    Name = "Staging"
+    Name        = "Staging"
   }
 }
 
 resource "aws_instance" "haproxy_qa" {
-  ami = "ami-d05e75b8"
+  ami           = "ami-d05e75b8"
   instance_type = "t2.micro"
 
   tags = {
-    Name = "Thor-HA-Proxy"
-    Role = "Thor-HA-Proxy"
+    Name        = "Thor-HA-Proxy"
+    Role        = "Thor-HA-Proxy"
     Environment = "Thor"
   }
 }

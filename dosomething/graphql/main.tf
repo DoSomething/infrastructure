@@ -10,23 +10,23 @@ resource "heroku_app" "graphql" {
   }
 
   config_vars {
-    APP_ENV = "production"
-    QUERY_ENV = "production"
-    APP_URL = "https://graphql.dosomething.org"
+    APP_ENV              = "production"
+    QUERY_ENV            = "production"
+    APP_URL              = "https://graphql.dosomething.org"
     GRAPHQL_ENDPOINT_URL = "https://graphql.dosomething.org/graphql"
   }
 
   buildpacks = [
-    "heroku/nodejs"
+    "heroku/nodejs",
   ]
 
   acm = true
 }
 
 resource "heroku_formation" "graphql" {
-  app  = "${heroku_app.graphql.name}"
-  type = "web"
-  size = "standard-1x"
+  app      = "${heroku_app.graphql.name}"
+  type     = "web"
+  size     = "standard-1x"
   quantity = 1
 }
 

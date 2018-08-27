@@ -7,7 +7,7 @@ variable "graphql_backend_qa" {}
 variable "ashes_backend_staging" {}
 
 resource "fastly_service_v1" "dosomething-qa" {
-  name = "Terraform: DoSomething (QA)"
+  name          = "Terraform: DoSomething (QA)"
   force_destroy = true
 
   domain {
@@ -23,76 +23,75 @@ resource "fastly_service_v1" "dosomething-qa" {
   }
 
   condition {
-    type = "REQUEST"
-    name = "backend-graphql-dev"
+    type      = "REQUEST"
+    name      = "backend-graphql-dev"
     statement = "req.http.host == \"${var.graphql_domain_dev}\""
   }
 
   condition {
-    type = "REQUEST"
-    name = "backend-graphql-qa"
+    type      = "REQUEST"
+    name      = "backend-graphql-qa"
     statement = "req.http.host == \"${var.graphql_domain_qa}\""
   }
 
   condition {
-    type = "REQUEST"
-    name = "path-robots"
+    type      = "REQUEST"
+    name      = "path-robots"
     statement = "req.url.basename == \"robots.txt\""
   }
 
   condition {
-    type = "REQUEST"
-    name = "backend-ashes-staging"
+    type      = "REQUEST"
+    name      = "backend-ashes-staging"
     statement = "req.http.host == \"staging.dosomething.org\""
   }
 
   backend {
-    address = "${var.graphql_backend_dev}"
-    name = "${var.graphql_name_dev}"
+    address           = "${var.graphql_backend_dev}"
+    name              = "${var.graphql_name_dev}"
     request_condition = "backend-graphql-dev"
-    auto_loadbalance = false
-    port = 443
-  }
-  
-  backend {
-    address = "${var.graphql_backend_qa}"
-    name = "${var.graphql_name_qa}"
-    request_condition = "backend-graphql-qa"
-    auto_loadbalance = false
-    port = 443
+    auto_loadbalance  = false
+    port              = 443
   }
 
   backend {
-    address = "${var.ashes_backend_staging}"
-    name = "ashes-staging"
+    address           = "${var.graphql_backend_qa}"
+    name              = "${var.graphql_name_qa}"
+    request_condition = "backend-graphql-qa"
+    auto_loadbalance  = false
+    port              = 443
+  }
+
+  backend {
+    address           = "${var.ashes_backend_staging}"
+    name              = "ashes-staging"
     request_condition = "backend-ashes-staging"
     ssl_cert_hostname = "staging.dosomething.org"
-    ssl_sni_hostname = "staging.dosomething.org"
-    auto_loadbalance = false
-    use_ssl=true
-    port = 443
+    ssl_sni_hostname  = "staging.dosomething.org"
+    auto_loadbalance  = false
+    use_ssl           = true
+    port              = 443
   }
 
   header {
-    name = "Country Code"
-    type = "request"
-    action = "set"
-    source = "geoip.country_code"
+    name        = "Country Code"
+    type        = "request"
+    action      = "set"
+    source      = "geoip.country_code"
     destination = "http.X-Fastly-Country-Code"
   }
 
   header {
-    name = "Country Code (Debug)"
-    type = "response"
-    action = "set"
-    source = "geoip.country_code"
+    name        = "Country Code (Debug)"
+    type        = "response"
+    action      = "set"
+    source      = "geoip.country_code"
     destination = "http.X-Fastly-Country-Code"
   }
 
   response_object {
-    name = "robots.txt deny"
-    content = "${file("${path.module}/robots.txt")}"
-    request_condition="path-robots"
+    name              = "robots.txt deny"
+    content           = "${file("${path.module}/robots.txt")}"
+    request_condition = "path-robots"
   }
 }
-
