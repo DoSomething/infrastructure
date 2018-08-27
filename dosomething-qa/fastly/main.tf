@@ -29,6 +29,12 @@ resource "fastly_service_v1" "dosomething-qa" {
     statement = "req.http.host == \"${var.graphql_domain_qa}\""
   }
 
+  condition {
+    type = "REQUEST"
+    name = "path-robots"
+    statement = "req.url.basename == \"robots.txt\""
+  }
+
   backend {
     address = "${var.graphql_backend_dev}"
     name = "${var.graphql_name_dev}"
@@ -57,6 +63,12 @@ resource "fastly_service_v1" "dosomething-qa" {
     action = "set"
     source = "geoip.country_code"
     destination = "http.X-Fastly-Country-Code"
+  }
+
+  response_object {
+    name = "robots.txt deny"
+    content = "${file("${path.module}/robots.txt")}"
+    request_condition="path-robots"
   }
 }
 
