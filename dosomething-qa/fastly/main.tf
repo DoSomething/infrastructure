@@ -42,5 +42,21 @@ resource "fastly_service_v1" "dosomething-qa" {
     request_condition = "backend-graphql-qa"
     port = 443
   }
+
+  header {
+    name = "Country Code"
+    type = "request"
+    action = "set"
+    source = "geoip.country_code"
+    destination = "http.X-Fastly-Country-Code"
+  }
+
+  header {
+    name = "Country Code (Debug)"
+    type = "response"
+    action = "set"
+    source = "geoip.country_code"
+    destination = "http.X-Fastly-Country-Code"
+  }
 }
 
