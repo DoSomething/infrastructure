@@ -11,7 +11,7 @@ resource "fastly_service_v1" "dosomething" {
   }
 
   condition {
-    type = "request"
+    type = "REQUEST"
     name = "backend-graphql"
     statement = "req.http.host == \"${var.graphql_domain}\""
   }

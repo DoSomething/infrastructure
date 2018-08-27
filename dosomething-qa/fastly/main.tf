@@ -18,13 +18,13 @@ resource "fastly_service_v1" "dosomething-qa" {
   }
 
   condition {
-    type = "request"
+    type = "REQUEST"
     name = "backend-graphql-dev"
     statement = "req.http.host == \"${var.graphql_domain_dev}\""
   }
 
   condition {
-    type = "request"
+    type = "REQUEST"
     name = "backend-graphql-qa"
     statement = "req.http.host == \"${var.graphql_domain_qa}\""
   }
