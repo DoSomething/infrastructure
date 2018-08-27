@@ -18,4 +18,3 @@ module "graphql" {
   graphql_pipeline="${var.graphql_pipeline}"
   papertrail_destination="${var.papertrail_destination}"
 }
-
