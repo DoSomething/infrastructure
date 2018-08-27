@@ -50,6 +50,7 @@ resource "fastly_service_v1" "dosomething-qa" {
     address = "${var.graphql_backend_dev}"
     name = "${var.graphql_name_dev}"
     request_condition = "backend-graphql-dev"
+    auto_loadbalance = false
     port = 443
   }
   
@@ -57,6 +58,7 @@ resource "fastly_service_v1" "dosomething-qa" {
     address = "${var.graphql_backend_qa}"
     name = "${var.graphql_name_qa}"
     request_condition = "backend-graphql-qa"
+    auto_loadbalance = false
     port = 443
   }
 
@@ -66,6 +68,7 @@ resource "fastly_service_v1" "dosomething-qa" {
     request_condition = "backend-ashes-staging"
     ssl_cert_hostname = "staging.dosomething.org"
     ssl_sni_hostname = "staging.dosomething.org"
+    auto_loadbalance = false
     use_ssl=true
     port = 443
   }
