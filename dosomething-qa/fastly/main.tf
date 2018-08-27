@@ -4,6 +4,7 @@ variable "graphql_backend_dev" {}
 variable "graphql_name_qa" {}
 variable "graphql_domain_qa" {}
 variable "graphql_backend_qa" {}
+variable "ashes_backend_staging" {}
 
 resource "fastly_service_v1" "dosomething-qa" {
   name = "Terraform: DoSomething (QA)"
@@ -15,6 +16,10 @@ resource "fastly_service_v1" "dosomething-qa" {
 
   domain {
     name = "${var.graphql_domain_qa}"
+  }
+
+  domain {
+    name = "staging.dosomething.org"
   }
 
   condition {
@@ -35,6 +40,12 @@ resource "fastly_service_v1" "dosomething-qa" {
     statement = "req.url.basename == \"robots.txt\""
   }
 
+  condition {
+    type = "REQUEST"
+    name = "backend-ashes-staging"
+    statement = "req.http.host == \"staging.dosomething.org\""
+  }
+
   backend {
     address = "${var.graphql_backend_dev}"
     name = "${var.graphql_name_dev}"
@@ -46,6 +57,16 @@ resource "fastly_service_v1" "dosomething-qa" {
     address = "${var.graphql_backend_qa}"
     name = "${var.graphql_name_qa}"
     request_condition = "backend-graphql-qa"
+    port = 443
+  }
+
+  backend {
+    address = "${var.ashes_backend_staging}"
+    name = "ashes-staging"
+    request_condition = "backend-ashes-staging"
+    ssl_cert_hostname = "staging.dosomething.org"
+    ssl_sni_hostname = "staging.dosomething.org"
+    use_ssl=true
     port = 443
   }
 
