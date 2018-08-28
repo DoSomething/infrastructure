@@ -2,12 +2,12 @@
 
 This is a prototype for managing DoSomething.org's infrastructure as code, using [Terraform](https://www.terraform.io). We're currently evaluating whether this is the right tool for us, and migrating services piece-by-piece to test.
 
-## Usage
+## Installation
 
 Install [Terraform](https://www.terraform.io) 0.11.x and the [AWS CLI](https://aws.amazon.com/cli/). Credentials can be found in Lastpass.
 
 ```sh
-# Set 'terraform' AWS profile:
+# Configure 'terraform' AWS profile:
 aws configure --profile terraform
 
 # Configure other backends w/ variables:
@@ -15,13 +15,25 @@ cp {example.,}terraform.tfvars && vi terraform.tfvars
 
 # Install dependencies:
 terraform init
+```
 
-# Make changes, then plan them:
+## Usage
+
+Terraform allows us to create & modify infrastructure declaratively. If you want to make a change, just find the relevant file & edit it. You can see all your options in Terraform's provider documentation for [Fastly](https://www.terraform.io/docs/providers/fastly/), [Heroku](https://www.terraform.io/docs/providers/heroku/), and [AWS](https://www.terraform.io/docs/providers/aws/) (read-only).
+
+Then **plan your change** to find out how it will affect the current state of the system:
+
+```sh
 terraform plan
+```
 
-# If everything looks good, apply!
+Once you're satisfied with your change, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the state in S3, and ensure nobody else makes any changes until you're done:
+
+```sh
 terraform apply
 ```
+
+See Terraform's [Getting Started guide](https://www.terraform.io/intro/getting-started/install.html) & [documentation](https://www.terraform.io/docs/index.html) for more details.
 
 ## Security Vulnerabilities
 

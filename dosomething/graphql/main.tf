@@ -51,7 +51,7 @@ resource "heroku_pipeline_coupling" "graphql" {
   stage    = "production"
 }
 
-# ----------------------------
+# ----------------------------------------------------
 
 output "name" {
   value = "${heroku_app.graphql.name}"
