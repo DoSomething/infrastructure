@@ -22,4 +22,9 @@ resource "fastly_service_v1" "dosomething" {
     request_condition = "backend-graphql"
     port              = 443
   }
+
+  request_setting {
+    name      = "Force SSL"
+    force_ssl = true
+  }
 }
