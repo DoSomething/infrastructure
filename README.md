@@ -4,7 +4,7 @@ This is a prototype for managing DoSomething.org's infrastructure as code, using
 
 ## Usage
 
-Install [Go](https://golang.org) 1.8+, [Terraform](https://www.terraform.io) 0.11.x, and the [AWS CLI](https://aws.amazon.com/cli/). Credentials can be found in Lastpass.
+Install [Terraform](https://www.terraform.io) 0.11.x and the [AWS CLI](https://aws.amazon.com/cli/). Credentials can be found in Lastpass.
 
 ```sh
 # Set 'terraform' AWS profile:
