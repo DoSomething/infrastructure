@@ -89,6 +89,11 @@ resource "fastly_service_v1" "dosomething-qa" {
     destination = "http.X-Fastly-Country-Code"
   }
 
+  request_setting {
+    name      = "Force SSL"
+    force_ssl = true
+  }
+
   response_object {
     name              = "robots.txt deny"
     content           = "${file("${path.module}/robots.txt")}"
