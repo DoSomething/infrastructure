@@ -4,14 +4,17 @@ This is a prototype for managing DoSomething.org's infrastructure as code, using
 
 ## Usage
 
-Install [Go](https://golang.org) 1.8+ and [Terraform](https://www.terraform.io) 0.11.x. **Note:** State is stored locally, so ask in [#team-devops](https://dosomething.slack.com/messages/C03T8SDJJ/) before running.
+Install [Go](https://golang.org) 1.8+, [Terraform](https://www.terraform.io) 0.11.x, and the [AWS CLI](https://aws.amazon.com/cli/). Credentials can be found in Lastpass.
 
 ```sh
+# Set 'terraform' AWS profile:
+aws configure --profile terraform
+
+# Configure other backends w/ variables:
+cp {example.,}terraform.tfvars && vi terraform.tfvars
+
 # Install dependencies:
 terraform init
-
-# Set environment variables (found in Lastpass):
-cp {example.,}terraform.tfvars && vi terraform.tfvars
 
 # Make changes, then plan them:
 terraform plan

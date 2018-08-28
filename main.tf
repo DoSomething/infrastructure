@@ -1,11 +1,20 @@
 variable "fastly_api_key" {}
 variable "heroku_email" {}
 variable "heroku_api_key" {}
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
 
 variable "papertrail_prod_destination" {}
 variable "papertrail_qa_destination" {}
+
+terraform {
+  backend "s3" {
+    bucket         = "dosomething-infrastructure-state"
+    dynamodb_table = "dosomething-infrastructure-locks"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    profile        = "terraform"
+    encrypt        = true
+  }
+}
 
 provider "fastly" {
   version = "~> 0.3"
@@ -19,10 +28,9 @@ provider "heroku" {
 }
 
 provider "aws" {
-  version    = "~> 1.33"
-  region     = "us-east-1"
-  access_key = "${var.aws_access_key}"
-  secret_key = "${var.aws_secret_key}"
+  version = "~> 1.33"
+  region  = "us-east-1"
+  profile = "terraform"
 }
 
 module "shared" {
