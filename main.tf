@@ -101,10 +101,6 @@ module "voting-app" {
   source = "voting-app"
 }
 
-module "voting-app-qa" {
-  source = "voting-app-qa"
-}
-
 # The miscellaneous property acts as a catch-all for smaller
 # applications that don't fit into another bucket, or utilities
 # like our Fastly domain redirect property.
