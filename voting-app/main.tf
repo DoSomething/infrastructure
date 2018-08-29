@@ -10,10 +10,6 @@ resource "fastly_service_v1" "voting-app" {
     name = "www.athletesgonegood.com"
   }
 
-  domain {
-    name = "www.fourleggedfinishers.com"
-  }
-
   condition {
     type      = "REQUEST"
     name      = "backend-celebsgonegood"
