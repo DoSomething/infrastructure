@@ -35,6 +35,7 @@ table redirects {
   "www.dosomethingtote.org": "https://www.dosomething.org",
   "www.fourleggedfinishers.com": "https://www.dosomething.org/us/campaigns/four-legged-finishers#",
   "www.fourleggedfinishers.org": "https://www.dosomething.org/us/campaigns/four-legged-finishers#",
+  "www.catsgonegood.com": "https://www.celebsgonegood.com",
 }
 # ------------------------------------------------------------------------------------
 
