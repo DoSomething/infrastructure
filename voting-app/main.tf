@@ -14,26 +14,30 @@ resource "fastly_service_v1" "voting-app" {
     name = "www.fourleggedfinishers.com"
   }
 
+  condition {
+    type      = "REQUEST"
+    name      = "backend-celebsgonegood"
+    statement = "req.http.host == \"www.celebsgonegood.com\""
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-athletesgonegood"
+    statement = "req.http.host == \"www.athletesgonegood.com\""
+  }
+
   backend {
-    address = "54.172.90.245"
-    name    = "HAProxy"
-    port    = 80
+    name              = "s3-www.celebsgonegood.com"
+    address           = "${aws_s3_bucket.cgg.bucket}.s3-website-${aws_s3_bucket.cgg.region}.amazonaws.com"
+    request_condition = "backend-celebsgonegood"
+    port              = 80
   }
 
-  header {
-    name        = "Country Code"
-    type        = "request"
-    action      = "set"
-    source      = "geoip.country_code"
-    destination = "http.X-Fastly-Country-Code"
-  }
-
-  header {
-    name        = "Country Code (Debug)"
-    type        = "response"
-    action      = "set"
-    source      = "geoip.country_code"
-    destination = "http.X-Fastly-Country-Code"
+  backend {
+    name              = "s3-www.athletesgonegood.com"
+    address           = "${aws_s3_bucket.agg.bucket}.s3-website-${aws_s3_bucket.agg.region}.amazonaws.com"
+    request_condition = "backend-athletesgonegood"
+    port              = 80
   }
 }
 
