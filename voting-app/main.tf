@@ -22,6 +22,33 @@ resource "fastly_service_v1" "voting-app" {
     statement = "req.http.host == \"www.athletesgonegood.com\""
   }
 
+  gzip {
+    name = "gzip"
+
+    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json"]
+
+    content_types = [
+      "text/html",
+      "application/x-javascript",
+      "text/css",
+      "application/javascript",
+      "text/javascript",
+      "application/json",
+      "application/vnd.ms-fontobject",
+      "application/x-font-opentype",
+      "application/x-font-truetype",
+      "application/x-font-ttf",
+      "application/xml",
+      "font/eot",
+      "font/opentype",
+      "font/otf",
+      "image/svg+xml",
+      "image/vnd.microsoft.icon",
+      "text/plain",
+      "text/xml",
+    ]
+  }
+
   backend {
     name              = "s3-www.celebsgonegood.com"
     address           = "${aws_s3_bucket.cgg.bucket}.s3-website-${aws_s3_bucket.cgg.region}.amazonaws.com"

@@ -73,6 +73,33 @@ resource "fastly_service_v1" "dosomething-qa" {
     port              = 443
   }
 
+  gzip {
+    name = "gzip"
+
+    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json"]
+
+    content_types = [
+      "text/html",
+      "application/x-javascript",
+      "text/css",
+      "application/javascript",
+      "text/javascript",
+      "application/json",
+      "application/vnd.ms-fontobject",
+      "application/x-font-opentype",
+      "application/x-font-truetype",
+      "application/x-font-ttf",
+      "application/xml",
+      "font/eot",
+      "font/opentype",
+      "font/otf",
+      "image/svg+xml",
+      "image/vnd.microsoft.icon",
+      "text/plain",
+      "text/xml",
+    ]
+  }
+
   header {
     name        = "Country Code"
     type        = "request"
