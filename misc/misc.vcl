@@ -9,6 +9,16 @@
 # ------------------------------------------------------------------------------------
 # Snippet: Redirects (INIT)
 # ------------------------------------------------------------------------------------
+#
+# This is where we define domain redirects! (See the "Trigger Redirect" and "Handle
+# Redirect" snippets below). To redirect a new domain, add the *origin* hostname
+# on the left (where you're redirecting from), and the new URL (with protocol)
+# on the right!
+#
+# Pro-tip: To ignore paths on a redirect (e.g. www.old.com/path to new.com/),
+# end the "destination" URL with a hash! When redirected, the original path
+# will be ignored by the destination web server! :)
+#
 table redirects {
   # Aurora:
   "aurora.dosomething.org": "https://admin.dosomething.org",

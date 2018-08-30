@@ -2,6 +2,12 @@ resource "fastly_service_v1" "misc" {
   name          = "Terraform: Miscellaneous"
   force_destroy = true
 
+  #
+  # We primarily use this property for domain redirects, like going from
+  # www.oldsite.com/any-path to www.newsite.com/any-path. To add a new
+  # domain, first add the origin domain to Fastly below. Then, head into
+  # 'misc.vcl' and add the mapping for how it should redirect!
+  #
   domain {
     name = "api.dosomething.org"
   }
