@@ -10,7 +10,10 @@ resource "heroku_app" "rogue-dev" {
   }
 
   config_vars {
-    # ...
+    APP_ENV   = "production"
+    APP_DEBUG = "false"
+    APP_LOG   = "errorlog"
+    APP_URL   = "https://activity-dev.dosomething.org"
   }
 
   buildpacks = [
@@ -62,7 +65,10 @@ resource "heroku_app" "rogue-qa" {
   }
 
   config_vars {
-    # ...
+    APP_ENV   = "production"
+    APP_DEBUG = "false"
+    APP_LOG   = "errorlog"
+    APP_URL   = "https://activity-qa.dosomething.org"
   }
 
   buildpacks = [

@@ -10,7 +10,10 @@ resource "heroku_app" "northstar-dev" {
   }
 
   config_vars {
-    # ...
+    APP_ENV   = "production"
+    APP_DEBUG = "false"
+    APP_LOG   = "errorlog"
+    APP_URL   = "https://identity-dev.dosomething.org"
   }
 
   buildpacks = [
@@ -62,7 +65,10 @@ resource "heroku_app" "northstar-qa" {
   }
 
   config_vars {
-    # ...
+    APP_ENV   = "production"
+    APP_DEBUG = "false"
+    APP_LOG   = "errorlog"
+    APP_URL   = "https://identity-qa.dosomething.org"
   }
 
   buildpacks = [
