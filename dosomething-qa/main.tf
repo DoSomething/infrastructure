@@ -1,4 +1,6 @@
 variable "graphql_pipeline" {}
+variable "northstar_pipeline" {}
+variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
 
 module "fastly" {
@@ -17,6 +19,20 @@ module "graphql" {
   source = "graphql"
 
   graphql_pipeline       = "${var.graphql_pipeline}"
+  papertrail_destination = "${var.papertrail_destination}"
+}
+
+module "northstar" {
+  source = "northstar"
+
+  northstar_pipeline     = "${var.northstar_pipeline}"
+  papertrail_destination = "${var.papertrail_destination}"
+}
+
+module "rogue" {
+  source = "rogue"
+
+  rogue_pipeline         = "${var.rogue_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
