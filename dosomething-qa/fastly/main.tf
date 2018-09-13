@@ -4,6 +4,12 @@ variable "graphql_backend_dev" {}
 variable "graphql_name_qa" {}
 variable "graphql_domain_qa" {}
 variable "graphql_backend_qa" {}
+variable "northstar_name_dev" {}
+variable "northstar_domain_dev" {}
+variable "northstar_backend_dev" {}
+variable "rogue_name_dev" {}
+variable "rogue_domain_dev" {}
+variable "rogue_backend_dev" {}
 variable "ashes_backend_staging" {}
 
 resource "fastly_service_v1" "dosomething-qa" {
@@ -16,6 +22,14 @@ resource "fastly_service_v1" "dosomething-qa" {
 
   domain {
     name = "${var.graphql_domain_qa}"
+  }
+
+  domain {
+    name = "${var.northstar_domain_dev}"
+  }
+
+  domain {
+    name = "${var.rogue_domain_dev}"
   }
 
   domain {
@@ -32,6 +46,18 @@ resource "fastly_service_v1" "dosomething-qa" {
     type      = "REQUEST"
     name      = "backend-graphql-qa"
     statement = "req.http.host == \"${var.graphql_domain_qa}\""
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-northstar-dev"
+    statement = "req.http.host == \"${var.northstar_domain_dev}\""
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-rogue-dev"
+    statement = "req.http.host == \"${var.rogue_domain_dev}\""
   }
 
   condition {
@@ -58,6 +84,22 @@ resource "fastly_service_v1" "dosomething-qa" {
     address           = "${var.graphql_backend_qa}"
     name              = "${var.graphql_name_qa}"
     request_condition = "backend-graphql-qa"
+    auto_loadbalance  = false
+    port              = 443
+  }
+
+  backend {
+    address           = "${var.northstar_backend_dev}"
+    name              = "${var.northstar_name_dev}"
+    request_condition = "backend-northstar-dev"
+    auto_loadbalance  = false
+    port              = 443
+  }
+
+  backend {
+    address           = "${var.rogue_backend_dev}"
+    name              = "${var.rogue_name_dev}"
+    request_condition = "backend-rogue-dev"
     auto_loadbalance  = false
     port              = 443
   }

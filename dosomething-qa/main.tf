@@ -6,12 +6,21 @@ variable "papertrail_destination" {}
 module "fastly" {
   source = "fastly"
 
-  graphql_name_dev      = "${module.graphql.name_dev}"
-  graphql_domain_dev    = "${module.graphql.domain_dev}"
-  graphql_backend_dev   = "${module.graphql.backend_dev}"
-  graphql_name_qa       = "${module.graphql.name_qa}"
-  graphql_domain_qa     = "${module.graphql.domain_qa}"
-  graphql_backend_qa    = "${module.graphql.backend_qa}"
+  graphql_name_dev    = "${module.graphql.name_dev}"
+  graphql_domain_dev  = "${module.graphql.domain_dev}"
+  graphql_backend_dev = "${module.graphql.backend_dev}"
+  graphql_name_qa     = "${module.graphql.name_qa}"
+  graphql_domain_qa   = "${module.graphql.domain_qa}"
+  graphql_backend_qa  = "${module.graphql.backend_qa}"
+
+  northstar_name_dev    = "${module.northstar.name_dev}"
+  northstar_domain_dev  = "${module.northstar.domain_dev}"
+  northstar_backend_dev = "${module.northstar.backend_dev}"
+
+  rogue_name_dev    = "${module.rogue.name_dev}"
+  rogue_domain_dev  = "${module.rogue.domain_dev}"
+  rogue_backend_dev = "${module.rogue.backend_dev}"
+
   ashes_backend_staging = "${module.ashes.backend_staging}"
 }
 
