@@ -34,6 +34,9 @@ table redirects {
   "northstar-qa.dosomething.org": "https://identity-dev.dosomething.org",
   "profile.dosomething.org": "https://identity.dosomething.org",
 
+  # Phoenix:
+  "phoenix-preview.dosomething.org": "https://www-preview.dosomething.org",
+
   # Rogue:
   "rogue.dosomething.org": "https://activity.dosomething.org",
   "rogue-thor.dosomething.org": "https://activity-qa.dosomething.org",
