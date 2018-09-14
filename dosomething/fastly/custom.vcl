@@ -6,10 +6,64 @@
 # <https://docs.fastly.com/vcl/custom-vcl/creating-custom-vcl/>
 #
 
+# ------------------------------------------------------------------------------------
+# Snippet: EEA Country Codes (INIT)
+# ------------------------------------------------------------------------------------
+table eea {
+  "AT": "true",
+  "BE": "true",
+  "BG": "true",
+  "HR": "true",
+  "CY": "true",
+  "CZ": "true",
+  "DK": "true",
+  "EU": "true",
+  "EE": "true",
+  "FI": "true",
+  "FR": "true",
+  "DE": "true",
+  "GR": "true",
+  "HU": "true",
+  "IS": "true",
+  "IE": "true",
+  "IT": "true",
+  "LV": "true",
+  "LI": "true",
+  "LT": "true",
+  "LU": "true",
+  "MT": "true",
+  "NL": "true",
+  "NO": "true",
+  "PL": "true",
+  "PT": "true",
+  "RO": "true",
+  "SK": "true",
+  "SI": "true",
+  "ES": "true",
+  "SE": "true",
+  "CH": "true",
+  "UK": "true",
+  "GB": "true"
+}
+# ------------------------------------------------------------------------------------
+
 
 
 sub vcl_recv {
 #FASTLY recv
+  # ------------------------------------------------------------------------------------
+  # Snippet: Trigger GDPR Redirect (RECV)
+  # ------------------------------------------------------------------------------------
+  if (table.lookup(eea, geoip.country_code)) {
+    set req.http.X-Fastly-Is-EEA = "true";
+    unset req.http.X-Forwarded-For;
+    remove req.http.Cookie;
+    error 811;
+  } else {
+    set req.http.X-Fastly-Is-EEA = "false";
+  }
+  # ------------------------------------------------------------------------------------
+
   if (req.request != "HEAD" && req.request != "GET" && req.request != "FASTLYPURGE") {
     return(pass);
   }
@@ -75,6 +129,18 @@ sub vcl_deliver {
 
 sub vcl_error {
 #FASTLY error
+  # ------------------------------------------------------------------------------------
+  # Snippet: Handle Redirect (ERROR)
+  # ------------------------------------------------------------------------------------
+  if (obj.status == 811) {
+    set obj.status = 302;
+    set obj.http.Location = "https://sorry.dosomething.org";
+    set obj.response = "Found";
+    return (deliver);
+  }
+  # ------------------------------------------------------------------------------------
+}
+
 sub vcl_pass {
 #FASTLY pass
 }
