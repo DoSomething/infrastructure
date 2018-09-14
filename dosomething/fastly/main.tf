@@ -54,4 +54,12 @@ resource "fastly_service_v1" "dosomething" {
     name      = "Force SSL"
     force_ssl = true
   }
+
+  vcl {
+    main = true
+    name = "main"
+
+    # @TODO: Separate into snippets once Terraform adds support.
+    content = "${file("${path.module}/custom.vcl")}"
+  }
 }
