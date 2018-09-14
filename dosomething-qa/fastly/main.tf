@@ -210,4 +210,12 @@ resource "fastly_service_v1" "dosomething-qa" {
     content           = "${file("${path.module}/robots.txt")}"
     request_condition = "path-robots"
   }
+
+  vcl {
+    main = true
+    name = "main"
+
+    # @TODO: Separate into snippets once Terraform adds support.
+    content = "${file("${path.module}/custom.vcl")}"
+  }
 }
