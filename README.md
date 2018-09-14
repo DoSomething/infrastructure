@@ -21,7 +21,9 @@ terraform init
 
 Terraform allows us to create & modify infrastructure declaratively. If you want to make a change, just find the relevant file & edit it. You can see all your options in Terraform's provider documentation for [Fastly](https://www.terraform.io/docs/providers/fastly/), [Heroku](https://www.terraform.io/docs/providers/heroku/), and [AWS](https://www.terraform.io/docs/providers/aws/) (read-only).
 
-Then **plan your change** to find out how it will affect the current state of the system:
+You can run `terraform fmt` at any time to automatically format your code (or use an [hclfmt](https://github.com/fatih/hclfmt#editor-integration) plugin for your editor).
+
+Next **plan your change** to find out how it will affect the current state of the system:
 
 ```sh
 terraform plan
