@@ -1,5 +1,5 @@
-resource "fastly_service_v1" "misc" {
-  name          = "Terraform: Miscellaneous"
+resource "fastly_service_v1" "redirects" {
+  name          = "Terraform: Domain Redirects"
   force_destroy = true
 
   #

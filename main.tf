@@ -103,9 +103,8 @@ module "voting-app" {
   source = "voting-app"
 }
 
-# The miscellaneous property acts as a catch-all for smaller
-# applications that don't fit into another bucket, or utilities
-# like our Fastly domain redirect property.
-module "misc" {
-  source = "misc"
+# The redirects property handles redirects for old domains, like
+# 'northstar-thor.dosomething.org' to 'identity-qa.dosomething.org'.
+module "redirects" {
+  source = "redirects"
 }
