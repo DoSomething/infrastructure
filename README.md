@@ -4,7 +4,13 @@ This is a prototype for managing DoSomething.org's infrastructure as code, using
 
 ## Installation
 
-Install [Terraform](https://www.terraform.io) 0.11.x and the [AWS CLI](https://aws.amazon.com/cli/). Credentials can be found in Lastpass.
+Install [Terraform](https://www.terraform.io) 0.11.x and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
+
+```sh
+brew install awscli terraform
+```
+
+Next, configure secrets (see the "Terraform credentials" secure note in Lastpass) & install dependencies:
 
 ```sh
 # Configure 'terraform' AWS profile:
@@ -35,7 +41,7 @@ Once you're satisfied with your change, commit your work & make a pull request. 
 terraform apply
 ```
 
-See Terraform's [Getting Started guide](https://www.terraform.io/intro/getting-started/install.html) & [documentation](https://www.terraform.io/docs/index.html) for more details.
+See Terraform's [Getting Started guide](https://www.terraform.io/intro/getting-started/build.html) & [documentation](https://www.terraform.io/docs/index.html) for more details.
 
 ## Security Vulnerabilities
 
