@@ -93,6 +93,6 @@ resource "fastly_service_v1" "misc" {
     name = "misc"
 
     # @TODO: Separate into snippets once Terraform adds support.
-    content = "${file("${path.module}/misc.vcl")}"
+    content = "${file("${path.module}/custom.vcl")}"
   }
 }
