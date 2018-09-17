@@ -2,6 +2,8 @@ variable "graphql_pipeline" {}
 variable "northstar_pipeline" {}
 variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
+variable "papertrail_destination_fastly_dev" {}
+variable "papertrail_destination_fastly_qa" {}
 
 module "fastly" {
   source = "fastly"
@@ -28,6 +30,10 @@ module "fastly" {
   rogue_backend_qa  = "${module.rogue.backend_qa}"
 
   ashes_backend_staging = "${module.ashes.backend_staging}"
+
+  papertrail_destination            = "${var.papertrail_destination}"
+  papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
+  papertrail_destination_fastly_qa  = "${var.papertrail_destination_fastly_qa}"
 }
 
 module "graphql" {

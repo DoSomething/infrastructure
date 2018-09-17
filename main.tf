@@ -13,6 +13,8 @@ variable "heroku_email" {}
 variable "heroku_api_key" {}
 variable "papertrail_prod_destination" {}
 variable "papertrail_qa_destination" {}
+variable "papertrail_destination_fastly_dev" {}
+variable "papertrail_destination_fastly_qa" {}
 
 # ----------------------------------------------------
 
@@ -92,10 +94,12 @@ module "dosomething" {
 module "dosomething-qa" {
   source = "dosomething-qa"
 
-  graphql_pipeline       = "${module.shared.graphql_pipeline}"
-  northstar_pipeline     = "${module.shared.northstar_pipeline}"
-  rogue_pipeline         = "${module.shared.rogue_pipeline}"
-  papertrail_destination = "${var.papertrail_qa_destination}"
+  graphql_pipeline                  = "${module.shared.graphql_pipeline}"
+  northstar_pipeline                = "${module.shared.northstar_pipeline}"
+  rogue_pipeline                    = "${module.shared.rogue_pipeline}"
+  papertrail_destination            = "${var.papertrail_qa_destination}"
+  papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
+  papertrail_destination_fastly_qa  = "${var.papertrail_destination_fastly_qa}"
 }
 
 # The voting application (https://git.io/fAsod) once hosted

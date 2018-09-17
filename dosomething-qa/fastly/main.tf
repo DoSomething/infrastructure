@@ -17,6 +17,9 @@ variable "rogue_name_qa" {}
 variable "rogue_domain_qa" {}
 variable "rogue_backend_qa" {}
 variable "ashes_backend_staging" {}
+variable "papertrail_destination" {}
+variable "papertrail_destination_fastly_dev" {}
+variable "papertrail_destination_fastly_qa" {}
 
 resource "fastly_service_v1" "dosomething-qa" {
   name          = "Terraform: DoSomething (QA)"
@@ -217,5 +220,89 @@ resource "fastly_service_v1" "dosomething-qa" {
 
     # @TODO: Separate into snippets once Terraform adds support.
     content = "${file("${path.module}/custom.vcl")}"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-northstar-dev"
+    statement = "req.http.host == \"${var.northstar_domain_dev}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "northstar-dev"
+    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-northstar-dev"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-northstar-qa"
+    statement = "req.http.host == \"${var.northstar_domain_qa}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "northstar-qa"
+    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-northstar-qa"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-rogue-dev"
+    statement = "req.http.host == \"${var.rogue_domain_dev}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "rogue-dev"
+    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-rogue-dev"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-rogue-qa"
+    statement = "req.http.host == \"${var.rogue_domain_qa}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "rogue-qa"
+    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-rogue-qa"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-graphql-dev"
+    statement = "req.http.host == \"${var.graphql_domain_dev}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "graphql-dev"
+    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-graphql-dev"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-graphql-qa"
+    statement = "req.http.host == \"${var.graphql_domain_qa}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "graphql-qa"
+    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-graphql-qa"
   }
 }
