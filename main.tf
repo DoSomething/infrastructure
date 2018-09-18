@@ -86,6 +86,7 @@ module "dosomething" {
 
   graphql_pipeline              = "${module.shared.graphql_pipeline}"
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
+  rogue_pipeline                = "${module.shared.rogue_pipeline}"
   papertrail_destination        = "${var.papertrail_prod_destination}"
   papertrail_destination_fastly = "${var.papertrail_destination_fastly}"
 }
