@@ -15,9 +15,9 @@ module "fastly" {
   northstar_domain  = "${module.northstar.domain}"
   northstar_backend = "${module.northstar.backend}"
 
-  /* rogue_name    = "${module.rogue.name}" */
-  /* rogue_domain  = "${module.rogue.domain}" */
-  /* rogue_backend = "${module.rogue.backend}" */
+  rogue_name    = "${module.rogue.name}"
+  rogue_domain  = "${module.rogue.domain}"
+  rogue_backend = "${module.rogue.backend}"
 
   papertrail_destination = "${var.papertrail_destination_fastly}"
 }

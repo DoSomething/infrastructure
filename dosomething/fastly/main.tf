@@ -4,6 +4,9 @@ variable "graphql_backend" {}
 variable "northstar_name" {}
 variable "northstar_domain" {}
 variable "northstar_backend" {}
+variable "rogue_name" {}
+variable "rogue_domain" {}
+variable "rogue_backend" {}
 variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "dosomething" {
@@ -18,6 +21,10 @@ resource "fastly_service_v1" "dosomething" {
     name = "${var.northstar_domain}"
   }
 
+  domain {
+    name = "${var.rogue_domain}"
+  }
+
   condition {
     type      = "REQUEST"
     name      = "backend-graphql"
@@ -28,6 +35,12 @@ resource "fastly_service_v1" "dosomething" {
     type      = "REQUEST"
     name      = "backend-northstar"
     statement = "req.http.host == \"${var.northstar_domain}\""
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-rogue"
+    statement = "req.http.host == \"${var.rogue_domain}\""
   }
 
   backend {
@@ -41,6 +54,13 @@ resource "fastly_service_v1" "dosomething" {
     address           = "${var.northstar_backend}"
     name              = "${var.northstar_name}"
     request_condition = "backend-northstar"
+    port              = 443
+  }
+
+  backend {
+    address           = "${var.rogue_backend}"
+    name              = "${var.rogue_name}"
+    request_condition = "backend-rogue"
     port              = 443
   }
 
@@ -96,5 +116,19 @@ resource "fastly_service_v1" "dosomething" {
     port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-northstar"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-rogue"
+    statement = "req.http.host == \"${var.rogue_domain}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "rogue"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-rogue"
   }
 }
