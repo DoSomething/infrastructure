@@ -15,6 +15,7 @@ variable "papertrail_prod_destination" {}
 variable "papertrail_qa_destination" {}
 variable "papertrail_destination_fastly_dev" {}
 variable "papertrail_destination_fastly_qa" {}
+variable "papertrail_destination_fastly" {}
 
 # ----------------------------------------------------
 
@@ -83,9 +84,10 @@ module "shared" {
 module "dosomething" {
   source = "dosomething"
 
-  graphql_pipeline       = "${module.shared.graphql_pipeline}"
-  northstar_pipeline     = "${module.shared.northstar_pipeline}"
-  papertrail_destination = "${var.papertrail_prod_destination}"
+  graphql_pipeline              = "${module.shared.graphql_pipeline}"
+  northstar_pipeline            = "${module.shared.northstar_pipeline}"
+  papertrail_destination        = "${var.papertrail_prod_destination}"
+  papertrail_destination_fastly = "${var.papertrail_destination_fastly}"
 }
 
 # Our development & QA applications live in the combined
