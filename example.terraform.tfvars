@@ -13,5 +13,8 @@ heroku_email=
 heroku_api_key=
 
 # Papertrail:
-papertrail_prod_destination="logsN.papertrailapp.com:NNNNN"
-papertrail_qa_destination="logsN.papertrailapp.com:NNNNN"
+papertrail_prod_destination=
+papertrail_qa_destination=
+papertrail_destination_fastly=
+papertrail_destination_fastly_qa=
+papertrail_destination_fastly_dev=
