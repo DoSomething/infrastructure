@@ -24,6 +24,7 @@ table redirects {
   "aurora.dosomething.org": "https://admin.dosomething.org",
   "aurora-thor.dosomething.org": "https://admin-qa.dosomething.org",
   "aurora-qa.dosomething.org": "https://admin-dev.dosomething.org",
+  "redirect.dosomething.org": "https://admin.dosomething.org",
 
   # Data:
   "data.dosomething.org": "https://dsdata.looker.com",

@@ -80,6 +80,10 @@ resource "fastly_service_v1" "redirects" {
     name = "phoenix-preview.dosomething.org"
   }
 
+  domain {
+    name = "redirect.dosomething.org"
+  }
+
   # Note: Fastly requires at least one backend per service,
   # so our AWS HAProxy instance is included here.
   backend {
