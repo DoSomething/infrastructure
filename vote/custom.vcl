@@ -12,7 +12,9 @@
 #
 table redirects {
   # original path -> target URL
-  "/direct": "https://register.rockthevote.com/registrants/new?partner=37187&source=[r]"
+  "/direct":
+  "https://register.rockthevote.com/registrants/new?partner=37187&source=[r]",
+  "/katiecouric": "https://register.rockthevote.com/registrants/new?partner=37187&source=campaignID:8017,campaignRunID:8022,source:influencer,source_details:katie_couric"
 }
 
 sub vcl_recv {
