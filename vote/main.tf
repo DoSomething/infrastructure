@@ -41,6 +41,11 @@ resource "fastly_service_v1" "vote" {
     ]
   }
 
+  request_setting {
+    name      = "Force SSL"
+    force_ssl = true
+  }
+
   vcl {
     main = true
     name = "main"
