@@ -40,4 +40,12 @@ resource "fastly_service_v1" "vote" {
       "text/xml",
     ]
   }
+
+  vcl {
+    main = true
+    name = "main"
+
+    # @TODO: Separate into snippets once Terraform adds support.
+    content = "${file("${path.module}/custom.vcl")}"
+  }
 }
