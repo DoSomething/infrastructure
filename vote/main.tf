@@ -14,6 +14,19 @@ resource "fastly_service_v1" "vote" {
     port    = 80
   }
 
+  backend {
+    name              = "s3"
+    request_condition = "backend-s3"
+    address           = "${aws_s3_bucket.vote.bucket}.s3-website-${aws_s3_bucket.vote.region}.amazonaws.com"
+    port              = 80
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-s3"
+    statement = "req.url ~ \"^/(static|vendor)\""
+  }
+
   gzip {
     name = "gzip"
 
@@ -52,5 +65,18 @@ resource "fastly_service_v1" "vote" {
 
     # @TODO: Separate into snippets once Terraform adds support.
     content = "${file("${path.module}/custom.vcl")}"
+  }
+}
+
+resource "aws_s3_bucket" "vote" {
+  bucket = "vote.dosomething.org"
+  acl    = "public-read"
+
+  # see: https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteAccessPermissionsReqd.html 
+  policy = "${file("${path.module}/policy-vote.json")}"
+
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
   }
 }
