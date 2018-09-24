@@ -15,7 +15,7 @@ table redirects {
   "/direct": "https://register.rockthevote.com/registrants/new?partner=37187&source=[r]",
 
   # partner/ad direct redirects <https://goo.gl/LKPofK>:
-  "/katiecouric": "https://register.rockthevote.com/registrants/new?partner=37187&source=campaignID:8017,campaignRunID:8022,source:influencer,source_details:katie_couric"
+  # "/katiecouric": "https://register.rockthevote.com/registrants/new?partner=37187&source=campaignID:8017,campaignRunID:8022,source:influencer,source_details:katie_couric",
   # "/g/1": "https://register.rockthevote.com/registrants/new?partner=37187&source=ads",
   # "/g/2": "https://register.rockthevote.com/registrants/new?partner=37187&source=ads",
   # "/f/1": "https://register.rockthevote.com/registrants/new?partner=37187",
