@@ -1,3 +1,7 @@
+variable "s3_routes" {
+  default = "^/(static|vendor)"
+}
+
 resource "fastly_service_v1" "vote" {
   name          = "Terraform: Voter Registration"
   force_destroy = true
@@ -28,7 +32,19 @@ resource "fastly_service_v1" "vote" {
   condition {
     type      = "REQUEST"
     name      = "backend-s3"
-    statement = "req.url ~ \"^/(static|vendor)\""
+    statement = "req.url ~ \"${var.s3_routes}\""
+  }
+
+  condition {
+    type      = "CACHE"
+    name      = "cache-not-s3"
+    statement = "req.url !~ \"${var.s3_routes}\""
+  }
+
+  cache_setting {
+    name            = "force-pass"
+    action          = "pass"
+    cache_condition = "cache-not-s3"
   }
 
   gzip {
