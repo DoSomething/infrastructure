@@ -6,6 +6,10 @@ resource "fastly_service_v1" "vote" {
     name = "vote-fastly.dosomething.org"
   }
 
+  domain {
+    name = "vote.dosomething.org"
+  }
+
   default_host = "vote.dosomething.org"
 
   backend {
