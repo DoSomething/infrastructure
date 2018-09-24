@@ -105,6 +105,12 @@ module "dosomething-qa" {
   papertrail_destination_fastly_qa  = "${var.papertrail_destination_fastly_qa}"
 }
 
+# The voter registration landing page <vote.dosomething.org>
+# is hosted on Instapage, with optional fallback to S3.
+module "vote" {
+  source = "vote"
+}
+
 # The voting application (https://git.io/fAsod) once hosted
 # voting campaigns like Celebs Gone Good & Athletes Gone Good.
 module "voting-app" {
