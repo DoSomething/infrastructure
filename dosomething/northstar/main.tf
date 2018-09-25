@@ -28,7 +28,7 @@ resource "heroku_formation" "northstar" {
   app      = "${heroku_app.northstar.name}"
   type     = "web"
   size     = "Performance-M"
-  quantity = 1
+  quantity = 10
 }
 
 resource "heroku_formation" "northstar-queue" {
