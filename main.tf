@@ -109,6 +109,8 @@ module "dosomething-qa" {
 # is hosted on Instapage, with optional fallback to S3.
 module "vote" {
   source = "vote"
+
+  papertrail_destination = "${var.papertrail_destination_fastly}"
 }
 
 # The voting application (https://git.io/fAsod) once hosted
