@@ -25,17 +25,17 @@ terraform init
 
 ## Usage
 
-Terraform allows us to create & modify infrastructure declaratively. If you want to make a change, just find the relevant file & edit it. You can see all your options in Terraform's provider documentation for [Fastly](https://www.terraform.io/docs/providers/fastly/), [Heroku](https://www.terraform.io/docs/providers/heroku/), and [AWS](https://www.terraform.io/docs/providers/aws/) (read-only).
+Terraform allows us to create & modify infrastructure declaratively. You can see all your options in Terraform's provider documentation for [Fastly](https://www.terraform.io/docs/providers/fastly/), [Heroku](https://www.terraform.io/docs/providers/heroku/), and [AWS](https://www.terraform.io/docs/providers/aws/) (full access to S3 resources, read-only for everything else).
 
 You can run `terraform fmt` at any time to automatically format your code (or use an [hclfmt](https://github.com/fatih/hclfmt#editor-integration) plugin for your editor).
 
-Next **plan your change** to find out how it will affect the current state of the system:
+Next, **make a plan** to find out how it will affect the current state of the system:
 
 ```sh
 terraform plan | landscape
 ```
 
-Once you're satisfied with your change, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the state in S3, and ensure nobody else makes any changes until you're done:
+Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the state in S3, and ensure nobody else makes any changes until you're done:
 
 ```sh
 terraform apply
