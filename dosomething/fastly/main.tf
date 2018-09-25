@@ -91,6 +91,22 @@ resource "fastly_service_v1" "dosomething" {
     ]
   }
 
+  header {
+    name        = "Country Code"
+    type        = "request"
+    action      = "set"
+    source      = "geoip.country_code"
+    destination = "http.X-Fastly-Country-Code"
+  }
+
+  header {
+    name        = "Country Code (Debug)"
+    type        = "response"
+    action      = "set"
+    source      = "geoip.country_code"
+    destination = "http.X-Fastly-Country-Code"
+  }
+
   request_setting {
     name      = "Force SSL"
     force_ssl = true
