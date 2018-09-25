@@ -1,7 +1,3 @@
-variable "s3_routes" {
-  default = "^/(static|vendor)"
-}
-
 resource "fastly_service_v1" "vote" {
   name          = "Terraform: Voter Registration"
   force_destroy = true
@@ -17,34 +13,9 @@ resource "fastly_service_v1" "vote" {
   default_host = "vote.dosomething.org"
 
   backend {
-    name    = "instapage"
-    address = "secure.pageserve.co"
+    name    = "s3"
+    address = "${aws_s3_bucket.vote.bucket}.s3-website-${aws_s3_bucket.vote.region}.amazonaws.com"
     port    = 80
-  }
-
-  backend {
-    name              = "s3"
-    request_condition = "backend-s3"
-    address           = "${aws_s3_bucket.vote.bucket}.s3-website-${aws_s3_bucket.vote.region}.amazonaws.com"
-    port              = 80
-  }
-
-  condition {
-    type      = "REQUEST"
-    name      = "backend-s3"
-    statement = "req.url ~ \"${var.s3_routes}\""
-  }
-
-  condition {
-    type      = "CACHE"
-    name      = "cache-not-s3"
-    statement = "req.url !~ \"${var.s3_routes}\""
-  }
-
-  cache_setting {
-    name            = "force-pass"
-    action          = "pass"
-    cache_condition = "cache-not-s3"
   }
 
   gzip {
