@@ -4,10 +4,10 @@ This is a prototype for managing DoSomething.org's infrastructure as code, using
 
 ## Installation
 
-Install [Terraform](https://www.terraform.io) 0.11.x and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
+Install [Terraform](https://www.terraform.io) 0.11.x, [Landscape](https://github.com/coinbase/terraform-landscape), and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
 
 ```sh
-brew install awscli terraform
+brew install awscli terraform terraform_landscape
 ```
 
 Next, configure secrets (see the "Terraform credentials" secure note in Lastpass) & install dependencies:
@@ -32,7 +32,7 @@ You can run `terraform fmt` at any time to automatically format your code (or us
 Next **plan your change** to find out how it will affect the current state of the system:
 
 ```sh
-terraform plan
+terraform plan | landscape
 ```
 
 Once you're satisfied with your change, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the state in S3, and ensure nobody else makes any changes until you're done:
