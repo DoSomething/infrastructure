@@ -214,12 +214,22 @@ resource "fastly_service_v1" "dosomething-qa" {
     request_condition = "path-robots"
   }
 
-  vcl {
-    main = true
-    name = "main"
+  snippet {
+    name    = "GDPR: Redirects Table"
+    type    = "init"
+    content = "${file("${path.root}/shared/gdpr_init.vcl")}"
+  }
 
-    # @TODO: Separate into snippets once Terraform adds support.
-    content = "${file("${path.module}/custom.vcl")}"
+  snippet {
+    name    = "GDPR: Trigger Redirect"
+    type    = "recv"
+    content = "${file("${path.root}/shared/gdpr_recv.vcl")}"
+  }
+
+  snippet {
+    name    = "GDPR: Handle Redirect"
+    type    = "error"
+    content = "${file("${path.root}/shared/gdpr_error.vcl")}"
   }
 
   condition {
