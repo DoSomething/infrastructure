@@ -24,12 +24,14 @@ resource "heroku_app" "northstar" {
   acm = true
 }
 
-resource "heroku_formation" "northstar" {
-  app      = "${heroku_app.northstar.name}"
-  type     = "web"
-  size     = "Performance-M"
-  quantity = 1
-}
+# @TODO: Terraform doesn't support auto-scaling here. Re-add
+# if support is added in a future Heroku provider update.
+# resource "heroku_formation" "northstar" {
+#   app      = "${heroku_app.northstar.name}"
+#   type     = "web"
+#   size     = "Performance-M"
+#   quantity = 1
+# }
 
 resource "heroku_formation" "northstar-queue" {
   app      = "${heroku_app.northstar.name}"
