@@ -92,11 +92,21 @@ resource "fastly_service_v1" "redirects" {
     port    = 80
   }
 
-  vcl {
-    main = true
-    name = "misc"
+  snippet {
+    name    = "Redirects Table"
+    type    = "init"
+    content = "${file("${path.module}/redirects_table.vcl")}"
+  }
 
-    # @TODO: Separate into snippets once Terraform adds support.
-    content = "${file("${path.module}/custom.vcl")}"
+  snippet {
+    name    = "Trigger Redirect"
+    type    = "recv"
+    content = "${file("${path.module}/trigger_redirect.vcl")}"
+  }
+
+  snippet {
+    name    = "Handle Redirect"
+    type    = "error"
+    content = "${file("${path.module}/handle_redirect.vcl")}"
   }
 }
