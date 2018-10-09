@@ -81,12 +81,22 @@ resource "fastly_service_v1" "vote" {
     force_ssl = true
   }
 
-  vcl {
-    main = true
-    name = "main"
+  snippet {
+    name    = "Redirects Table"
+    type    = "init"
+    content = "${file("${path.module}/redirects_table.vcl")}"
+  }
 
-    # @TODO: Separate into snippets once Terraform adds support.
-    content = "${file("${path.module}/custom.vcl")}"
+  snippet {
+    name    = "Trigger Redirect"
+    type    = "recv"
+    content = "${file("${path.module}/trigger_redirect.vcl")}"
+  }
+
+  snippet {
+    name    = "Handle Redirect"
+    type    = "error"
+    content = "${file("${path.module}/handle_redirect.vcl")}"
   }
 
   condition {
