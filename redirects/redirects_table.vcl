@@ -1,5 +1,5 @@
 # This is where we define domain redirects! (See the "Trigger Redirect" and "Handle
-# Redirect" snippets below). To redirect a new domain, add the *origin* hostname
+# Redirect" snippets). To redirect a new domain, add the *origin* hostname
 # on the left (where you're redirecting from), and the new URL (with protocol)
 # on the right!
 #
