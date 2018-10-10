@@ -1,3 +1,6 @@
+# This is an array of country codes in the EEA (i.e. folks who
+# are affected by GDPR). Fastly VCL supports dictionaries, but not
+# arrays... hence an array of all "true"!
 table eea {
   "AT": "true",
   "BE": "true",

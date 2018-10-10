@@ -215,19 +215,19 @@ resource "fastly_service_v1" "dosomething-qa" {
   }
 
   snippet {
-    name    = "GDPR: Redirects Table"
+    name    = "GDPR - Redirects Table"
     type    = "init"
     content = "${file("${path.root}/shared/gdpr_init.vcl")}"
   }
 
   snippet {
-    name    = "GDPR: Trigger Redirect"
+    name    = "GDPR - Trigger Redirect"
     type    = "recv"
     content = "${file("${path.root}/shared/gdpr_recv.vcl")}"
   }
 
   snippet {
-    name    = "GDPR: Handle Redirect"
+    name    = "GDPR - Handle Redirect"
     type    = "error"
     content = "${file("${path.root}/shared/gdpr_error.vcl")}"
   }
