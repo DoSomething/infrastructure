@@ -22,6 +22,122 @@ variable "papertrail_destination" {}
 variable "papertrail_destination_fastly_dev" {}
 variable "papertrail_destination_fastly_qa" {}
 
+resource "fastly_service_v1" "frontend-qa" {
+  name          = "Terraform: Frontend (QA)"
+  force_destroy = true
+
+  domain {
+    name = "qa.dosomething.org"
+  }
+
+  condition {
+    type = "REQUEST"
+    name = "backend-ashes-qa"
+
+    # A doozy of a regular expression, to be sure! This checks if we're on any Ashes-specific
+    # paths. We'll remove these one-by-one as we dismantle this application.
+    statement = <<EOF
+		req.url ~ "^(\/(us|mx|br))?($|\/|\/(admin|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js|facts|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1|robots\.txt))"
+EOF
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "path-robots"
+    statement = "req.url.basename == \"robots.txt\""
+  }
+
+  backend {
+    address           = "${var.ashes_backend_qa}"
+    name              = "ashes-staging"
+    request_condition = "backend-ashes-qa"
+    ssl_cert_hostname = "qa.dosomething.org"
+    ssl_sni_hostname  = "qa.dosomething.org"
+    auto_loadbalance  = false
+    use_ssl           = true
+    port              = 443
+  }
+
+  backend {
+    address          = "dosomething-phoenix-qa.herokuapp.com"
+    name             = "dosomething-phoenix-qa"
+    auto_loadbalance = false
+    port             = 443
+  }
+
+  gzip {
+    name = "gzip"
+
+    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json"]
+
+    content_types = [
+      "text/html",
+      "application/x-javascript",
+      "text/css",
+      "application/javascript",
+      "text/javascript",
+      "application/json",
+      "application/vnd.ms-fontobject",
+      "application/x-font-opentype",
+      "application/x-font-truetype",
+      "application/x-font-ttf",
+      "application/xml",
+      "font/eot",
+      "font/opentype",
+      "font/otf",
+      "image/svg+xml",
+      "image/vnd.microsoft.icon",
+      "text/plain",
+      "text/xml",
+    ]
+  }
+
+  header {
+    name        = "Country Code"
+    type        = "request"
+    action      = "set"
+    source      = "geoip.country_code"
+    destination = "http.X-Fastly-Country-Code"
+  }
+
+  header {
+    name        = "Country Code (Debug)"
+    type        = "response"
+    action      = "set"
+    source      = "geoip.country_code"
+    destination = "http.X-Fastly-Country-Code"
+  }
+
+  request_setting {
+    name      = "Force SSL"
+    force_ssl = true
+  }
+
+  response_object {
+    name              = "robots.txt deny"
+    content           = "${file("${path.module}/robots.txt")}"
+    request_condition = "path-robots"
+  }
+
+  snippet {
+    name    = "GDPR - Redirects Table"
+    type    = "init"
+    content = "${file("${path.root}/shared/gdpr_init.vcl")}"
+  }
+
+  snippet {
+    name    = "GDPR - Trigger Redirect"
+    type    = "recv"
+    content = "${file("${path.root}/shared/gdpr_recv.vcl")}"
+  }
+
+  snippet {
+    name    = "GDPR - Handle Redirect"
+    type    = "error"
+    content = "${file("${path.root}/shared/gdpr_error.vcl")}"
+  }
+}
+
 resource "fastly_service_v1" "dosomething-qa" {
   name          = "Terraform: Backends (QA)"
   force_destroy = true
