@@ -22,10 +22,10 @@ resource "aws_instance" "haproxy_qa" {
   }
 }
 
-output "backend_staging" {
+output "backend_dev" {
   value = "${aws_instance.staging.public_ip}"
 }
 
-output "backend_haproxy_qa" {
+output "backend_qa" {
   value = "${aws_instance.haproxy_qa.public_ip}"
 }

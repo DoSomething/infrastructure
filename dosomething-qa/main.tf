@@ -29,7 +29,8 @@ module "fastly" {
   rogue_domain_qa   = "${module.rogue.domain_qa}"
   rogue_backend_qa  = "${module.rogue.backend_qa}"
 
-  ashes_backend_staging = "${module.ashes.backend_staging}"
+  ashes_backend_dev = "${module.ashes.backend_dev}"
+  ashes_backend_qa  = "${module.ashes.backend_qa}"
 
   papertrail_destination            = "${var.papertrail_destination}"
   papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"

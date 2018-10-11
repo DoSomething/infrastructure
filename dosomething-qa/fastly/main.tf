@@ -16,13 +16,14 @@ variable "rogue_backend_dev" {}
 variable "rogue_name_qa" {}
 variable "rogue_domain_qa" {}
 variable "rogue_backend_qa" {}
-variable "ashes_backend_staging" {}
+variable "ashes_backend_dev" {}
+variable "ashes_backend_qa" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly_dev" {}
 variable "papertrail_destination_fastly_qa" {}
 
 resource "fastly_service_v1" "dosomething-qa" {
-  name          = "Terraform: DoSomething (QA)"
+  name          = "Terraform: Backends (QA)"
   force_destroy = true
 
   domain {
@@ -97,7 +98,7 @@ resource "fastly_service_v1" "dosomething-qa" {
 
   condition {
     type      = "REQUEST"
-    name      = "backend-ashes-staging"
+    name      = "backend-ashes-dev"
     statement = "req.http.host == \"staging.dosomething.org\""
   }
 
@@ -150,9 +151,9 @@ resource "fastly_service_v1" "dosomething-qa" {
   }
 
   backend {
-    address           = "${var.ashes_backend_staging}"
+    address           = "${var.ashes_backend_dev}"
     name              = "ashes-staging"
-    request_condition = "backend-ashes-staging"
+    request_condition = "backend-ashes-dev"
     ssl_cert_hostname = "staging.dosomething.org"
     ssl_sni_hostname  = "staging.dosomething.org"
     auto_loadbalance  = false
