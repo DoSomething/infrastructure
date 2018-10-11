@@ -34,11 +34,8 @@ resource "fastly_service_v1" "frontend-qa" {
     type = "REQUEST"
     name = "backend-ashes-qa"
 
-    # A doozy of a regular expression, to be sure! This checks if we're on any Ashes-specific
-    # paths. We'll remove these one-by-one as we dismantle this application.
-    statement = <<EOF
-		req.url ~ "^(\/(us|mx|br))?($|\/|\/(admin|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js|facts|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1|robots\.txt))"
-EOF
+    # See 'ashes_recv.vcl' for where this is set.
+    statement = "req.http.X-Fastly-Backend == \"ashes\""
   }
 
   condition {
@@ -117,6 +114,19 @@ EOF
     name              = "robots.txt deny"
     content           = "${file("${path.module}/robots.txt")}"
     request_condition = "path-robots"
+  }
+
+  snippet {
+    name    = "Frontend - Ashes Campaigns"
+    type    = "init"
+    content = "${file("${path.module}/ashes_init.vcl")}"
+  }
+
+  snippet {
+    name     = "Frontend - Ashes Routing"
+    type     = "recv"
+    content  = "${file("${path.module}/ashes_recv.vcl")}"
+    priority = 200
   }
 
   snippet {
