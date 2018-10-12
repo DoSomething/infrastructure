@@ -17,6 +17,10 @@ table redirects {
   # Ashes:
   "thor.dosomething.org": "https://qa.dosomething.org",
 
+  # International Affiliates:
+  "uk.dosomething.org": "https://www.dosomething.org",
+  "canada.dosomething.org": "https://www.dosomething.org",
+
   # Data:
   "data.dosomething.org": "https://dsdata.looker.com",
 
@@ -36,6 +40,9 @@ table redirects {
   
   # etc:
   "api.dosomething.org": "https://graphql.dosomething.org",
+  "beta.dosomething.org": "https://www.dosomething.org",
+  "files.dosomething.org": "https://www.dosomething.org",
+  "m.dosomething.org": "https://www.dosomething.org",
   "www.teensforjeans.com": "https://www.dosomething.org/us/campaigns/teens-jeans",
   "www.dosomethingtote.org": "https://www.dosomething.org",
   "www.fourleggedfinishers.com": "https://www.dosomething.org/us/campaigns/four-legged-finishers#",
