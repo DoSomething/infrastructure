@@ -129,6 +129,18 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   snippet {
+    name    = "Frontend - Trigger International Redirect"
+    type    = "recv"
+    content = "${file("${path.module}/homepage_recv.vcl")}"
+  }
+
+  snippet {
+    name    = "Frontend - Handle International Redirect"
+    type    = "error"
+    content = "${file("${path.module}/homepage_error.vcl")}"
+  }
+
+  snippet {
     name    = "Frontend - Trigger Redirect"
     type    = "recv"
     content = "${file("${path.module}/redirect_recv.vcl")}"
