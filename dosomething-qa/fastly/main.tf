@@ -123,10 +123,21 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   snippet {
-    name     = "Frontend - Ashes Routing"
-    type     = "recv"
-    content  = "${file("${path.module}/ashes_recv.vcl")}"
-    priority = 200
+    name    = "Frontend - Ashes Routing"
+    type    = "recv"
+    content = "${file("${path.module}/ashes_recv.vcl")}"
+  }
+
+  snippet {
+    name    = "Frontend - Trigger Redirect"
+    type    = "recv"
+    content = "${file("${path.module}/redirect_recv.vcl")}"
+  }
+
+  snippet {
+    name    = "Frontend - Handle Redirect"
+    type    = "error"
+    content = "${file("${path.module}/redirect_error.vcl")}"
   }
 
   snippet {
