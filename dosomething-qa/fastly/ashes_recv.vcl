@@ -14,7 +14,7 @@ else if (req.url ~ "^\/((us|mx|br)\/?)?campaigns\/?$") {
   # The Explore Campaigns page is served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url ~ "\/((us|mx|br)\/)?(admin|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
+else if (req.url ~ "\/((us|mx|br)\/)?(admin|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
   # Drupal built-in and third-party modules are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
