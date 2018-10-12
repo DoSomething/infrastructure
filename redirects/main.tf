@@ -49,6 +49,10 @@ resource "fastly_service_v1" "redirects" {
   }
 
   domain {
+    name = "thor.dosomething.org"
+  }
+
+  domain {
     name = "aurora-qa.dosomething.org"
   }
 
