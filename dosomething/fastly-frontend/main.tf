@@ -1,6 +1,6 @@
 variable "ashes_backend" {}
 
-resource "fastly_service_v1" "frontend-qa" {
+resource "fastly_service_v1" "frontend" {
   name          = "Terraform: Frontend"
   force_destroy = true
 
