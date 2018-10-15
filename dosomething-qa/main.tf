@@ -5,8 +5,18 @@ variable "papertrail_destination" {}
 variable "papertrail_destination_fastly_dev" {}
 variable "papertrail_destination_fastly_qa" {}
 
-module "fastly" {
-  source = "fastly"
+module "fastly-frontend" {
+  source = "fastly-frontend"
+
+  ashes_backend_dev = "${module.ashes.backend_dev}"
+  ashes_backend_qa  = "${module.ashes.backend_qa}"
+
+  # papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
+  # papertrail_destination_fastly_qa  = "${var.papertrail_destination_fastly_qa}"
+}
+
+module "fastly-backend" {
+  source = "fastly-backend"
 
   graphql_name_dev    = "${module.graphql.name_dev}"
   graphql_domain_dev  = "${module.graphql.domain_dev}"
@@ -30,7 +40,6 @@ module "fastly" {
   rogue_backend_qa  = "${module.rogue.backend_qa}"
 
   ashes_backend_dev = "${module.ashes.backend_dev}"
-  ashes_backend_qa  = "${module.ashes.backend_qa}"
 
   papertrail_destination            = "${var.papertrail_destination}"
   papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
