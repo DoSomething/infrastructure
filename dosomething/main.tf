@@ -4,8 +4,8 @@ variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
-module "fastly" {
-  source = "fastly"
+module "fastly-backend" {
+  source = "fastly-backend"
 
   graphql_name    = "${module.graphql.name}"
   graphql_domain  = "${module.graphql.domain}"

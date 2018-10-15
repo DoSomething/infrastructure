@@ -9,8 +9,8 @@ variable "rogue_domain" {}
 variable "rogue_backend" {}
 variable "papertrail_destination" {}
 
-resource "fastly_service_v1" "dosomething" {
-  name          = "Terraform: DoSomething"
+resource "fastly_service_v1" "backends" {
+  name          = "Terraform: Backends"
   force_destroy = true
 
   domain {
