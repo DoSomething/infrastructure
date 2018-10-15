@@ -309,4 +309,8 @@ table ashes_campaigns {
   "yo-teach": "true",
   "youth-wave-week-action": "true",
   "zombie-blood-drive": "true",
+
+  # international campaigns on /campaigns prefix:
+  "sua-mochila-pesada-pode-te-causar-muitos-problemas": "true",
+  "sua-escola-": "true", # our slug regex only captures ASCII, hence no é-accessivel.
 }
