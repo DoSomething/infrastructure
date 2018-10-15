@@ -18,8 +18,12 @@ else if (req.url ~ "\/((us|mx|br)\/)?(admin|openid\-connect|file|sites|profiles|
   # Drupal built-in and third-party modules are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url ~ "\/((us|mx|br)\/)?(facts|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)") {
-  # And some custom Ashes paths that we've created ourselves:
+else if (
+  req.url ~ "\/((us|mx|br)\/)?(facts|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
+  && req.url.path != "/us/about/our-press"
+) {
+  # And our custom Ashes paths for DS.org content.
+  # NOTE: We've specifically overridden 'our-press' to Phoenix!
   set req.http.X-Fastly-Backend = "ashes";
 }
 else if (req.url ~ "\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
