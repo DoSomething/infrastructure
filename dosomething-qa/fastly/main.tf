@@ -112,7 +112,7 @@ resource "fastly_service_v1" "frontend-qa" {
 
   response_object {
     name              = "robots.txt deny"
-    content           = "${file("${path.module}/robots.txt")}"
+    content           = "${file("${path.root}/shared/deny-robots.txt")}"
     request_condition = "path-robots"
   }
 
@@ -360,7 +360,7 @@ resource "fastly_service_v1" "dosomething-qa" {
 
   response_object {
     name              = "robots.txt deny"
-    content           = "${file("${path.module}/robots.txt")}"
+    content           = "${file("${path.root}/shared/deny-robots.txt")}"
     request_condition = "path-robots"
   }
 
