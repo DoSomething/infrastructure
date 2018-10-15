@@ -4,6 +4,12 @@ variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
+module "fastly-frontend" {
+  source = "fastly-frontend"
+
+  ashes_backend = "${module.ashes.backend}"
+}
+
 module "fastly-backend" {
   source = "fastly-backend"
 
@@ -41,4 +47,8 @@ module "rogue" {
 
   rogue_pipeline         = "${var.rogue_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
+}
+
+module "ashes" {
+  source = "ashes"
 }
