@@ -1,46 +1,46 @@
-variable "graphql_name_qa" {}
-variable "graphql_domain_qa" {}
-variable "graphql_backend_qa" {}
-variable "northstar_name_qa" {}
-variable "northstar_domain_qa" {}
-variable "northstar_backend_qa" {}
-variable "rogue_name_qa" {}
-variable "rogue_domain_qa" {}
-variable "rogue_backend_qa" {}
-variable "papertrail_destination_fastly_qa" {}
+variable "graphql_name_dev" {}
+variable "graphql_domain_dev" {}
+variable "graphql_backend_dev" {}
+variable "northstar_name_dev" {}
+variable "northstar_domain_dev" {}
+variable "northstar_backend_dev" {}
+variable "rogue_name_dev" {}
+variable "rogue_domain_dev" {}
+variable "rogue_backend_dev" {}
+variable "papertrail_destination_fastly_dev" {}
 
-resource "fastly_service_v1" "backends-qa" {
-  name          = "Terraform: Backends (QA)"
+resource "fastly_service_v1" "backends-dev" {
+  name          = "Terraform: Backends (Development)"
   force_destroy = true
 
   domain {
-    name = "${var.graphql_domain_qa}"
+    name = "${var.graphql_domain_dev}"
   }
 
   domain {
-    name = "${var.northstar_domain_qa}"
+    name = "${var.northstar_domain_dev}"
   }
 
   domain {
-    name = "${var.rogue_domain_qa}"
+    name = "${var.rogue_domain_dev}"
   }
 
   condition {
     type      = "REQUEST"
-    name      = "backend-graphql-qa"
-    statement = "req.http.host == \"${var.graphql_domain_qa}\""
+    name      = "backend-graphql-dev"
+    statement = "req.http.host == \"${var.graphql_domain_dev}\""
   }
 
   condition {
     type      = "REQUEST"
-    name      = "backend-northstar-qa"
-    statement = "req.http.host == \"${var.northstar_domain_qa}\""
+    name      = "backend-northstar-dev"
+    statement = "req.http.host == \"${var.northstar_domain_dev}\""
   }
 
   condition {
     type      = "REQUEST"
-    name      = "backend-rogue-qa"
-    statement = "req.http.host == \"${var.rogue_domain_qa}\""
+    name      = "backend-rogue-dev"
+    statement = "req.http.host == \"${var.rogue_domain_dev}\""
   }
 
   condition {
@@ -50,25 +50,25 @@ resource "fastly_service_v1" "backends-qa" {
   }
 
   backend {
-    address           = "${var.graphql_backend_qa}"
-    name              = "${var.graphql_name_qa}"
-    request_condition = "backend-graphql-qa"
+    address           = "${var.graphql_backend_dev}"
+    name              = "${var.graphql_name_dev}"
+    request_condition = "backend-graphql-dev"
     auto_loadbalance  = false
     port              = 443
   }
 
   backend {
-    address           = "${var.northstar_backend_qa}"
-    name              = "${var.northstar_name_qa}"
-    request_condition = "backend-northstar-qa"
+    address           = "${var.northstar_backend_dev}"
+    name              = "${var.northstar_name_dev}"
+    request_condition = "backend-northstar-dev"
     auto_loadbalance  = false
     port              = 443
   }
 
   backend {
-    address           = "${var.rogue_backend_qa}"
-    name              = "${var.rogue_name_qa}"
-    request_condition = "backend-rogue-qa"
+    address           = "${var.rogue_backend_dev}"
+    name              = "${var.rogue_name_dev}"
+    request_condition = "backend-rogue-dev"
     auto_loadbalance  = false
     port              = 443
   }
@@ -147,43 +147,43 @@ resource "fastly_service_v1" "backends-qa" {
 
   condition {
     type      = "RESPONSE"
-    name      = "errors-northstar-qa"
-    statement = "req.http.host == \"${var.northstar_domain_qa}\" && resp.status > 501 && resp.status < 600"
+    name      = "errors-northstar-dev"
+    statement = "req.http.host == \"${var.northstar_domain_dev}\" && resp.status > 501 && resp.status < 600"
   }
 
   papertrail {
-    name               = "northstar-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    name               = "northstar-dev"
+    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
-    response_condition = "errors-northstar-qa"
+    response_condition = "errors-northstar-dev"
   }
 
   condition {
     type      = "RESPONSE"
-    name      = "errors-rogue-qa"
-    statement = "req.http.host == \"${var.rogue_domain_qa}\" && resp.status > 501 && resp.status < 600"
+    name      = "errors-rogue-dev"
+    statement = "req.http.host == \"${var.rogue_domain_dev}\" && resp.status > 501 && resp.status < 600"
   }
 
   papertrail {
-    name               = "rogue-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    name               = "rogue-dev"
+    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
-    response_condition = "errors-rogue-qa"
+    response_condition = "errors-rogue-dev"
   }
 
   condition {
     type      = "RESPONSE"
-    name      = "errors-graphql-qa"
-    statement = "req.http.host == \"${var.graphql_domain_qa}\" && resp.status > 501 && resp.status < 600"
+    name      = "errors-graphql-dev"
+    statement = "req.http.host == \"${var.graphql_domain_dev}\" && resp.status > 501 && resp.status < 600"
   }
 
   papertrail {
-    name               = "graphql-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    name               = "graphql-dev"
+    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
-    response_condition = "errors-graphql-qa"
+    response_condition = "errors-graphql-dev"
   }
 }

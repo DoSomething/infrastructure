@@ -91,18 +91,30 @@ module "dosomething" {
   papertrail_destination_fastly = "${var.papertrail_destination_fastly}"
 }
 
-# Our development & QA applications live in the combined
-# 'dosomething-qa' stack. This is a (scaled down) copy of
-# our production stack where we test new changes.
+# Our QA applications live in the 'dosomething-qa' stack.
+# This is a (scaled down) copy of our production environment
+# where we test new changes before they affect real traffic.
 module "dosomething-qa" {
   source = "dosomething-qa"
+
+  graphql_pipeline                 = "${module.shared.graphql_pipeline}"
+  northstar_pipeline               = "${module.shared.northstar_pipeline}"
+  rogue_pipeline                   = "${module.shared.rogue_pipeline}"
+  papertrail_destination           = "${var.papertrail_qa_destination}"
+  papertrail_destination_fastly_qa = "${var.papertrail_destination_fastly_qa}"
+}
+
+# Our development applications live in the 'dosomething-dev'
+# stack. This is a (scaled down) copy of our production
+# environment with test & sandbox data.
+module "dosomething-dev" {
+  source = "dosomething-dev"
 
   graphql_pipeline                  = "${module.shared.graphql_pipeline}"
   northstar_pipeline                = "${module.shared.northstar_pipeline}"
   rogue_pipeline                    = "${module.shared.rogue_pipeline}"
   papertrail_destination            = "${var.papertrail_qa_destination}"
   papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
-  papertrail_destination_fastly_qa  = "${var.papertrail_destination_fastly_qa}"
 }
 
 # The voter registration landing page <vote.dosomething.org>

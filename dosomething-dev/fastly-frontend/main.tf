@@ -1,16 +1,16 @@
-variable "ashes_backend_qa" {}
+variable "ashes_backend_dev" {}
 
-resource "fastly_service_v1" "frontend-qa" {
-  name          = "Terraform: Frontend (QA)"
+resource "fastly_service_v1" "frontend-dev" {
+  name          = "Terraform: Frontend (Development)"
   force_destroy = true
 
   domain {
-    name = "qa.dosomething.org"
+    name = "staging.dosomething.org"
   }
 
   condition {
     type = "REQUEST"
-    name = "backend-ashes-qa"
+    name = "backend-ashes-dev"
 
     # See 'ashes_recv.vcl' for where this is set.
     statement = "req.http.X-Fastly-Backend == \"ashes\""
@@ -23,19 +23,19 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   backend {
-    address           = "${var.ashes_backend_qa}"
+    address           = "${var.ashes_backend_dev}"
     name              = "ashes-staging"
-    request_condition = "backend-ashes-qa"
-    ssl_cert_hostname = "qa.dosomething.org"
-    ssl_sni_hostname  = "qa.dosomething.org"
+    request_condition = "backend-ashes-dev"
+    ssl_cert_hostname = "staging.dosomething.org"
+    ssl_sni_hostname  = "staging.dosomething.org"
     auto_loadbalance  = false
     use_ssl           = true
     port              = 443
   }
 
   backend {
-    address          = "dosomething-phoenix-qa.herokuapp.com"
-    name             = "dosomething-phoenix-qa"
+    address          = "dosomething-phoenix-dev.herokuapp.com"
+    name             = "dosomething-phoenix-dev"
     auto_loadbalance = false
     port             = 443
   }
