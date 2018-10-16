@@ -6,7 +6,7 @@ resource "fastly_service_v1" "frontend" {
   force_destroy = true
 
   domain {
-    name = "www-new.dosomething.org"
+    name = "www.dosomething.org"
   }
 
   condition {
@@ -144,7 +144,7 @@ resource "fastly_service_v1" "frontend" {
   }
 
   papertrail {
-    name    = "www-new.dosomething.org"
+    name    = "www.dosomething.org"
     address = "${element(split(":", var.papertrail_destination), 0)}"
     port    = "${element(split(":", var.papertrail_destination), 1)}"
     format  = "%t '%r' status=%>s backend=%{X-Origin-Name}o microseconds=%D"
