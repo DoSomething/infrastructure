@@ -28,6 +28,10 @@ else if (
 }
 else if (req.url ~ "\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
     table.lookup(ashes_campaigns, re.group.3)) {
-  # Finally, see if a given campaign should be served by Ashes:
+  # See if a given campaign should be served by Ashes:
+  set req.http.X-Fastly-Backend = "ashes";
+}
+else if (req.url ~ "^\/robots\.txt") {
+  # Finally, serve robots.txt rom Ashes on production:
   set req.http.X-Fastly-Backend = "ashes";
 }
