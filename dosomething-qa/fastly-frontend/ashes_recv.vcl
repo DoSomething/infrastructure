@@ -19,7 +19,7 @@ else if (req.url ~ "\/((us|mx|br)\/)?(admin|image|openid\-connect|file|sites|pro
   set req.http.X-Fastly-Backend = "ashes";
 }
 else if (
-  req.url ~ "\/((us|mx|br)\/)?(facts|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
+  req.url ~ "\/((us|mx|br)\/)?(facts|fact|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
   && req.url.path != "/us/about/our-press"
 ) {
   # And our custom Ashes paths for DS.org content.
