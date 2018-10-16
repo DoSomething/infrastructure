@@ -30,4 +30,6 @@ else if (req.url.path ~ "\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
     table.lookup(ashes_campaigns, re.group.3)) {
   # See if a given campaign should be served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
+} else if (req.url.path ~ "^\/(us|mx|br)\/(apple-touch-icon[^\.\/]*|favicon)\.png$") {
+  set req.http.X-Fastly-Backend = "ashes";
 }
