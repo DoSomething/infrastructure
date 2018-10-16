@@ -9,8 +9,7 @@ module "fastly-frontend" {
 
   ashes_backend_dev = "${module.ashes.backend_dev}"
 
-  # papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
-  # papertrail_destination_fastly_qa  = "${var.papertrail_destination_fastly_qa}"
+  papertrail_destination = "${var.papertrail_destination_fastly_dev}"
 }
 
 module "fastly-backend" {
