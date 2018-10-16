@@ -6,32 +6,32 @@
 unset req.http.X-Fastly-Backend;
 
 # Should this page be served by Ashes? Let's see:
-if (req.url.path ~ "^\/((us|mx|br)\/?)?$") {
+if (req.url.path ~ "(?i)^\/((us|mx|br)\/?)?$") {
   # The homepage & international variants are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url.path ~ "^\/((us|mx|br)\/?)?campaigns\/?$") {
+else if (req.url.path ~ "(?i)^\/((us|mx|br)\/?)?campaigns\/?$") {
   # The Explore Campaigns page is served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url.path ~ "\/((us|mx|br)\/)?(admin|image|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(admin|image|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
   # Drupal built-in and third-party modules are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
 else if (
-  req.url.path ~ "\/((us|mx|br)\/)?(facts|fact|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
-  && req.url.path != "/us/about/our-press"
+  req.url.path ~ "(?i)\/((us|mx|br)\/)?(facts|fact|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
+  && std.tolower(req.url.path) != "/us/about/our-press"
 ) {
   # And our custom Ashes paths for DS.org content.
   # NOTE: We've specifically overridden 'our-press' to Phoenix!
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url.path ~ "\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
-    table.lookup(ashes_campaigns, re.group.3)) {
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
+    table.lookup(ashes_campaigns, std.tolower(re.group.3))) {
   # See if a given campaign should be served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url.path ~ "^\/robots\.txt") {
+else if (req.url.path ~ "(?i)^\/robots\.txt") {
   # Finally, serve robots.txt rom Ashes on production:
   set req.http.X-Fastly-Backend = "ashes";
 }
