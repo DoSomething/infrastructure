@@ -145,6 +145,12 @@ resource "fastly_service_v1" "backends-qa" {
     content = "${file("${path.root}/shared/gdpr_error.vcl")}"
   }
 
+  snippet {
+    name    = "Shared - Set X-Origin-Name Header"
+    type    = "fetch"
+    content = "${file("${path.root}/shared/origin_name.vcl")}"
+  }
+
   condition {
     type      = "RESPONSE"
     name      = "errors-northstar-qa"

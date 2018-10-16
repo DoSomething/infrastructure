@@ -1,4 +1,5 @@
 variable "ashes_backend" {}
+variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "frontend" {
   name          = "Terraform: Frontend"
@@ -134,5 +135,18 @@ resource "fastly_service_v1" "frontend" {
     name    = "GDPR - Handle Redirect"
     type    = "error"
     content = "${file("${path.root}/shared/gdpr_error.vcl")}"
+  }
+
+  snippet {
+    name    = "Shared - Set X-Origin-Name Header"
+    type    = "fetch"
+    content = "${file("${path.root}/shared/origin_name.vcl")}"
+  }
+
+  papertrail {
+    name    = "www-new.dosomething.org"
+    address = "${element(split(":", var.papertrail_destination), 0)}"
+    port    = "${element(split(":", var.papertrail_destination), 1)}"
+    format  = "%t '%r' status=%>s backend=%{X-Origin-Name}o microseconds=%D"
   }
 }

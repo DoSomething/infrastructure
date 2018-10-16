@@ -8,6 +8,8 @@ module "fastly-frontend" {
   source = "fastly-frontend"
 
   ashes_backend = "${module.ashes.backend}"
+
+  papertrail_destination = "${var.papertrail_destination_fastly}"
 }
 
 module "fastly-backend" {
