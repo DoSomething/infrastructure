@@ -6,24 +6,27 @@
 unset req.http.X-Fastly-Backend;
 
 # Should this page be served by Ashes? Let's see:
-if (req.url ~ "^\/((us|mx|br)\/?)?$") {
+if (req.url.path ~ "(?i)^\/((us|mx|br)\/?)?$") {
   # The homepage & international variants are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url ~ "^\/((us|mx|br)\/?)?campaigns\/?$") {
+else if (req.url.path ~ "(?i)^\/((us|mx|br)\/?)?campaigns\/?$") {
   # The Explore Campaigns page is served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url ~ "\/((us|mx|br)\/)?(admin|image|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(admin|image|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
   # Drupal built-in and third-party modules are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url ~ "\/((us|mx|br)\/)?(facts|fact|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)") {
-  # And some custom Ashes paths that we've created ourselves:
+else if (
+  req.url.path ~ "(?i)\/((us|mx|br)\/)?(facts|fact|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
+) {
+  # And our custom Ashes paths for DS.org content.
+  # NOTE: We've specifically overridden 'our-press' to Phoenix!
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url ~ "\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
     table.lookup(ashes_campaigns, re.group.3)) {
-  # Finally, see if a given campaign should be served by Ashes:
+  # See if a given campaign should be served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
