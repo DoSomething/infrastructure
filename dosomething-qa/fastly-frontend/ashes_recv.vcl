@@ -20,14 +20,14 @@ else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(admin|image|openid\-connect|file|
 }
 else if (
   req.url.path ~ "(?i)\/((us|mx|br)\/)?(facts|fact|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
-  && req.url.path != "/us/about/our-press"
+  && std.tolower(req.url.path) != "/us/about/our-press"
 ) {
   # And our custom Ashes paths for DS.org content.
   # NOTE: We've specifically overridden 'our-press' to Phoenix!
   set req.http.X-Fastly-Backend = "ashes";
 }
 else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
-    table.lookup(ashes_campaigns, re.group.3)) {
+    table.lookup(ashes_campaigns, std.tolower(re.group.3))) {
   # See if a given campaign should be served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
