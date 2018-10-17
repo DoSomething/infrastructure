@@ -45,6 +45,13 @@ module "northstar" {
   papertrail_destination = "${var.papertrail_destination}"
 }
 
+module "phoenix" {
+  source = "phoenix"
+
+  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  papertrail_destination = "${var.papertrail_destination}"
+}
+
 module "rogue" {
   source = "rogue"
 
