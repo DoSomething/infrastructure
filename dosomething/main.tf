@@ -1,5 +1,6 @@
 variable "graphql_pipeline" {}
 variable "northstar_pipeline" {}
+variable "phoenix_pipeline" {}
 variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
