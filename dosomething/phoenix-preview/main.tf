@@ -13,6 +13,7 @@ resource "heroku_app" "phoenix-preview" {
     APP_ENV   = "production"
     APP_DEBUG = "false"
     APP_LOG   = "errorlog"
+    APP_URL   = "https://www-preview.dosomething.org"
   }
 
   buildpacks = [
