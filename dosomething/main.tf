@@ -52,6 +52,13 @@ module "phoenix" {
   papertrail_destination = "${var.papertrail_destination}"
 }
 
+module "phoenix-preview" {
+  source = "phoenix-preview"
+
+  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  papertrail_destination = "${var.papertrail_destination}"
+}
+
 module "rogue" {
   source = "rogue"
 
