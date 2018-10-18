@@ -24,26 +24,26 @@ resource "heroku_app" "northstar-qa" {
   acm = true
 }
 
-resource "heroku_formation" "northstar-qa" {
+resource "heroku_formation" "web" {
   app      = "${heroku_app.northstar-qa.name}"
   type     = "web"
   size     = "Standard-1X"
   quantity = 1
 }
 
-resource "heroku_formation" "northstar-qa-queue" {
+resource "heroku_formation" "queue" {
   app      = "${heroku_app.northstar-qa.name}"
   type     = "queue"
   size     = "Standard-1X"
   quantity = 1
 }
 
-resource "heroku_domain" "northstar-qa" {
+resource "heroku_domain" "identity-qa" {
   app      = "${heroku_app.northstar-qa.name}"
   hostname = "identity-qa.dosomething.org"
 }
 
-resource "heroku_drain" "northstar-qa" {
+resource "heroku_drain" "papertrail" {
   app = "${heroku_app.northstar-qa.name}"
   url = "syslog+tls://${var.papertrail_destination}"
 }
@@ -59,7 +59,7 @@ output "name" {
 }
 
 output "domain" {
-  value = "${heroku_domain.northstar-qa.hostname}"
+  value = "${heroku_domain.identity-qa.hostname}"
 }
 
 output "backend" {

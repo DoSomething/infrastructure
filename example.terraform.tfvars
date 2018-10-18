@@ -6,15 +6,15 @@
 # set with 'aws configure --profile terraform'
 
 # Fastly:
-fastly_api_key=
+fastly_api_key=""
 
 # Heroku:
-heroku_email=
-heroku_api_key=
+heroku_email=""
+heroku_api_key=""
 
 # Papertrail:
-papertrail_prod_destination=
-papertrail_qa_destination=
-papertrail_destination_fastly=
-papertrail_destination_fastly_qa=
-papertrail_destination_fastly_dev=
+papertrail_prod_destination=""
+papertrail_qa_destination=""
+papertrail_destination_fastly=""
+papertrail_destination_fastly_qa=""
+papertrail_destination_fastly_dev=""

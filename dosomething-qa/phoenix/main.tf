@@ -24,7 +24,7 @@ resource "heroku_app" "phoenix-qa" {
   acm = true
 }
 
-resource "heroku_formation" "www" {
+resource "heroku_formation" "web" {
   app      = "${heroku_app.phoenix-qa.name}"
   type     = "web"
   size     = "Hobby"
