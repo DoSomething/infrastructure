@@ -24,26 +24,26 @@ resource "heroku_app" "rogue-dev" {
   acm = true
 }
 
-resource "heroku_formation" "rogue-dev" {
+resource "heroku_formation" "web" {
   app      = "${heroku_app.rogue-dev.name}"
   type     = "web"
   size     = "hobby"
   quantity = 1
 }
 
-resource "heroku_formation" "rogue-dev-queue" {
+resource "heroku_formation" "queue" {
   app      = "${heroku_app.rogue-dev.name}"
   type     = "queue"
   size     = "hobby"
   quantity = 0
 }
 
-resource "heroku_domain" "rogue-dev" {
+resource "heroku_domain" "activity-dev" {
   app      = "${heroku_app.rogue-dev.name}"
   hostname = "activity-dev.dosomething.org"
 }
 
-resource "heroku_drain" "rogue-dev" {
+resource "heroku_drain" "papertrail" {
   app = "${heroku_app.rogue-dev.name}"
   url = "syslog+tls://${var.papertrail_destination}"
 }
@@ -54,14 +54,14 @@ resource "heroku_pipeline_coupling" "rogue-dev" {
   stage    = "development"
 }
 
-output "name_dev" {
+output "name" {
   value = "${heroku_app.rogue-dev.name}"
 }
 
-output "domain_dev" {
-  value = "${heroku_domain.rogue-dev.hostname}"
+output "domain" {
+  value = "${heroku_domain.activity-dev.hostname}"
 }
 
-output "backend_dev" {
+output "backend" {
   value = "${heroku_app.rogue-dev.heroku_hostname}"
 }

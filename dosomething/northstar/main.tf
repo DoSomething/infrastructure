@@ -33,19 +33,19 @@ resource "heroku_app" "northstar" {
 #   quantity = 1
 # }
 
-resource "heroku_formation" "northstar-queue" {
+resource "heroku_formation" "queue" {
   app      = "${heroku_app.northstar.name}"
   type     = "queue"
   size     = "Standard-1X"
   quantity = 1
 }
 
-resource "heroku_domain" "northstar" {
+resource "heroku_domain" "identity" {
   app      = "${heroku_app.northstar.name}"
   hostname = "identity.dosomething.org"
 }
 
-resource "heroku_drain" "northstar" {
+resource "heroku_drain" "papertrail" {
   app = "${heroku_app.northstar.name}"
   url = "syslog+tls://${var.papertrail_destination}"
 }
@@ -56,14 +56,12 @@ resource "heroku_pipeline_coupling" "northstar" {
   stage    = "production"
 }
 
-# ----------------------------
-
 output "name" {
   value = "${heroku_app.northstar.name}"
 }
 
 output "domain" {
-  value = "${heroku_domain.northstar.hostname}"
+  value = "${heroku_domain.identity.hostname}"
 }
 
 output "backend" {

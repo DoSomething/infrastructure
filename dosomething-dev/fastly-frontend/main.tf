@@ -1,6 +1,6 @@
-variable "ashes_backend_dev" {}
-variable "phoenix_name_qa" {}
-variable "phoenix_backend_qa" {}
+variable "ashes_backend" {}
+variable "phoenix_name" {}
+variable "phoenix_backend" {}
 variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "frontend-dev" {
@@ -26,7 +26,7 @@ resource "fastly_service_v1" "frontend-dev" {
   }
 
   backend {
-    address           = "${var.ashes_backend_dev}"
+    address           = "${var.ashes_backend}"
     name              = "ashes-staging"
     request_condition = "backend-ashes-dev"
     ssl_cert_hostname = "staging.dosomething.org"
@@ -37,8 +37,8 @@ resource "fastly_service_v1" "frontend-dev" {
   }
 
   backend {
-    address          = "${var.phoenix_backend_qa}"
-    name             = "${var.phoenix_name_qa}"
+    address          = "${var.phoenix_backend}"
+    name             = "${var.phoenix_name}"
     auto_loadbalance = false
     port             = 443
   }

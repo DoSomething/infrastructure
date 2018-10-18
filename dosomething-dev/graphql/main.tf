@@ -23,14 +23,14 @@ resource "heroku_app" "graphql-dev" {
   acm = true
 }
 
-resource "heroku_formation" "graphql-dev" {
+resource "heroku_formation" "web" {
   app      = "${heroku_app.graphql-dev.name}"
   type     = "web"
   size     = "hobby"
   quantity = 1
 }
 
-resource "heroku_addon" "graphql-dev-redis" {
+resource "heroku_addon" "redis" {
   app  = "${heroku_app.graphql-dev.name}"
   plan = "heroku-redis:hobby-dev"
 }
@@ -40,7 +40,7 @@ resource "heroku_domain" "graphql-dev" {
   hostname = "graphql-dev.dosomething.org"
 }
 
-resource "heroku_drain" "graphql-dev" {
+resource "heroku_drain" "papertrail" {
   app = "${heroku_app.graphql-dev.name}"
   url = "syslog+tls://${var.papertrail_destination}"
 }
@@ -51,14 +51,14 @@ resource "heroku_pipeline_coupling" "graphql-dev" {
   stage    = "development"
 }
 
-output "name_dev" {
+output "name" {
   value = "${heroku_app.graphql-dev.name}"
 }
 
-output "domain_dev" {
+output "domain" {
   value = "${heroku_domain.graphql-dev.hostname}"
 }
 
-output "backend_dev" {
+output "backend" {
   value = "${heroku_app.graphql-dev.heroku_hostname}"
 }

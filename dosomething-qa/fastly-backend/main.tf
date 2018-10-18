@@ -1,59 +1,59 @@
-variable "graphql_name_qa" {}
-variable "graphql_domain_qa" {}
-variable "graphql_backend_qa" {}
-variable "northstar_name_qa" {}
-variable "northstar_domain_qa" {}
-variable "northstar_backend_qa" {}
-variable "phoenix_name_qa" {}
-variable "phoenix_domain_qa" {}
-variable "phoenix_backend_qa" {}
-variable "rogue_name_qa" {}
-variable "rogue_domain_qa" {}
-variable "rogue_backend_qa" {}
-variable "papertrail_destination_fastly_qa" {}
+variable "graphql_name" {}
+variable "graphql_domain" {}
+variable "graphql_backend" {}
+variable "northstar_name" {}
+variable "northstar_domain" {}
+variable "northstar_backend" {}
+variable "phoenix_name" {}
+variable "phoenix_domain" {}
+variable "phoenix_backend" {}
+variable "rogue_name" {}
+variable "rogue_domain" {}
+variable "rogue_backend" {}
+variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "backends-qa" {
   name          = "Terraform: Backends (QA)"
   force_destroy = true
 
   domain {
-    name = "${var.graphql_domain_qa}"
+    name = "${var.graphql_domain}"
   }
 
   domain {
-    name = "${var.northstar_domain_qa}"
+    name = "${var.northstar_domain}"
   }
 
   domain {
-    name = "${var.phoenix_domain_qa}"
+    name = "${var.phoenix_domain}"
   }
 
   domain {
-    name = "${var.rogue_domain_qa}"
+    name = "${var.rogue_domain}"
   }
 
   condition {
     type      = "REQUEST"
     name      = "backend-graphql-qa"
-    statement = "req.http.host == \"${var.graphql_domain_qa}\""
+    statement = "req.http.host == \"${var.graphql_domain}\""
   }
 
   condition {
     type      = "REQUEST"
     name      = "backend-northstar-qa"
-    statement = "req.http.host == \"${var.northstar_domain_qa}\""
+    statement = "req.http.host == \"${var.northstar_domain}\""
   }
 
   condition {
     type      = "REQUEST"
     name      = "backend-phoenix-qa"
-    statement = "req.http.host == \"${var.phoenix_domain_qa}\""
+    statement = "req.http.host == \"${var.phoenix_domain}\""
   }
 
   condition {
     type      = "REQUEST"
     name      = "backend-rogue-qa"
-    statement = "req.http.host == \"${var.rogue_domain_qa}\""
+    statement = "req.http.host == \"${var.rogue_domain}\""
   }
 
   condition {
@@ -63,32 +63,32 @@ resource "fastly_service_v1" "backends-qa" {
   }
 
   backend {
-    address           = "${var.graphql_backend_qa}"
-    name              = "${var.graphql_name_qa}"
+    address           = "${var.graphql_backend}"
+    name              = "${var.graphql_name}"
     request_condition = "backend-graphql-qa"
     auto_loadbalance  = false
     port              = 443
   }
 
   backend {
-    address           = "${var.northstar_backend_qa}"
-    name              = "${var.northstar_name_qa}"
+    address           = "${var.northstar_backend}"
+    name              = "${var.northstar_name}"
     request_condition = "backend-northstar-qa"
     auto_loadbalance  = false
     port              = 443
   }
 
   backend {
-    address           = "${var.phoenix_backend_qa}"
-    name              = "${var.phoenix_name_qa}"
+    address           = "${var.phoenix_backend}"
+    name              = "${var.phoenix_name}"
     request_condition = "backend-phoenix-qa"
     auto_loadbalance  = false
     port              = 443
   }
 
   backend {
-    address           = "${var.rogue_backend_qa}"
-    name              = "${var.rogue_name_qa}"
+    address           = "${var.rogue_backend}"
+    name              = "${var.rogue_name}"
     request_condition = "backend-rogue-qa"
     auto_loadbalance  = false
     port              = 443
@@ -175,13 +175,13 @@ resource "fastly_service_v1" "backends-qa" {
   condition {
     type      = "RESPONSE"
     name      = "errors-northstar-qa"
-    statement = "req.http.host == \"${var.northstar_domain_qa}\" && resp.status > 501 && resp.status < 600"
+    statement = "req.http.host == \"${var.northstar_domain}\" && resp.status > 501 && resp.status < 600"
   }
 
   papertrail {
     name               = "northstar-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-northstar-qa"
   }
@@ -189,13 +189,13 @@ resource "fastly_service_v1" "backends-qa" {
   condition {
     type      = "RESPONSE"
     name      = "errors-phoenix-qa"
-    statement = "req.http.host == \"${var.phoenix_domain_qa}\" && resp.status > 501 && resp.status < 600"
+    statement = "req.http.host == \"${var.phoenix_domain}\" && resp.status > 501 && resp.status < 600"
   }
 
   papertrail {
     name               = "phoenix-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-phoenix-qa"
   }
@@ -203,13 +203,13 @@ resource "fastly_service_v1" "backends-qa" {
   condition {
     type      = "RESPONSE"
     name      = "errors-rogue-qa"
-    statement = "req.http.host == \"${var.rogue_domain_qa}\" && resp.status > 501 && resp.status < 600"
+    statement = "req.http.host == \"${var.rogue_domain}\" && resp.status > 501 && resp.status < 600"
   }
 
   papertrail {
     name               = "rogue-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-rogue-qa"
   }
@@ -217,13 +217,13 @@ resource "fastly_service_v1" "backends-qa" {
   condition {
     type      = "RESPONSE"
     name      = "errors-graphql-qa"
-    statement = "req.http.host == \"${var.graphql_domain_qa}\" && resp.status > 501 && resp.status < 600"
+    statement = "req.http.host == \"${var.graphql_domain}\" && resp.status > 501 && resp.status < 600"
   }
 
   papertrail {
     name               = "graphql-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-graphql-qa"
   }
