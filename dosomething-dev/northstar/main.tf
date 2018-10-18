@@ -54,14 +54,14 @@ resource "heroku_pipeline_coupling" "northstar-dev" {
   stage    = "development"
 }
 
-output "name_dev" {
+output "name" {
   value = "${heroku_app.northstar-dev.name}"
 }
 
-output "domain_dev" {
+output "domain" {
   value = "${heroku_domain.northstar-dev.hostname}"
 }
 
-output "backend_dev" {
+output "backend" {
   value = "${heroku_app.northstar-dev.heroku_hostname}"
 }

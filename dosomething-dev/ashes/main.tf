@@ -11,6 +11,6 @@ resource "aws_instance" "staging" {
   }
 }
 
-output "backend_dev" {
+output "backend" {
   value = "${aws_instance.staging.public_ip}"
 }

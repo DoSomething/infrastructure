@@ -51,14 +51,14 @@ resource "heroku_pipeline_coupling" "graphql-dev" {
   stage    = "development"
 }
 
-output "name_dev" {
+output "name" {
   value = "${heroku_app.graphql-dev.name}"
 }
 
-output "domain_dev" {
+output "domain" {
   value = "${heroku_domain.graphql-dev.hostname}"
 }
 
-output "backend_dev" {
+output "backend" {
   value = "${heroku_app.graphql-dev.heroku_hostname}"
 }

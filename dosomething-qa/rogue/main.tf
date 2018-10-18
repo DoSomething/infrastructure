@@ -54,14 +54,14 @@ resource "heroku_pipeline_coupling" "rogue-qa" {
   stage    = "staging"
 }
 
-output "name_qa" {
+output "name" {
   value = "${heroku_app.rogue-qa.name}"
 }
 
-output "domain_qa" {
+output "domain" {
   value = "${heroku_domain.rogue-qa.hostname}"
 }
 
-output "backend_qa" {
+output "backend" {
   value = "${heroku_app.rogue-qa.heroku_hostname}"
 }

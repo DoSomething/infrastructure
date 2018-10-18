@@ -51,14 +51,14 @@ resource "heroku_pipeline_coupling" "graphql-qa" {
   stage    = "staging"
 }
 
-output "name_qa" {
+output "name" {
   value = "${heroku_app.graphql-qa.name}"
 }
 
-output "domain_qa" {
+output "domain" {
   value = "${heroku_domain.graphql-qa.hostname}"
 }
 
-output "backend_qa" {
+output "backend" {
   value = "${heroku_app.graphql-qa.heroku_hostname}"
 }

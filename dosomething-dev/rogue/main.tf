@@ -54,14 +54,14 @@ resource "heroku_pipeline_coupling" "rogue-dev" {
   stage    = "development"
 }
 
-output "name_dev" {
+output "name" {
   value = "${heroku_app.rogue-dev.name}"
 }
 
-output "domain_dev" {
+output "domain" {
   value = "${heroku_domain.rogue-dev.hostname}"
 }
 
-output "backend_dev" {
+output "backend" {
   value = "${heroku_app.rogue-dev.heroku_hostname}"
 }

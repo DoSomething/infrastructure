@@ -8,10 +8,10 @@ variable "papertrail_destination_fastly_qa" {}
 module "fastly-frontend" {
   source = "fastly-frontend"
 
-  ashes_backend_qa = "${module.ashes.backend_qa}"
+  ashes_backend = "${module.ashes.backend}"
 
-  phoenix_name_qa    = "${module.phoenix.name}"
-  phoenix_backend_qa = "${module.phoenix.backend}"
+  phoenix_name    = "${module.phoenix.name}"
+  phoenix_backend = "${module.phoenix.backend}"
 
   papertrail_destination = "${var.papertrail_destination_fastly_qa}"
 }
@@ -19,21 +19,21 @@ module "fastly-frontend" {
 module "fastly-backend" {
   source = "fastly-backend"
 
-  graphql_name_qa    = "${module.graphql.name_qa}"
-  graphql_domain_qa  = "${module.graphql.domain_qa}"
-  graphql_backend_qa = "${module.graphql.backend_qa}"
+  graphql_name    = "${module.graphql.name}"
+  graphql_domain  = "${module.graphql.domain}"
+  graphql_backend = "${module.graphql.backend}"
 
-  northstar_name_qa    = "${module.northstar.name_qa}"
-  northstar_domain_qa  = "${module.northstar.domain_qa}"
-  northstar_backend_qa = "${module.northstar.backend_qa}"
+  northstar_name    = "${module.northstar.name}"
+  northstar_domain  = "${module.northstar.domain}"
+  northstar_backend = "${module.northstar.backend}"
 
-  phoenix_name_qa    = "${module.phoenix.name}"
-  phoenix_domain_qa  = "${module.phoenix.domain}"
-  phoenix_backend_qa = "${module.phoenix.backend}"
+  phoenix_name    = "${module.phoenix.name}"
+  phoenix_domain  = "${module.phoenix.domain}"
+  phoenix_backend = "${module.phoenix.backend}"
 
-  rogue_name_qa    = "${module.rogue.name_qa}"
-  rogue_domain_qa  = "${module.rogue.domain_qa}"
-  rogue_backend_qa = "${module.rogue.backend_qa}"
+  rogue_name    = "${module.rogue.name}"
+  rogue_domain  = "${module.rogue.domain}"
+  rogue_backend = "${module.rogue.backend}"
 
   papertrail_destination_fastly_qa = "${var.papertrail_destination_fastly_qa}"
 }
