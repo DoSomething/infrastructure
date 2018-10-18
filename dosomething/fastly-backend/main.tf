@@ -56,6 +56,18 @@ resource "fastly_service_v1" "backends" {
     statement = "req.http.host == \"${var.rogue_domain}\""
   }
 
+  condition {
+    type      = "REQUEST"
+    name      = "path-robots-preview"
+    statement = "req.url.basename == \"robots.txt\" && req.http.host == \"${var.phoenix_preview_domain}\""
+  }
+
+  response_object {
+    name              = "robots.txt deny for phoenix-preview"
+    content           = "${file("${path.root}/shared/deny-robots.txt")}"
+    request_condition = "path-robots-preview"
+  }
+
   backend {
     address           = "${var.graphql_backend}"
     name              = "${var.graphql_name}"
