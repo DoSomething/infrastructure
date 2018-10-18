@@ -4,6 +4,9 @@ variable "graphql_backend" {}
 variable "northstar_name" {}
 variable "northstar_domain" {}
 variable "northstar_backend" {}
+variable "phoenix_preview_name" {}
+variable "phoenix_preview_domain" {}
+variable "phoenix_preview_backend" {}
 variable "rogue_name" {}
 variable "rogue_domain" {}
 variable "rogue_backend" {}
@@ -19,6 +22,10 @@ resource "fastly_service_v1" "backends" {
 
   domain {
     name = "${var.northstar_domain}"
+  }
+
+  domain {
+    name = "${var.phoenix_preview_domain}"
   }
 
   domain {
@@ -39,8 +46,26 @@ resource "fastly_service_v1" "backends" {
 
   condition {
     type      = "REQUEST"
+    name      = "backend-phoenix-preview"
+    statement = "req.http.host == \"${var.phoenix_preview_domain}\""
+  }
+
+  condition {
+    type      = "REQUEST"
     name      = "backend-rogue"
     statement = "req.http.host == \"${var.rogue_domain}\""
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "path-robots-preview"
+    statement = "req.url.basename == \"robots.txt\" && req.http.host == \"${var.phoenix_preview_domain}\""
+  }
+
+  response_object {
+    name              = "robots.txt deny for phoenix-preview"
+    content           = "${file("${path.root}/shared/deny-robots.txt")}"
+    request_condition = "path-robots-preview"
   }
 
   backend {
@@ -54,6 +79,13 @@ resource "fastly_service_v1" "backends" {
     address           = "${var.northstar_backend}"
     name              = "${var.northstar_name}"
     request_condition = "backend-northstar"
+    port              = 443
+  }
+
+  backend {
+    address           = "${var.phoenix_preview_backend}"
+    name              = "${var.phoenix_preview_name}"
+    request_condition = "backend-phoenix-preview"
     port              = 443
   }
 
@@ -148,6 +180,20 @@ resource "fastly_service_v1" "backends" {
     port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-northstar"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-phoenix-preview"
+    statement = "req.http.host == \"${var.phoenix_preview_domain}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "phoenix-preview"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-phoenix-preview"
   }
 
   condition {

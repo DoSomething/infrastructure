@@ -1,4 +1,6 @@
 variable "ashes_backend_qa" {}
+variable "phoenix_name_qa" {}
+variable "phoenix_backend_qa" {}
 variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "frontend-qa" {
@@ -25,7 +27,7 @@ resource "fastly_service_v1" "frontend-qa" {
 
   backend {
     address           = "${var.ashes_backend_qa}"
-    name              = "ashes-staging"
+    name              = "ashes-qa"
     request_condition = "backend-ashes-qa"
     ssl_cert_hostname = "qa.dosomething.org"
     ssl_sni_hostname  = "qa.dosomething.org"
@@ -35,8 +37,8 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   backend {
-    address          = "dosomething-phoenix-qa.herokuapp.com"
-    name             = "dosomething-phoenix-qa"
+    address          = "${var.phoenix_backend_qa}"
+    name             = "${var.phoenix_name_qa}"
     auto_loadbalance = false
     port             = 443
   }

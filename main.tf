@@ -86,6 +86,7 @@ module "dosomething" {
 
   graphql_pipeline              = "${module.shared.graphql_pipeline}"
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
+  phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
   rogue_pipeline                = "${module.shared.rogue_pipeline}"
   papertrail_destination        = "${var.papertrail_prod_destination}"
   papertrail_destination_fastly = "${var.papertrail_destination_fastly}"
@@ -99,6 +100,7 @@ module "dosomething-qa" {
 
   graphql_pipeline                 = "${module.shared.graphql_pipeline}"
   northstar_pipeline               = "${module.shared.northstar_pipeline}"
+  phoenix_pipeline                 = "${module.shared.phoenix_pipeline}"
   rogue_pipeline                   = "${module.shared.rogue_pipeline}"
   papertrail_destination           = "${var.papertrail_qa_destination}"
   papertrail_destination_fastly_qa = "${var.papertrail_destination_fastly_qa}"
@@ -112,6 +114,7 @@ module "dosomething-dev" {
 
   graphql_pipeline                  = "${module.shared.graphql_pipeline}"
   northstar_pipeline                = "${module.shared.northstar_pipeline}"
+  phoenix_pipeline                  = "${module.shared.phoenix_pipeline}"
   rogue_pipeline                    = "${module.shared.rogue_pipeline}"
   papertrail_destination            = "${var.papertrail_qa_destination}"
   papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
