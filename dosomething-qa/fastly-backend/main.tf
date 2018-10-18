@@ -4,6 +4,9 @@ variable "graphql_backend_qa" {}
 variable "northstar_name_qa" {}
 variable "northstar_domain_qa" {}
 variable "northstar_backend_qa" {}
+variable "phoenix_name_qa" {}
+variable "phoenix_domain_qa" {}
+variable "phoenix_backend_qa" {}
 variable "rogue_name_qa" {}
 variable "rogue_domain_qa" {}
 variable "rogue_backend_qa" {}
@@ -22,6 +25,10 @@ resource "fastly_service_v1" "backends-qa" {
   }
 
   domain {
+    name = "${var.phoenix_domain_qa}"
+  }
+
+  domain {
     name = "${var.rogue_domain_qa}"
   }
 
@@ -35,6 +42,12 @@ resource "fastly_service_v1" "backends-qa" {
     type      = "REQUEST"
     name      = "backend-northstar-qa"
     statement = "req.http.host == \"${var.northstar_domain_qa}\""
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-phoenix-qa"
+    statement = "req.http.host == \"${var.phoenix_domain_qa}\""
   }
 
   condition {
@@ -61,6 +74,14 @@ resource "fastly_service_v1" "backends-qa" {
     address           = "${var.northstar_backend_qa}"
     name              = "${var.northstar_name_qa}"
     request_condition = "backend-northstar-qa"
+    auto_loadbalance  = false
+    port              = 443
+  }
+
+  backend {
+    address           = "${var.phoenix_backend_qa}"
+    name              = "${var.phoenix_name_qa}"
+    request_condition = "backend-phoenix-qa"
     auto_loadbalance  = false
     port              = 443
   }
@@ -163,6 +184,20 @@ resource "fastly_service_v1" "backends-qa" {
     port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-northstar-qa"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-phoenix-qa"
+    statement = "req.http.host == \"${var.phoenix_domain_qa}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "phoenix-qa"
+    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-phoenix-qa"
   }
 
   condition {

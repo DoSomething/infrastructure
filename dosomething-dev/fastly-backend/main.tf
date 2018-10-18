@@ -4,6 +4,9 @@ variable "graphql_backend_dev" {}
 variable "northstar_name_dev" {}
 variable "northstar_domain_dev" {}
 variable "northstar_backend_dev" {}
+variable "phoenix_name_dev" {}
+variable "phoenix_domain_dev" {}
+variable "phoenix_backend_dev" {}
 variable "rogue_name_dev" {}
 variable "rogue_domain_dev" {}
 variable "rogue_backend_dev" {}
@@ -22,6 +25,10 @@ resource "fastly_service_v1" "backends-dev" {
   }
 
   domain {
+    name = "${var.phoenix_domain_dev}"
+  }
+
+  domain {
     name = "${var.rogue_domain_dev}"
   }
 
@@ -35,6 +42,12 @@ resource "fastly_service_v1" "backends-dev" {
     type      = "REQUEST"
     name      = "backend-northstar-dev"
     statement = "req.http.host == \"${var.northstar_domain_dev}\""
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-phoenix-dev"
+    statement = "req.http.host == \"${var.phoenix_domain_dev}\""
   }
 
   condition {
@@ -61,6 +74,14 @@ resource "fastly_service_v1" "backends-dev" {
     address           = "${var.northstar_backend_dev}"
     name              = "${var.northstar_name_dev}"
     request_condition = "backend-northstar-dev"
+    auto_loadbalance  = false
+    port              = 443
+  }
+
+  backend {
+    address           = "${var.phoenix_backend_dev}"
+    name              = "${var.phoenix_name_dev}"
+    request_condition = "backend-phoenix-dev"
     auto_loadbalance  = false
     port              = 443
   }
@@ -163,6 +184,20 @@ resource "fastly_service_v1" "backends-dev" {
     port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-northstar-dev"
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "errors-phoenix-dev"
+    statement = "req.http.host == \"${var.phoenix_domain_dev}\" && resp.status > 501 && resp.status < 600"
+  }
+
+  papertrail {
+    name               = "phoenix-dev"
+    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
+    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    response_condition = "errors-phoenix-dev"
   }
 
   condition {

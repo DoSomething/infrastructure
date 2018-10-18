@@ -10,6 +10,9 @@ module "fastly-frontend" {
 
   ashes_backend_qa = "${module.ashes.backend_qa}"
 
+  phoenix_name_qa    = "${module.phoenix.name}"
+  phoenix_backend_qa = "${module.phoenix.backend}"
+
   papertrail_destination = "${var.papertrail_destination_fastly_qa}"
 }
 
@@ -23,6 +26,10 @@ module "fastly-backend" {
   northstar_name_qa    = "${module.northstar.name_qa}"
   northstar_domain_qa  = "${module.northstar.domain_qa}"
   northstar_backend_qa = "${module.northstar.backend_qa}"
+
+  phoenix_name_qa    = "${module.phoenix.name}"
+  phoenix_domain_qa  = "${module.phoenix.domain}"
+  phoenix_backend_qa = "${module.phoenix.backend}"
 
   rogue_name_qa    = "${module.rogue.name_qa}"
   rogue_domain_qa  = "${module.rogue.domain_qa}"

@@ -57,7 +57,7 @@ output "name" {
 }
 
 output "domain" {
-  value = "${heroku_domain.qa.hostname}"
+  value = "${heroku_domain.www-qa.hostname}"
 }
 
 output "backend" {

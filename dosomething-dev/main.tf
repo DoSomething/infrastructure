@@ -8,6 +8,9 @@ variable "papertrail_destination_fastly_dev" {}
 module "fastly-frontend" {
   source = "fastly-frontend"
 
+  phoenix_name_qa    = "${module.phoenix.name}"
+  phoenix_backend_qa = "${module.phoenix.backend}"
+
   ashes_backend_dev = "${module.ashes.backend_dev}"
 
   papertrail_destination = "${var.papertrail_destination_fastly_dev}"
@@ -23,6 +26,10 @@ module "fastly-backend" {
   northstar_name_dev    = "${module.northstar.name_dev}"
   northstar_domain_dev  = "${module.northstar.domain_dev}"
   northstar_backend_dev = "${module.northstar.backend_dev}"
+
+  phoenix_name_dev    = "${module.phoenix.name}"
+  phoenix_domain_dev  = "${module.phoenix.domain}"
+  phoenix_backend_dev = "${module.phoenix.backend}"
 
   rogue_name_dev    = "${module.rogue.name_dev}"
   rogue_domain_dev  = "${module.rogue.domain_dev}"
