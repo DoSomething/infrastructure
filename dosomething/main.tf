@@ -10,6 +10,9 @@ module "fastly-frontend" {
 
   ashes_backend = "${module.ashes.backend}"
 
+  phoenix_name    = "${module.phoenix.name}"
+  phoenix_backend = "${module.phoenix.backend}"
+
   papertrail_destination = "${var.papertrail_destination_fastly}"
 }
 
@@ -19,6 +22,10 @@ module "fastly-backend" {
   graphql_name    = "${module.graphql.name}"
   graphql_domain  = "${module.graphql.domain}"
   graphql_backend = "${module.graphql.backend}"
+
+  phoenix_preview_name    = "${module.phoenix_preview.name}"
+  phoenix_preview_domain  = "${module.phoenix_preview.domain}"
+  phoenix_preview_backend = "${module.phoenix_preview.backend}"
 
   northstar_name    = "${module.northstar.name}"
   northstar_domain  = "${module.northstar.domain}"
@@ -52,7 +59,7 @@ module "phoenix" {
   papertrail_destination = "${var.papertrail_destination}"
 }
 
-module "phoenix-preview" {
+module "phoenix_preview" {
   source = "phoenix-preview"
 
   phoenix_pipeline       = "${var.phoenix_pipeline}"

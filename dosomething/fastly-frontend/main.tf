@@ -1,4 +1,6 @@
 variable "ashes_backend" {}
+variable "phoenix_name" {}
+variable "phoenix_backend" {}
 variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "frontend" {
@@ -29,8 +31,8 @@ resource "fastly_service_v1" "frontend" {
   }
 
   backend {
-    address          = "dosomething-phoenix.herokuapp.com"
-    name             = "dosomething-phoenix"
+    address          = "${var.phoenix_backend}"
+    name             = "${var.phoenix_name}"
     auto_loadbalance = false
     port             = 443
   }
