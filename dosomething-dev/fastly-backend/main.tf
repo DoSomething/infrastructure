@@ -10,7 +10,7 @@ variable "phoenix_backend" {}
 variable "rogue_name" {}
 variable "rogue_domain" {}
 variable "rogue_backend" {}
-variable "papertrail_destination_fastly_dev" {}
+variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "backends-dev" {
   name          = "Terraform: Backends (Development)"
@@ -180,8 +180,8 @@ resource "fastly_service_v1" "backends-dev" {
 
   papertrail {
     name               = "northstar-dev"
-    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-northstar-dev"
   }
@@ -194,8 +194,8 @@ resource "fastly_service_v1" "backends-dev" {
 
   papertrail {
     name               = "phoenix-dev"
-    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-phoenix-dev"
   }
@@ -208,8 +208,8 @@ resource "fastly_service_v1" "backends-dev" {
 
   papertrail {
     name               = "rogue-dev"
-    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-rogue-dev"
   }
@@ -222,8 +222,8 @@ resource "fastly_service_v1" "backends-dev" {
 
   papertrail {
     name               = "graphql-dev"
-    address            = "${element(split(":", var.papertrail_destination_fastly_dev), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_dev), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-graphql-dev"
   }

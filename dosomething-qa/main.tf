@@ -35,7 +35,7 @@ module "fastly-backend" {
   rogue_domain  = "${module.rogue.domain}"
   rogue_backend = "${module.rogue.backend}"
 
-  papertrail_destination_fastly_qa = "${var.papertrail_destination_fastly_qa}"
+  papertrail_destination = "${var.papertrail_destination_fastly_qa}"
 }
 
 module "graphql" {

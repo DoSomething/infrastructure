@@ -10,7 +10,7 @@ variable "phoenix_backend" {}
 variable "rogue_name" {}
 variable "rogue_domain" {}
 variable "rogue_backend" {}
-variable "papertrail_destination_fastly_qa" {}
+variable "papertrail_destination" {}
 
 resource "fastly_service_v1" "backends-qa" {
   name          = "Terraform: Backends (QA)"
@@ -180,8 +180,8 @@ resource "fastly_service_v1" "backends-qa" {
 
   papertrail {
     name               = "northstar-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-northstar-qa"
   }
@@ -194,8 +194,8 @@ resource "fastly_service_v1" "backends-qa" {
 
   papertrail {
     name               = "phoenix-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-phoenix-qa"
   }
@@ -208,8 +208,8 @@ resource "fastly_service_v1" "backends-qa" {
 
   papertrail {
     name               = "rogue-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-rogue-qa"
   }
@@ -222,8 +222,8 @@ resource "fastly_service_v1" "backends-qa" {
 
   papertrail {
     name               = "graphql-qa"
-    address            = "${element(split(":", var.papertrail_destination_fastly_qa), 0)}"
-    port               = "${element(split(":", var.papertrail_destination_fastly_qa), 1)}"
+    address            = "${element(split(":", var.papertrail_destination), 0)}"
+    port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors-graphql-qa"
   }
