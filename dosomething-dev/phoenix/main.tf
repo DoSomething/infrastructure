@@ -24,19 +24,19 @@ resource "heroku_app" "phoenix-dev" {
   acm = true
 }
 
-resource "heroku_formation" "phoenix-dev" {
+resource "heroku_formation" "web" {
   app      = "${heroku_app.phoenix-dev.name}"
   type     = "web"
   size     = "Hobby"
   quantity = 1
 }
 
-resource "heroku_domain" "phoenix-dev" {
+resource "heroku_domain" "www-dev" {
   app      = "${heroku_app.phoenix-dev.name}"
   hostname = "www-dev.dosomething.org"
 }
 
-resource "heroku_drain" "phoenix-dev" {
+resource "heroku_drain" "papertrail" {
   app = "${heroku_app.phoenix-dev.name}"
   url = "syslog+tls://${var.papertrail_destination}"
 }
@@ -47,14 +47,14 @@ resource "heroku_pipeline_coupling" "phoenix-dev" {
   stage    = "development"
 }
 
-output "name_dev" {
+output "name" {
   value = "${heroku_app.phoenix-dev.name}"
 }
 
-output "domain_dev" {
-  value = "${heroku_domain.phoenix-dev.hostname}"
+output "domain" {
+  value = "${heroku_domain.www-dev.hostname}"
 }
 
-output "backend_dev" {
+output "backend" {
   value = "${heroku_app.phoenix-dev.heroku_hostname}"
 }

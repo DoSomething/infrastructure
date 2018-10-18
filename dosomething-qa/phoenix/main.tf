@@ -24,7 +24,7 @@ resource "heroku_app" "phoenix-qa" {
   acm = true
 }
 
-resource "heroku_formation" "phoenix-qa" {
+resource "heroku_formation" "www" {
   app      = "${heroku_app.phoenix-qa.name}"
   type     = "web"
   size     = "Hobby"
@@ -41,7 +41,7 @@ resource "heroku_domain" "www-qa" {
   hostname = "www-qa.dosomething.org"
 }
 
-resource "heroku_drain" "phoenix-qa" {
+resource "heroku_drain" "papertrail" {
   app = "${heroku_app.phoenix-qa.name}"
   url = "syslog+tls://${var.papertrail_destination}"
 }
@@ -52,14 +52,14 @@ resource "heroku_pipeline_coupling" "phoenix-qa" {
   stage    = "staging"
 }
 
-output "name_qa" {
+output "name" {
   value = "${heroku_app.phoenix-qa.name}"
 }
 
-output "domain_qa" {
+output "domain" {
   value = "${heroku_domain.qa.hostname}"
 }
 
-output "backend_qa" {
+output "backend" {
   value = "${heroku_app.phoenix-qa.heroku_hostname}"
 }
