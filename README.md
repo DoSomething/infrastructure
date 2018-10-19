@@ -32,13 +32,13 @@ You can run `terraform fmt` at any time to automatically format your code (or us
 Next, **make a plan** to find out how it will affect the current state of the system:
 
 ```sh
-terraform plan | landscape
+make plan
 ```
 
 Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the state in S3, and ensure nobody else makes any changes until you're done:
 
 ```sh
-terraform apply
+make apply
 ```
 
 See Terraform's [Getting Started guide](https://www.terraform.io/intro/getting-started/build.html) & [documentation](https://www.terraform.io/docs/index.html) for more details.
