@@ -50,7 +50,7 @@ provider "fastly" {
 # visibility & to make cross-cloud dependencies (like AWS
 # resources or Fastly backends) easier to hook up.
 provider "heroku" {
-  version = "~> 1.3"
+  version = "~> 1.5"
   email   = "${var.heroku_email}"
   api_key = "${var.heroku_api_key}"
 }
@@ -60,7 +60,7 @@ provider "heroku" {
 # some legacy servers on EC2. AWS credentials are stored
 # using the `aws` CLI (see installation instructions).
 provider "aws" {
-  version = "~> 1.33"
+  version = "~> 1.41"
   region  = "us-east-1"
   profile = "terraform"
 }
