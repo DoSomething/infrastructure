@@ -30,4 +30,8 @@ apply: ## Update infrastructure to match your Terraform config.
 		echo "$(BOLD)$(RED)✘ERROR: Push your changes to GitHub before applying. $(RESET)"; \
 		exit 1; \
 	fi;
+	@if [ "$$(git rev-list --right-only --count HEAD...@'{u}')" != "0" ]; then \
+		echo "$(BOLD)$(RED)✘ERROR: Pull latest changes from GitHub before applying. $(RESET)"; \
+		exit 1; \
+	fi;
 	@terraform apply
