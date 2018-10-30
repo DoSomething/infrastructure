@@ -94,7 +94,6 @@ table ashes_campaigns {
   "fight-equality": "true",
   "fight-fire-cookies": "true",
   "file-under-sexist": "true",
-  "find-your-v-spot": "true",
   "fish-bowl-baggies": "true",
   "flush-it-down": "true",
   "flyer-away": "true",
