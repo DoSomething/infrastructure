@@ -12,6 +12,10 @@ variable "rogue_domain" {}
 variable "rogue_backend" {}
 variable "papertrail_destination" {}
 
+variable "papertrail_log_format" {
+  default = "%t '%r' status=%>s cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o bytes=%b microseconds=%D"
+}
+
 resource "fastly_service_v1" "backends" {
   name          = "Terraform: Backends"
   force_destroy = true
@@ -39,8 +43,20 @@ resource "fastly_service_v1" "backends" {
   }
 
   condition {
+    type      = "RESPONSE"
+    name      = "response-graphql"
+    statement = "req.http.host == \"${var.graphql_domain}\""
+  }
+
+  condition {
     type      = "REQUEST"
     name      = "backend-northstar"
+    statement = "req.http.host == \"${var.northstar_domain}\""
+  }
+
+  condition {
+    type      = "RESPONSE"
+    name      = "response-northstar"
     statement = "req.http.host == \"${var.northstar_domain}\""
   }
 
@@ -51,8 +67,20 @@ resource "fastly_service_v1" "backends" {
   }
 
   condition {
+    type      = "RESPONSE"
+    name      = "response-phoenix-preview"
+    statement = "req.http.host == \"${var.phoenix_preview_domain}\""
+  }
+
+  condition {
     type      = "REQUEST"
     name      = "backend-rogue"
+    statement = "req.http.host == \"${var.rogue_domain}\""
+  }
+
+  condition {
+    type      = "RESPOSNE"
+    name      = "response-rogue"
     statement = "req.http.host == \"${var.rogue_domain}\""
   }
 
@@ -72,6 +100,8 @@ resource "fastly_service_v1" "backends" {
     address           = "${var.graphql_backend}"
     name              = "${var.graphql_name}"
     request_condition = "backend-graphql"
+    shield            = "iad-va-us"
+    auto_loadbalance  = false
     port              = 443
   }
 
@@ -79,6 +109,8 @@ resource "fastly_service_v1" "backends" {
     address           = "${var.northstar_backend}"
     name              = "${var.northstar_name}"
     request_condition = "backend-northstar"
+    shield            = "iad-va-us"
+    auto_loadbalance  = false
     port              = 443
   }
 
@@ -86,6 +118,8 @@ resource "fastly_service_v1" "backends" {
     address           = "${var.phoenix_preview_backend}"
     name              = "${var.phoenix_preview_name}"
     request_condition = "backend-phoenix-preview"
+    shield            = "iad-va-us"
+    auto_loadbalance  = false
     port              = 443
   }
 
@@ -93,6 +127,8 @@ resource "fastly_service_v1" "backends" {
     address           = "${var.rogue_backend}"
     name              = "${var.rogue_name}"
     request_condition = "backend-rogue"
+    shield            = "iad-va-us"
+    auto_loadbalance  = false
     port              = 443
   }
 
@@ -168,45 +204,27 @@ resource "fastly_service_v1" "backends" {
     content = "${file("${path.root}/shared/origin_name.vcl")}"
   }
 
-  condition {
-    type      = "RESPONSE"
-    name      = "errors-northstar"
-    statement = "req.http.host == \"${var.northstar_domain}\" && resp.status > 501 && resp.status < 600"
-  }
-
   papertrail {
     name               = "northstar"
     address            = "${element(split(":", var.papertrail_destination), 0)}"
     port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
-    response_condition = "errors-northstar"
-  }
-
-  condition {
-    type      = "RESPONSE"
-    name      = "errors-phoenix-preview"
-    statement = "req.http.host == \"${var.phoenix_preview_domain}\" && resp.status > 501 && resp.status < 600"
+    format             = "${var.papertrail_log_format}"
+    response_condition = "response-northstar"
   }
 
   papertrail {
     name               = "phoenix-preview"
     address            = "${element(split(":", var.papertrail_destination), 0)}"
     port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
-    response_condition = "errors-phoenix-preview"
-  }
-
-  condition {
-    type      = "RESPONSE"
-    name      = "errors-rogue"
-    statement = "req.http.host == \"${var.rogue_domain}\" && resp.status > 501 && resp.status < 600"
+    format             = "${var.papertrail_log_format}"
+    response_condition = "response-phoenix-preview"
   }
 
   papertrail {
     name               = "rogue"
     address            = "${element(split(":", var.papertrail_destination), 0)}"
     port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
-    response_condition = "errors-rogue"
+    format             = "${var.papertrail_log_format}"
+    response_condition = "response-rogue"
   }
 }
