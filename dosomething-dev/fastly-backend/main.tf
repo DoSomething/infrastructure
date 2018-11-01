@@ -66,6 +66,7 @@ resource "fastly_service_v1" "backends-dev" {
     address           = "${var.graphql_backend}"
     name              = "${var.graphql_name}"
     request_condition = "backend-graphql-dev"
+    shield            = "iad-va-us"
     auto_loadbalance  = false
     port              = 443
   }
@@ -74,6 +75,7 @@ resource "fastly_service_v1" "backends-dev" {
     address           = "${var.northstar_backend}"
     name              = "${var.northstar_name}"
     request_condition = "backend-northstar-dev"
+    shield            = "iad-va-us"
     auto_loadbalance  = false
     port              = 443
   }
@@ -82,6 +84,7 @@ resource "fastly_service_v1" "backends-dev" {
     address           = "${var.phoenix_backend}"
     name              = "${var.phoenix_name}"
     request_condition = "backend-phoenix-dev"
+    shield            = "iad-va-us"
     auto_loadbalance  = false
     port              = 443
   }
@@ -90,6 +93,7 @@ resource "fastly_service_v1" "backends-dev" {
     address           = "${var.rogue_backend}"
     name              = "${var.rogue_name}"
     request_condition = "backend-rogue-dev"
+    shield            = "iad-va-us"
     auto_loadbalance  = false
     port              = 443
   }
