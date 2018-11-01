@@ -79,7 +79,7 @@ resource "fastly_service_v1" "backends" {
   }
 
   condition {
-    type      = "RESPOSNE"
+    type      = "RESPONSE"
     name      = "response-rogue"
     statement = "req.http.host == \"${var.rogue_domain}\""
   }
