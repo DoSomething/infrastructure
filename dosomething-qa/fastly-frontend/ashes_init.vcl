@@ -297,6 +297,7 @@ table ashes_campaigns {
   "visionary-volunteer": "true",
   "vote-or-shut": "true",
   "week-without-oil": "true",
+  "welcome-home": "true",
   "welcome-home-0": "true",
   "who-has-their-eye-you": "true",
   "whole-new-ball-game": "true",
