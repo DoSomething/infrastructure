@@ -25,6 +25,24 @@ resource "fastly_service_v1" "frontend-qa" {
     statement = "req.url.basename == \"robots.txt\""
   }
 
+  response_object {
+    name              = "robots.txt deny"
+    content           = "${file("${path.root}/shared/deny-robots.txt")}"
+    request_condition = "path-robots"
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "election-takeover"
+    statement = "req.url.path ~ \"(?i)^\\/((us)\\/?)?$\""
+  }
+
+  response_object {
+    name              = "election day takeover"
+    content           = "${file("${path.root}/shared/election-takeover.html")}"
+    request_condition = "election-takeover"
+  }
+
   backend {
     address           = "${var.ashes_backend}"
     name              = "ashes-qa"
@@ -89,12 +107,6 @@ resource "fastly_service_v1" "frontend-qa" {
   request_setting {
     name      = "Force SSL"
     force_ssl = true
-  }
-
-  response_object {
-    name              = "robots.txt deny"
-    content           = "${file("${path.root}/shared/deny-robots.txt")}"
-    request_condition = "path-robots"
   }
 
   snippet {
