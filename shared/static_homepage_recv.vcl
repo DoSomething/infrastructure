@@ -1,9 +1,9 @@
 declare local var.start_time TIME;
 declare local var.end_time TIME;
 
-# Times must be provided to Fastly in GMT (so the time in EST + 5 hours).
-set var.start_time = std.time("Mon, 05 Nov 2018 00:00:00 GMT", std.integer2time(-1));
-set var.end_time = std.time("Mon, 05 Nov 2018 22:08:00 GMT", std.integer2time(-1));
+# Here, we'll set the times for the takeover in EST (24 hour time):
+set var.start_time = std.time("2018-11-05 00:00:00", std.integer2time(-1));
+set var.end_time = std.time("2018-11-05 17:17:00", std.integer2time(-1));
 
 # Ensure this value is only set within our VCL:
 unset req.http.X-Synthetic-Response;
@@ -11,8 +11,8 @@ unset req.http.X-Synthetic-Response;
 # If we're in between the start and end times, show the synthetic response:
 # Times must be provided to Fastly in GMT (so the time in EST + 5 hours).
 if (req.url.path ~ "(?i)^\/((us)\/?)?$"
-    && time.is_after(now, var.start_time)
-    && time.is_after(var.end_time, now)
+    && time.is_after(now, time.add(var.start_time, 5h))
+    && time.is_after(time.add(var.end_time, 5h), now)
 ) {
   set req.http.X-Synthetic-Response = "true";
 }
