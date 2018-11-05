@@ -22,15 +22,14 @@ resource "fastly_service_v1" "frontend" {
   condition {
     type      = "REQUEST"
     name      = "election-takeover"
-    statement = "req.url.path ~ \"(?i)^\\/((us)\\/?)?$\""
+    statement = "req.http.X-Synthetic-Response == \"true\""
   }
 
-  # TODO: Uncomment this block when we're ready to launch in prod!
-  # response_object {
-  #   name              = "election day takeover"
-  #   content           = "${file("${path.root}/shared/election-takeover.html")}"
-  #   request_condition = "election-takeover"
-  # }
+  response_object {
+    name              = "election day takeover"
+    content           = "${file("${path.root}/shared/election-takeover.html")}"
+    request_condition = "election-takeover"
+  }
 
   backend {
     address           = "${var.ashes_backend}"
@@ -42,12 +41,14 @@ resource "fastly_service_v1" "frontend" {
     use_ssl           = true
     port              = 443
   }
+
   backend {
     address          = "${var.phoenix_backend}"
     name             = "${var.phoenix_name}"
     auto_loadbalance = false
     port             = 443
   }
+
   gzip {
     name = "gzip"
 
@@ -74,6 +75,7 @@ resource "fastly_service_v1" "frontend" {
       "text/xml",
     ]
   }
+
   header {
     name        = "Country Code"
     type        = "request"
@@ -81,6 +83,7 @@ resource "fastly_service_v1" "frontend" {
     source      = "geoip.country_code"
     destination = "http.X-Fastly-Country-Code"
   }
+
   header {
     name        = "Country Code (Debug)"
     type        = "response"
@@ -88,60 +91,78 @@ resource "fastly_service_v1" "frontend" {
     source      = "geoip.country_code"
     destination = "http.X-Fastly-Country-Code"
   }
+
   request_setting {
     name      = "Force SSL"
     force_ssl = true
   }
+
   snippet {
     name    = "Frontend - Ashes Campaigns"
     type    = "init"
     content = "${file("${path.module}/ashes_init.vcl")}"
   }
+
   snippet {
     name    = "Frontend - Ashes Routing"
     type    = "recv"
     content = "${file("${path.module}/ashes_recv.vcl")}"
   }
+
   snippet {
     name    = "Frontend - Trigger International Redirect"
     type    = "recv"
     content = "${file("${path.module}/homepage_recv.vcl")}"
   }
+
   snippet {
     name    = "Frontend - Handle International Redirect"
     type    = "error"
     content = "${file("${path.module}/homepage_error.vcl")}"
   }
+
   snippet {
     name    = "Frontend - Trigger Redirect"
     type    = "recv"
     content = "${file("${path.module}/redirect_recv.vcl")}"
   }
+
   snippet {
     name    = "Frontend - Handle Redirect"
     type    = "error"
     content = "${file("${path.module}/redirect_error.vcl")}"
   }
+
   snippet {
     name    = "GDPR - Redirects Table"
     type    = "init"
     content = "${file("${path.root}/shared/gdpr_init.vcl")}"
   }
+
   snippet {
     name    = "GDPR - Trigger Redirect"
     type    = "recv"
     content = "${file("${path.root}/shared/gdpr_recv.vcl")}"
   }
+
   snippet {
     name    = "GDPR - Handle Redirect"
     type    = "error"
     content = "${file("${path.root}/shared/gdpr_error.vcl")}"
   }
+
   snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = "${file("${path.root}/shared/origin_name.vcl")}"
   }
+
+  snippet {
+    name    = "Shared - Static Homepage Takeover"
+    type    = "recv"
+    content = "${file("${path.root}/shared/static_homepage_recv.vcl")}"
+  }
+
   papertrail {
     name    = "www.dosomething.org"
     address = "${element(split(":", var.papertrail_destination), 0)}"
