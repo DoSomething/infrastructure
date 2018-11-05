@@ -34,7 +34,7 @@ resource "fastly_service_v1" "frontend-qa" {
   condition {
     type      = "REQUEST"
     name      = "election-takeover"
-    statement = "req.url.path ~ \"(?i)^\\/((us)\\/?)?$\""
+    statement = "req.http.X-Synthetic-Response == \"true\""
   }
 
   response_object {
@@ -167,6 +167,12 @@ resource "fastly_service_v1" "frontend-qa" {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = "${file("${path.root}/shared/origin_name.vcl")}"
+  }
+
+  snippet {
+    name    = "Shared - Synthetic Homepage Takeover"
+    type    = "recv"
+    content = "${file("${path.root}/shared/election_recv.vcl")}"
   }
 
   papertrail {
