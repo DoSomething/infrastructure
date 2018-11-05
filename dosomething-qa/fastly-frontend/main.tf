@@ -25,6 +25,24 @@ resource "fastly_service_v1" "frontend-qa" {
     statement = "req.url.basename == \"robots.txt\""
   }
 
+  response_object {
+    name              = "robots.txt deny"
+    content           = "${file("${path.root}/shared/deny-robots.txt")}"
+    request_condition = "path-robots"
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "election-takeover"
+    statement = "req.http.X-Synthetic-Response == \"true\""
+  }
+
+  response_object {
+    name              = "election day takeover"
+    content           = "${file("${path.root}/shared/election-takeover.html")}"
+    request_condition = "election-takeover"
+  }
+
   backend {
     address           = "${var.ashes_backend}"
     name              = "ashes-qa"
@@ -91,12 +109,6 @@ resource "fastly_service_v1" "frontend-qa" {
     force_ssl = true
   }
 
-  response_object {
-    name              = "robots.txt deny"
-    content           = "${file("${path.root}/shared/deny-robots.txt")}"
-    request_condition = "path-robots"
-  }
-
   snippet {
     name    = "Frontend - Ashes Campaigns"
     type    = "init"
@@ -155,6 +167,12 @@ resource "fastly_service_v1" "frontend-qa" {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = "${file("${path.root}/shared/origin_name.vcl")}"
+  }
+
+  snippet {
+    name    = "Shared - Static Homepage Takeover"
+    type    = "recv"
+    content = "${file("${path.root}/shared/static_homepage_recv.vcl")}"
   }
 
   papertrail {

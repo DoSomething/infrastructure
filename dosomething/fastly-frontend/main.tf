@@ -19,6 +19,18 @@ resource "fastly_service_v1" "frontend" {
     statement = "req.http.X-Fastly-Backend == \"ashes\""
   }
 
+  condition {
+    type      = "REQUEST"
+    name      = "election-takeover"
+    statement = "req.http.X-Synthetic-Response == \"true\""
+  }
+
+  response_object {
+    name              = "election day takeover"
+    content           = "${file("${path.root}/shared/election-takeover.html")}"
+    request_condition = "election-takeover"
+  }
+
   backend {
     address           = "${var.ashes_backend}"
     name              = "ashes"
@@ -143,6 +155,12 @@ resource "fastly_service_v1" "frontend" {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = "${file("${path.root}/shared/origin_name.vcl")}"
+  }
+
+  snippet {
+    name    = "Shared - Static Homepage Takeover"
+    type    = "recv"
+    content = "${file("${path.root}/shared/static_homepage_recv.vcl")}"
   }
 
   papertrail {
