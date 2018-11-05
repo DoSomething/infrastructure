@@ -170,9 +170,9 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   snippet {
-    name    = "Shared - Synthetic Homepage Takeover"
+    name    = "Shared - Static Homepage Takeover"
     type    = "recv"
-    content = "${file("${path.root}/shared/election_recv.vcl")}"
+    content = "${file("${path.root}/shared/static_homepage_recv.vcl")}"
   }
 
   papertrail {
