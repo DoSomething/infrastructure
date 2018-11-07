@@ -174,7 +174,7 @@ resource "fastly_service_v1" "frontend-qa" {
     type    = "recv"
     content = "${file("${path.module}/takeover_config.vcl")}"
 
-    priority = 0 # Make sure we configure this before it runs!
+    priority = 0 # Make sure we configure this before it runs below!
   }
 
   snippet {

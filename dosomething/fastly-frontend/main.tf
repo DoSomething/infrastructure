@@ -157,18 +157,19 @@ resource "fastly_service_v1" "frontend" {
     content = "${file("${path.root}/shared/origin_name.vcl")}"
   }
 
-  # snippet {
-  #   name    = "Frontend - Homepage Takeover Configuration"
-  #   type    = "init"
-  #   content = "${file("${path.module}/takeover_init.vcl")}"
-  # }
+  snippet {
+    name    = "Frontend - Homepage Takeover Configuration"
+    type    = "recv"
+    content = "${file("${path.module}/takeover_config.vcl")}"
 
+    priority = 0 # Make sure we configure this before it runs below!
+  }
 
-  # snippet {
-  #   name    = "Shared - Static Homepage Takeover"
-  #   type    = "recv"
-  #   content = "${file("${path.root}/shared/static_homepage_recv.vcl")}"
-  # }
+  snippet {
+    name    = "Shared - Static Homepage Takeover"
+    type    = "recv"
+    content = "${file("${path.root}/shared/takeover_recv.vcl")}"
+  }
 
   papertrail {
     name    = "www.dosomething.org"
