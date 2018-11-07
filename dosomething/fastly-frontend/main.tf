@@ -21,14 +21,14 @@ resource "fastly_service_v1" "frontend" {
 
   condition {
     type      = "REQUEST"
-    name      = "election-takeover"
-    statement = "req.http.X-Synthetic-Response == \"true\""
+    name      = "timed-synthetic-takeover"
+    statement = "req.http.X-Timed-Synthetic-Response == \"true\""
   }
 
   response_object {
-    name              = "election day takeover"
-    content           = "${file("${path.root}/shared/election-takeover.html")}"
-    request_condition = "election-takeover"
+    name              = "timed synthetic takeover"
+    request_condition = "timed-synthetic-takeover"
+    content           = "${file("${path.root}/shared/takeovers/election.html")}"
   }
 
   backend {
@@ -158,9 +158,17 @@ resource "fastly_service_v1" "frontend" {
   }
 
   snippet {
+    name    = "Frontend - Homepage Takeover Configuration"
+    type    = "recv"
+    content = "${file("${path.module}/takeover_config.vcl")}"
+
+    priority = 0 # Make sure we configure this before it runs below!
+  }
+
+  snippet {
     name    = "Shared - Static Homepage Takeover"
     type    = "recv"
-    content = "${file("${path.root}/shared/static_homepage_recv.vcl")}"
+    content = "${file("${path.root}/shared/takeover_recv.vcl")}"
   }
 
   papertrail {
