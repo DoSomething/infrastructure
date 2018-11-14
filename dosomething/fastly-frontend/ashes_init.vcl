@@ -33,7 +33,6 @@ table ashes_campaigns {
   "bookitforward": "true",
   "bookmark-climate-change": "true",
   "box-o-books": "true",
-  "breakup-bash": "true",
   "bubble-breaks": "true",
   "bully-project": "true",
   "bully-text-superstar-edition": "true",
