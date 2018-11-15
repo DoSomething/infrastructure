@@ -149,26 +149,18 @@ resource "aws_iam_access_key" "queue_user" {
   user = "${aws_iam_user.queue_user.name}"
 }
 
-resource "aws_iam_user_policy" "queue_user" {
-  name = "test"
-  user = "${aws_iam_user.queue_user.name}"
+data "template_file" "sqs_policy" {
+  template = "${file("sqs-policy.json.tpl")}"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "sqs:ReceiveMessage",
-        "sqs:DeleteMessage",
-        "sqs:GetQueueAttributes",
-      ],
-      "Effect": "Allow",
-      "Resource": "${aws_sqs_queue.queue.arn}"
-    }
-  ]
+  vars {
+    queue_arn = "${aws_sqs_queue.queue.arn}"
+  }
 }
-EOF
+
+resource "aws_iam_user_policy" "queue_user" {
+  name   = "${var.name}-sqs"
+  user   = "${aws_iam_user.queue_user.name}"
+  policy = "${data.template_file.sqs_policy.rendered}"
 }
 
 output "name" {
