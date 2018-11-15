@@ -150,26 +150,49 @@ resource "aws_sqs_queue" "queue" {
   message_retention_seconds = "${60 * 60 * 24 * 14}"
 }
 
-resource "aws_iam_user" "queue_user" {
+resource "aws_s3_bucket" "storage" {
+  bucket = "dosomething-${var.name}"
+  acl    = "public-read"
+
+  tags {
+    Application = "${var.name}"
+  }
+}
+
+resource "aws_iam_user" "aws_user" {
   name = "${var.name}-queue"
 }
 
 resource "aws_iam_access_key" "queue_user" {
-  user = "${aws_iam_user.queue_user.name}"
+  user = "${aws_iam_user.aws_user.name}"
 }
 
 data "template_file" "sqs_policy" {
-  template = "${file("sqs-policy.json.tpl")}"
+  template = "${file("${path.root}/shared/sqs-policy.json.tpl")}"
 
   vars {
     queue_arn = "${aws_sqs_queue.queue.arn}"
   }
 }
 
-resource "aws_iam_user_policy" "queue_user" {
+resource "aws_iam_user_policy" "sqs_policy" {
   name   = "${var.name}-sqs"
-  user   = "${aws_iam_user.queue_user.name}"
+  user   = "${aws_iam_user.aws_user.name}"
   policy = "${data.template_file.sqs_policy.rendered}"
+}
+
+data "template_file" "s3_policy" {
+  template = "${file("${path.root}/shared/s3-policy.json.tpl")}"
+
+  vars {
+    bucket_arn = "${aws_s3_bucket.storage.arn}"
+  }
+}
+
+resource "aws_iam_user_policy" "s3_policy" {
+  name   = "${var.name}-s3"
+  user   = "${aws_iam_user.aws_user.name}"
+  policy = "${data.template_file.s3_policy.rendered}"
 }
 
 output "name" {
