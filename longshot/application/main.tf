@@ -160,7 +160,7 @@ resource "aws_s3_bucket" "storage" {
 }
 
 resource "aws_iam_user" "aws_user" {
-  name = "${var.name}-queue"
+  name = "${var.name}"
 }
 
 resource "aws_iam_access_key" "queue_user" {
