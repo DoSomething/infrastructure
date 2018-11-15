@@ -19,6 +19,10 @@ variable "queue_scale" {
   default = "1"
 }
 
+variable "redis_type" {
+  default = "hobby-dev"
+}
+
 variable "database_name" {}
 
 variable "database_type" {
@@ -111,6 +115,11 @@ resource "heroku_pipeline_coupling" "app" {
   app      = "${heroku_app.app.name}"
   pipeline = "${var.pipeline}"
   stage    = "${var.pipeline_stage}"
+}
+
+resource "heroku_addon" "redis" {
+  app  = "${heroku_app.app.name}"
+  plan = "heroku-redis:${var.redis_type}"
 }
 
 resource "aws_db_instance" "database" {
