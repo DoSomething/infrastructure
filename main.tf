@@ -120,6 +120,12 @@ module "dosomething-dev" {
   papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
 }
 
+# The redirects property handles redirects for old domains, like
+# 'northstar-thor.dosomething.org' to 'identity-qa.dosomething.org'.
+module "redirects" {
+  source = "redirects"
+}
+
 # The voter registration landing page <vote.dosomething.org>
 # is hosted on Instapage, with optional fallback to S3.
 module "vote" {
@@ -132,10 +138,4 @@ module "vote" {
 # voting campaigns like Celebs Gone Good & Athletes Gone Good.
 module "voting-app" {
   source = "voting-app"
-}
-
-# The redirects property handles redirects for old domains, like
-# 'northstar-thor.dosomething.org' to 'identity-qa.dosomething.org'.
-module "redirects" {
-  source = "redirects"
 }
