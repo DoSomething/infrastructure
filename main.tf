@@ -124,6 +124,9 @@ module "dosomething-dev" {
 # application, used by clients like Footlocker and H&R Block.
 module "longshot" {
   source = "longshot"
+
+  papertrail_prod_destination = "${var.papertrail_prod_destination}"
+  papertrail_qa_destination   = "${var.papertrail_qa_destination}"
 }
 
 # The redirects property handles redirects for old domains, like
