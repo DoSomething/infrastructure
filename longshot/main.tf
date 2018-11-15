@@ -5,7 +5,7 @@ resource "heroku_pipeline" "longshot" {
   name = "longshot"
 }
 
-module "dosomething-qa" {
+module "longshot-qa" {
   source = "application"
 
   name           = "longshot-qa"
