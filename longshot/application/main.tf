@@ -70,9 +70,11 @@ resource "heroku_app" "app" {
     DB_PASSWORD = "${data.aws_ssm_parameter.database_password.value}"
 
     # S3 Bucket & SQS Queue:
-    SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.id}"
     AWS_ACCESS_KEY    = "${aws_iam_access_key.aws_key.id}"
     AWS_SECRET_KEY    = "${aws_iam_access_key.aws_key.secret}"
+    SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.id}"
+    S3_REGION         = "${aws_s3_bucket.storage.region}"
+    S3_BUCKET         = "${aws_s3_bucket.storage.id}"
 
     # Additional secrets, set manually:
     # APP_KEY = ...
