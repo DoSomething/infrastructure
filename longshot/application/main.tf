@@ -70,7 +70,7 @@ resource "heroku_app" "app" {
     DB_PASSWORD = "${data.aws_ssm_parameter.database_password.value}"
 
     # Queue:
-    SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.arn}"
+    SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.id}"
     SQS_PUBLIC_KEY    = "${aws_iam_access_key.queue_user.id}"
     SQS_SECRET_KEY    = "${aws_iam_access_key.queue_user.secret}"
 
