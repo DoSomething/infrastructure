@@ -120,6 +120,12 @@ module "dosomething-dev" {
   papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
 }
 
+# Longshot is DoSomething Strategic's white-labeled scholarship
+# application, used by clients like Footlocker and H&R Block.
+module "longshot" {
+  source = "longshot"
+}
+
 # The redirects property handles redirects for old domains, like
 # 'northstar-thor.dosomething.org' to 'identity-qa.dosomething.org'.
 module "redirects" {
