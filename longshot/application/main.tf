@@ -54,8 +54,9 @@ resource "heroku_app" "app" {
     APP_URL   = "https://${var.host}"
 
     # Drivers:
-    QUEUE_DRIVER = "sqs"
-    CACHE_DRIVER = "redis"
+    QUEUE_DRIVER   = "sqs"
+    CACHE_DRIVER   = "redis"
+    STORAGE_DRIVER = "s3"
 
     # Email:
     EMAIL_ADDRESS = "${var.email_address}"
