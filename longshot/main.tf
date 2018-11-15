@@ -18,7 +18,7 @@ module "dosomething-qa" {
 
   database_name  = "whitelabel_scholarship"
   database_type  = "db.t2.micro"
-  database_scale = 10
+  database_scale = 5
 
   papertrail_destination = "${var.papertrail_qa_destination}"
 }

@@ -118,10 +118,14 @@ resource "aws_db_instance" "database" {
   engine_version      = "10.0"
   instance_class      = "${var.database_type}"
   allocated_storage   = "${var.database_scale}"
-  name                = "${var.name}"
   username            = "${data.aws_ssm_parameter.database_username.value}"
   password            = "${data.aws_ssm_parameter.database_password.value}"
   publicly_accessible = true
+  skip_final_snapshot = true
+
+  tags = {
+    Application = "${var.name}"
+  }
 }
 
 data "aws_ssm_parameter" "database_username" {
