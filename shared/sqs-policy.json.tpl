@@ -3,6 +3,7 @@
   "Statement": [
     {
       "Action": [
+        "sqs:SendMessage",
         "sqs:ReceiveMessage",
         "sqs:DeleteMessage",
         "sqs:GetQueueAttributes"
