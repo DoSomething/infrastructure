@@ -58,6 +58,7 @@ resource "heroku_app" "app" {
     CACHE_DRIVER   = "redis"
     SESSION_DRIVER = "redis"
     STORAGE_DRIVER = "s3"
+    MAIL_DRIVER    = "mandrill"
 
     # Email:
     EMAIL_NAME    = "${var.email_name}"
