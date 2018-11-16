@@ -61,10 +61,11 @@ resource "heroku_app" "app" {
 
   config_vars {
     # App settings:
-    APP_ENV   = "production"
-    APP_DEBUG = "false"
-    APP_LOG   = "errorlog"
-    APP_URL   = "https://${var.host}"
+    APP_ENV                    = "production"
+    APP_DEBUG                  = "false"
+    APP_LOG                    = "errorlog"
+    APP_URL                    = "https://${var.host}"
+    TRUSTED_PROXY_IP_ADDRESSES = "**"
 
     # Drivers:
     QUEUE_DRIVER   = "sqs"
