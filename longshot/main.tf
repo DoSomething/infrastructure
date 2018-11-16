@@ -16,9 +16,9 @@ module "longshot-qa" {
   email_name    = "Longshot QA"
   email_address = "devops@dosomething.org"
 
-  database_name  = "whitelabel_scholarship"
-  database_type  = "db.t2.micro"
-  database_scale = 5
+  database_name = "whitelabel_scholarship"
+  database_type = "db.t2.micro"
+  database_size = 5
 
   papertrail_destination = "${var.papertrail_qa_destination}"
 }

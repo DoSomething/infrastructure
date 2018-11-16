@@ -29,7 +29,7 @@ variable "database_type" {
   default = "db.t2.medium"
 }
 
-variable "database_scale" {
+variable "database_size" {
   default = 100
 }
 
@@ -143,7 +143,7 @@ resource "aws_db_instance" "database" {
   engine              = "mariadb"
   engine_version      = "10.0"
   instance_class      = "${var.database_type}"
-  allocated_storage   = "${var.database_scale}"
+  allocated_storage   = "${var.database_size}"
   username            = "${data.aws_ssm_parameter.database_username.value}"
   password            = "${data.aws_ssm_parameter.database_password.value}"
   publicly_accessible = true
