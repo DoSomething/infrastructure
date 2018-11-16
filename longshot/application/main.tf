@@ -38,6 +38,18 @@ variable "email_address" {}
 
 variable "papertrail_destination" {}
 
+data "aws_ssm_parameter" "database_username" {
+  name = "/${var.name}/rds/username"
+}
+
+data "aws_ssm_parameter" "database_password" {
+  name = "/${var.name}/rds/password"
+}
+
+data "aws_ssm_parameter" "mandrill_api_key" {
+  name = "/mandrill/api-key"
+}
+
 resource "heroku_app" "app" {
   name   = "dosomething-${var.name}"
   region = "us"
@@ -61,9 +73,10 @@ resource "heroku_app" "app" {
     MAIL_DRIVER    = "mandrill"
 
     # Email:
-    EMAIL_NAME    = "${var.email_name}"
-    EMAIL_ADDRESS = "${var.email_address}"
-    MAIL_HOST     = "smtp.mandrillapp.com"
+    EMAIL_NAME      = "${var.email_name}"
+    EMAIL_ADDRESS   = "${var.email_address}"
+    MAIL_HOST       = "smtp.mandrillapp.com"
+    MANDRILL_APIKEY = "${data.aws_ssm_parameter.mandrill_api_key.value}"
 
     # Database:
     DB_HOST     = "${aws_db_instance.database.address}"
@@ -81,7 +94,6 @@ resource "heroku_app" "app" {
 
     # Additional secrets, set manually:
     # APP_KEY = ...
-    # MANDRILL_API_KEY = ...
   }
 
   buildpacks = [
@@ -140,14 +152,6 @@ resource "aws_db_instance" "database" {
   tags = {
     Application = "${var.name}"
   }
-}
-
-data "aws_ssm_parameter" "database_username" {
-  name = "/${var.name}/rds/username"
-}
-
-data "aws_ssm_parameter" "database_password" {
-  name = "/${var.name}/rds/password"
 }
 
 resource "aws_sqs_queue" "queue" {
