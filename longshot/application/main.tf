@@ -60,8 +60,8 @@ resource "heroku_app" "app" {
     STORAGE_DRIVER = "s3"
 
     # Email:
+    EMAIL_NAME    = "${var.email_name}"
     EMAIL_ADDRESS = "${var.email_address}"
-    EMAIL_ADDRESS = "${var.email_name}"
     MAIL_HOST     = "smtp.mandrillapp.com"
 
     # Database:
