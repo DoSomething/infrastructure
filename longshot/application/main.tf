@@ -30,7 +30,8 @@ variable "database_type" {
 }
 
 variable "database_size" {
-  default = 100
+  default     = 100
+  description = "The amount of storage to allocate to the database, in GB."
 }
 
 variable "email_name" {}
