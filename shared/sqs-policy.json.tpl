@@ -6,7 +6,8 @@
         "sqs:SendMessage",
         "sqs:ReceiveMessage",
         "sqs:DeleteMessage",
-        "sqs:GetQueueAttributes"
+        "sqs:GetQueueAttributes",
+        "sqs:ChangeMessageVisibility"
       ],
       "Effect": "Allow",
       "Resource": "${queue_arn}"
