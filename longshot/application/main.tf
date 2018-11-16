@@ -56,6 +56,7 @@ resource "heroku_app" "app" {
     # Drivers:
     QUEUE_DRIVER   = "sqs"
     CACHE_DRIVER   = "redis"
+    SESSION_DRIVER = "redis"
     STORAGE_DRIVER = "s3"
 
     # Email:
