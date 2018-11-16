@@ -23,7 +23,7 @@ module "longshot-qa" {
   papertrail_destination = "${var.papertrail_qa_destination}"
 }
 
-module "longshot-footlocer-internal" {
+module "longshot-footlocker-internal" {
   source = "application"
 
   name           = "longshot-footlocker-internal"
