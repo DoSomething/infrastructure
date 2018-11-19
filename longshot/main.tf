@@ -16,7 +16,6 @@ module "longshot-qa" {
   email_name    = "Longshot QA"
   email_address = "devops@dosomething.org"
 
-  database_name = "whitelabel_scholarship"
   database_type = "db.t2.micro"
   database_size = 5
 
@@ -34,8 +33,8 @@ module "longshot-footlocker-internal" {
   email_name    = "Foot Locker Scholar Athletes"
   email_address = "footlocker@tmiagency.org"
 
-  database_name = "footlocker_internal"
   database_type = "db.t2.medium"
+  database_size = 10
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
