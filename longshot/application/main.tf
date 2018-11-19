@@ -29,6 +29,11 @@ variable "database_type" {
   default = "db.t2.medium"
 }
 
+variable "database_subnet_group" {
+  default     = "default-vpc-7899331d"
+  description = "The AWS subnet group name for this database."
+}
+
 variable "database_size" {
   default     = 100
   description = "The amount of storage to allocate to the database, in GB."
@@ -150,6 +155,10 @@ resource "aws_db_instance" "database" {
   password            = "${data.aws_ssm_parameter.database_password.value}"
   publicly_accessible = true
   skip_final_snapshot = true
+
+  # TODO: We should migrate our account out of EC2-Classic, create
+  # a default VPC, and let resources be created in there by default!
+  db_subnet_group_name = "${var.database_subnet_group}"
 
   tags = {
     Application = "${var.name}"
