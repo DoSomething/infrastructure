@@ -57,7 +57,7 @@ data "aws_ssm_parameter" "mandrill_api_key" {
 }
 
 resource "heroku_app" "app" {
-  name   = "dosomething-${var.name}"
+  name   = "${var.name}"
   region = "us"
 
   organization {
@@ -171,7 +171,7 @@ resource "aws_sqs_queue" "queue" {
 }
 
 resource "aws_s3_bucket" "storage" {
-  bucket = "dosomething-${var.name}"
+  bucket = "${var.name}"
   acl    = "public-read"
 
   tags {
