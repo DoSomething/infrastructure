@@ -34,6 +34,11 @@ variable "database_subnet_group" {
   description = "The AWS subnet group name for this database."
 }
 
+variable "database_security_group" {
+  default     = "sg-c9a37db2"
+  description = "The security group ID for this database."
+}
+
 variable "database_size" {
   default     = 100
   description = "The amount of storage to allocate to the database, in GB."
@@ -147,14 +152,15 @@ resource "heroku_addon" "redis" {
 }
 
 resource "aws_db_instance" "database" {
-  engine              = "mariadb"
-  engine_version      = "10.0"
-  instance_class      = "${var.database_type}"
-  allocated_storage   = "${var.database_size}"
-  username            = "${data.aws_ssm_parameter.database_username.value}"
-  password            = "${data.aws_ssm_parameter.database_password.value}"
-  publicly_accessible = true
-  skip_final_snapshot = true
+  engine                 = "mariadb"
+  engine_version         = "10.0"
+  instance_class         = "${var.database_type}"
+  allocated_storage      = "${var.database_size}"
+  username               = "${data.aws_ssm_parameter.database_username.value}"
+  password               = "${data.aws_ssm_parameter.database_password.value}"
+  vpc_security_group_ids = ["${var.database_security_group}"]
+  publicly_accessible    = true
+  skip_final_snapshot    = true
 
   # TODO: We should migrate our account out of EC2-Classic, create
   # a default VPC, and let resources be created in there by default!
