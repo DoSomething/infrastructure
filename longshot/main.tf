@@ -34,7 +34,7 @@ module "longshot-footlocker-internal" {
   email_address = "footlocker@tmiagency.org"
 
   database_type = "db.t2.medium"
-  database_size = 10
+  database_size = 100
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
