@@ -22,6 +22,23 @@ module "longshot-qa" {
   papertrail_destination = "${var.papertrail_qa_destination}"
 }
 
+module "longshot-footlocker" {
+  source = "application"
+
+  name           = "longshot-footlocker"
+  host           = "footlockerscholarathletes.com"
+  pipeline       = "${heroku_pipeline.longshot.id}"
+  pipeline_stage = "production"
+
+  email_name    = "Foot Locker Scholar Athletes"
+  email_address = "footlocker@tmiagency.org"
+
+  database_type = "db.t2.medium"
+  database_size = 100
+
+  papertrail_destination = "${var.papertrail_prod_destination}"
+}
+
 module "longshot-footlocker-internal" {
   source = "application"
 
