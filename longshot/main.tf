@@ -55,3 +55,20 @@ module "longshot-footlocker-internal" {
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
+
+module "hrblock" {
+  source = "application"
+
+  name           = "longshot-hrblock"
+  host           = "caps.hrblock.com"
+  pipeline       = "${heroku_pipeline.longshot.id}"
+  pipeline_stage = "production"
+
+  email_name    = "Kary at CAPS"
+  email_address = "contracts@tmiagency.org"
+
+  database_type = "db.t2.medium"
+  database_size = 100
+
+  papertrail_destination = "${var.papertrail_prod_destination}"
+}
