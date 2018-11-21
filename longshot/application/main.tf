@@ -23,10 +23,18 @@ variable "redis_type" {
   default = "hobby-dev"
 }
 
-variable "database_name" {}
-
 variable "database_type" {
   default = "db.t2.medium"
+}
+
+variable "database_subnet_group" {
+  default     = "default-vpc-7899331d"
+  description = "The AWS subnet group name for this database."
+}
+
+variable "database_security_group" {
+  default     = "sg-c9a37db2"
+  description = "The security group ID for this database."
 }
 
 variable "database_size" {
@@ -52,7 +60,7 @@ data "aws_ssm_parameter" "mandrill_api_key" {
 }
 
 resource "heroku_app" "app" {
-  name   = "dosomething-${var.name}"
+  name   = "${var.name}"
   region = "us"
 
   organization {
@@ -83,7 +91,7 @@ resource "heroku_app" "app" {
     # Database:
     DB_HOST     = "${aws_db_instance.database.address}"
     DB_PORT     = "${aws_db_instance.database.port}"
-    DB_DATABASE = "${var.database_name}"
+    DB_DATABASE = "${aws_db_instance.database.name}"
     DB_USERNAME = "${data.aws_ssm_parameter.database_username.value}"
     DB_PASSWORD = "${data.aws_ssm_parameter.database_password.value}"
 
@@ -142,14 +150,28 @@ resource "heroku_addon" "redis" {
 }
 
 resource "aws_db_instance" "database" {
-  engine              = "mariadb"
-  engine_version      = "10.0"
-  instance_class      = "${var.database_type}"
-  allocated_storage   = "${var.database_size}"
-  username            = "${data.aws_ssm_parameter.database_username.value}"
-  password            = "${data.aws_ssm_parameter.database_password.value}"
-  publicly_accessible = true
-  skip_final_snapshot = true
+  identifier = "${var.name}"
+  name       = "longshot"
+
+  engine            = "mariadb"
+  engine_version    = "10.2"
+  instance_class    = "${var.database_type}"
+  allocated_storage = "${var.database_size}"
+
+  allow_major_version_upgrade = true
+
+  backup_retention_period = 7             # 7 days.
+  backup_window           = "06:00-07:00" # 1-2am ET.
+
+  username = "${data.aws_ssm_parameter.database_username.value}"
+  password = "${data.aws_ssm_parameter.database_password.value}"
+
+  # TODO: We should migrate our account out of EC2-Classic, create
+  # a default VPC, and let resources be created in there by default!
+  db_subnet_group_name = "${var.database_subnet_group}"
+
+  vpc_security_group_ids = ["${var.database_security_group}"]
+  publicly_accessible    = true
 
   tags = {
     Application = "${var.name}"
@@ -162,7 +184,7 @@ resource "aws_sqs_queue" "queue" {
 }
 
 resource "aws_s3_bucket" "storage" {
-  bucket = "dosomething-${var.name}"
+  bucket = "${var.name}"
   acl    = "public-read"
 
   tags {
