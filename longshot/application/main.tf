@@ -158,6 +158,8 @@ resource "aws_db_instance" "database" {
   instance_class    = "${var.database_type}"
   allocated_storage = "${var.database_size}"
 
+  allow_major_version_upgrade = true
+
   backup_retention_period = 7             # 7 days.
   backup_window           = "06:00-07:00" # 1-2am ET.
 
