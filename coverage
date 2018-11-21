@@ -56,7 +56,7 @@ terraform_diff "S3 buckets" "aws_s3_bucket" "bucket" "$AWS_S3_BUCKETS"
 
 # SQS queues:
 AWS_SQS_IDS=$(aws sqs list-queues --query "QueueUrls[].[@]" --output text --profile readonly | sed -E "s/queue\.amazonaws\.com/sqs\.us-east-1.amazonaws\.com/")
-terraform_diff "S3 buckets" "aws_sqs_queue" "id" "$AWS_SQS_IDS"
+terraform_diff "SQS queues" "aws_sqs_queue" "id" "$AWS_SQS_IDS"
 
 # IAM users:
 AWS_IAM_USERS=$(aws iam list-users --query "Users[].[UserName]" --output text --profile readonly)
