@@ -1,0 +1,77 @@
+#!/bin/bash
+
+###########################################################
+###########################################################
+##                                                       ##
+## Use this script to generate a a summary of how many   ##
+## resources we have defined in Terraform.               ##
+##                                                       ##
+##  - Requires `aws`, `terraform`, and `jq`.             ##
+##  - Expects an initialized Terraform environment & a   ##
+##    configured 'readonly' AWS profile, Heroku CLI, &   ##
+##    FASTLY_API_KEY environment variable.               ##
+##                                                       ##
+###########################################################
+###########################################################
+
+
+##
+## Given a list of resources elsewhere, compare with Terraform
+## resources and summarize alongside a diff.
+##
+## Usage: terraform_diff "RDS instances" "terraform_resource" "identifier" "$MULTILINE_ID_LIST"
+##
+function terraform_diff() {
+  echo "#### $1:"
+  TERRAFORM_IDS=$(terraform state list | grep "\.$2\." | xargs -I _ sh -c "terraform state show _ | grep -E ^$3[[:space:]]+=" | sed -E "s/^$3[  ]+= //")
+  TERRAFORM_COUNT=$(echo "$TERRAFORM_IDS" | sed '/^[  ]*$/d' | wc -l | sed -E 's/[[:space:]]//g')
+  AWS_COUNT=$(echo "$4" | wc -l | sed -E 's/[[:space:]]//g')
+  PERCENTAGE=$(echo "scale=0; $TERRAFORM_COUNT*100/$AWS_COUNT" | bc)
+
+  echo "We have $TERRAFORM_COUNT of $AWS_COUNT $1 ($PERCENTAGE%) in Terraform:"
+
+  echo "\`\`\`diff"
+  diff <(echo "$4" | sort) <(echo "$TERRAFORM_IDS" | sort) -u | sed -e '1,3d'
+  echo "\`\`\`"
+}
+
+###########################################################
+###########################################################
+
+# VPCs & security groups:
+AWS_VPC_IDS=$(aws ec2 describe-vpcs --query "Vpcs[].[VpcId]" --output text --profile readonly)
+terraform_diff "AWS VPCs" "aws_vpc" "id" "$AWS_VPC_IDS"
+
+# # Running EC2 instances:
+AWS_EC2_IDS=$(aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId]" --filter "Name=instance-state-code,Values=16" --output text --profile readonly)
+terraform_diff "Running EC2 instances" "aws_instance" "id" "$AWS_EC2_IDS"
+
+# # RDS instances:
+AWS_RDS_IDS=$(aws rds describe-db-instances --query "DBInstances[].[DBInstanceIdentifier]" --output text --profile readonly)
+terraform_diff "RDS instances" "aws_db_instance" "identifier" "$AWS_RDS_IDS"
+
+# S3 buckets:
+AWS_S3_BUCKETS=$(aws s3api list-buckets --query "Buckets[].[Name]" --profile readonly --output text)
+terraform_diff "S3 buckets" "aws_s3_bucket" "bucket" "$AWS_S3_BUCKETS"
+
+# SQS queues:
+AWS_SQS_IDS=$(aws sqs list-queues --query "QueueUrls[].[@]" --output text --profile readonly | sed -E "s/queue\.amazonaws\.com/sqs\.us-east-1.amazonaws\.com/")
+terraform_diff "SQS queues" "aws_sqs_queue" "id" "$AWS_SQS_IDS"
+
+# IAM users:
+AWS_IAM_USERS=$(aws iam list-users --query "Users[].[UserName]" --output text --profile readonly)
+terraform_diff "IAM users" "aws_iam_user" "id" "$AWS_IAM_USERS"
+
+# Heroku applications:
+HEROKU_APPS=$(curl -sn https://api.heroku.com/organizations/dosomething/apps -H "Accept: application/vnd.heroku+json; version=3" | jq ".[].name" -r)
+terraform_diff "Heroku apps" "heroku_app" "name" "$HEROKU_APPS"
+
+# Fastly services:
+FASTLY_SERVICES=$(curl -s "https://api.fastly.com/services?page%5Bsize%5D=100&filter%5Bdeleted%5D=false" -H "Fastly-Key: $FASTLY_API_KEY" | jq ".data[].attributes | select (.active_version != null) | .name" -r)
+terraform_diff "Fastly services" "fastly_service_v1" "name" "$FASTLY_SERVICES"
+
+# DNS records:
+# TODO: ...
+
+# Runscope buckets:
+# TODO: ...
