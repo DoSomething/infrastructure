@@ -7,12 +7,12 @@
 #   - /mandrill/api-key
 
 # Required variables:
-variable "pipeline" {
-  description = "The Heroku pipeline ID this application should be created in."
+variable "environment" {
+  description = "The environment for this applicaiton: development, qa, or production."
 }
 
-variable "pipeline_stage" {
-  description = "The pipeline stage this application should be created in: development, staging, or production."
+variable "pipeline" {
+  description = "The Heroku pipeline ID this application should be created in."
 }
 
 variable "name" {
@@ -105,7 +105,7 @@ resource "heroku_app" "app" {
 
   config_vars {
     # App settings:
-    APP_ENV                    = "production"
+    APP_ENV                    = "${var.environment}"
     APP_DEBUG                  = "false"
     APP_LOG                    = "errorlog"
     APP_URL                    = "https://${var.host}"
@@ -177,7 +177,9 @@ resource "heroku_drain" "papertrail" {
 resource "heroku_pipeline_coupling" "app" {
   app      = "${heroku_app.app.name}"
   pipeline = "${var.pipeline}"
-  stage    = "${var.pipeline_stage}"
+
+  # Heroku uses "staging" for what we call "qa":
+  stage = "${var.environment == "qa" ? "staging" : var.environment}"
 }
 
 resource "heroku_addon" "redis" {
