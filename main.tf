@@ -65,6 +65,12 @@ provider "aws" {
   profile = "terraform"
 }
 
+# The template provider is used to generate files with
+# interpolated variables (like JSON or VCL).
+provider "template" {
+  version = "~> 1.0"
+}
+
 # ----------------------------------------------------
 
 # We separate our infrastructure into modules for
