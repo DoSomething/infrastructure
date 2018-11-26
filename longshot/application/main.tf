@@ -216,7 +216,7 @@ resource "aws_db_instance" "database" {
 
 resource "aws_sqs_queue" "queue" {
   name                      = "${var.name}"
-  message_retention_seconds = "${60 * 60 * 24 * 14}"
+  message_retention_seconds = "${60 * 60 * 24 * 14}" # 14 days (maximum).
 }
 
 resource "aws_s3_bucket" "storage" {
