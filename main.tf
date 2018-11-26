@@ -98,12 +98,12 @@ module "dosomething" {
 module "dosomething-qa" {
   source = "dosomething-qa"
 
-  graphql_pipeline                 = "${module.shared.graphql_pipeline}"
-  northstar_pipeline               = "${module.shared.northstar_pipeline}"
-  phoenix_pipeline                 = "${module.shared.phoenix_pipeline}"
-  rogue_pipeline                   = "${module.shared.rogue_pipeline}"
-  papertrail_destination           = "${var.papertrail_qa_destination}"
-  papertrail_destination_fastly_qa = "${var.papertrail_destination_fastly_qa}"
+  graphql_pipeline              = "${module.shared.graphql_pipeline}"
+  northstar_pipeline            = "${module.shared.northstar_pipeline}"
+  phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
+  rogue_pipeline                = "${module.shared.rogue_pipeline}"
+  papertrail_destination        = "${var.papertrail_qa_destination}"
+  papertrail_destination_fastly = "${var.papertrail_destination_fastly_qa}"
 }
 
 # Our development applications live in the 'dosomething-dev'
@@ -112,12 +112,12 @@ module "dosomething-qa" {
 module "dosomething-dev" {
   source = "dosomething-dev"
 
-  graphql_pipeline                  = "${module.shared.graphql_pipeline}"
-  northstar_pipeline                = "${module.shared.northstar_pipeline}"
-  phoenix_pipeline                  = "${module.shared.phoenix_pipeline}"
-  rogue_pipeline                    = "${module.shared.rogue_pipeline}"
-  papertrail_destination            = "${var.papertrail_qa_destination}"
-  papertrail_destination_fastly_dev = "${var.papertrail_destination_fastly_dev}"
+  graphql_pipeline              = "${module.shared.graphql_pipeline}"
+  northstar_pipeline            = "${module.shared.northstar_pipeline}"
+  phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
+  rogue_pipeline                = "${module.shared.rogue_pipeline}"
+  papertrail_destination        = "${var.papertrail_qa_destination}"
+  papertrail_destination_fastly = "${var.papertrail_destination_fastly_dev}"
 }
 
 # Longshot is DoSomething Strategic's white-labeled scholarship

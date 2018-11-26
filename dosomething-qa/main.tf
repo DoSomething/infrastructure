@@ -3,7 +3,7 @@ variable "northstar_pipeline" {}
 variable "phoenix_pipeline" {}
 variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
-variable "papertrail_destination_fastly_qa" {}
+variable "papertrail_destination_fastly" {}
 
 module "fastly-frontend" {
   source = "fastly-frontend"
@@ -13,7 +13,7 @@ module "fastly-frontend" {
   phoenix_name    = "${module.phoenix.name}"
   phoenix_backend = "${module.phoenix.backend}"
 
-  papertrail_destination = "${var.papertrail_destination_fastly_qa}"
+  papertrail_destination = "${var.papertrail_destination_fastly}"
 }
 
 module "fastly-backend" {
@@ -35,7 +35,7 @@ module "fastly-backend" {
   rogue_domain  = "${module.rogue.domain}"
   rogue_backend = "${module.rogue.backend}"
 
-  papertrail_destination = "${var.papertrail_destination_fastly_qa}"
+  papertrail_destination = "${var.papertrail_destination_fastly}"
 }
 
 module "graphql" {
