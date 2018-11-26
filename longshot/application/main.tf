@@ -24,7 +24,8 @@ variable "redis_type" {
 }
 
 variable "database_type" {
-  default = "db.t2.medium"
+  default     = "db.t2.medium"
+  description = "The RDS instance class. See: https://goo.gl/vTMqx9"
 }
 
 variable "database_subnet_group" {
