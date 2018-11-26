@@ -38,7 +38,7 @@ variable "database_security_group" {
   description = "The security group ID for this database."
 }
 
-variable "database_size" {
+variable "database_size_gb" {
   default     = 100
   description = "The amount of storage to allocate to the database, in GB."
 }
@@ -157,7 +157,7 @@ resource "aws_db_instance" "database" {
   engine            = "mariadb"
   engine_version    = "10.3"
   instance_class    = "${var.database_type}"
-  allocated_storage = "${var.database_size}"
+  allocated_storage = "${var.database_size_gb}"
 
   allow_major_version_upgrade = true
 
