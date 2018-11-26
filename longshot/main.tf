@@ -8,16 +8,16 @@ resource "heroku_pipeline" "longshot" {
 module "longshot-qa" {
   source = "application"
 
-  name           = "longshot-qa"
-  host           = "longshot-qa.dosomething.org"
-  pipeline       = "${heroku_pipeline.longshot.id}"
-  pipeline_stage = "staging"
+  name        = "longshot-qa"
+  host        = "longshot-qa.dosomething.org"
+  pipeline    = "${heroku_pipeline.longshot.id}"
+  environment = "qa"
 
   email_name    = "Longshot QA"
   email_address = "devops@dosomething.org"
 
-  database_type = "db.t2.micro"
-  database_size = 5
+  database_type    = "db.t2.micro"
+  database_size_gb = 5
 
   papertrail_destination = "${var.papertrail_qa_destination}"
 }
@@ -25,16 +25,15 @@ module "longshot-qa" {
 module "longshot-footlocker" {
   source = "application"
 
-  name           = "longshot-footlocker"
-  host           = "footlockerscholarathletes.com"
-  pipeline       = "${heroku_pipeline.longshot.id}"
-  pipeline_stage = "production"
+  name        = "longshot-footlocker"
+  host        = "footlockerscholarathletes.com"
+  pipeline    = "${heroku_pipeline.longshot.id}"
+  environment = "production"
 
   email_name    = "Foot Locker Scholar Athletes"
   email_address = "footlocker@tmiagency.org"
 
   database_type = "db.t2.medium"
-  database_size = 100
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
@@ -42,16 +41,15 @@ module "longshot-footlocker" {
 module "longshot-footlocker-internal" {
   source = "application"
 
-  name           = "longshot-footlocker-internal"
-  host           = "footlocker-internal.dosomething.org"
-  pipeline       = "${heroku_pipeline.longshot.id}"
-  pipeline_stage = "production"
+  name        = "longshot-footlocker-internal"
+  host        = "footlocker-internal.dosomething.org"
+  pipeline    = "${heroku_pipeline.longshot.id}"
+  environment = "production"
 
   email_name    = "Foot Locker Scholar Athletes"
   email_address = "footlocker@tmiagency.org"
 
   database_type = "db.t2.medium"
-  database_size = 100
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
@@ -59,16 +57,15 @@ module "longshot-footlocker-internal" {
 module "hrblock" {
   source = "application"
 
-  name           = "longshot-hrblock"
-  host           = "caps.hrblock.com"
-  pipeline       = "${heroku_pipeline.longshot.id}"
-  pipeline_stage = "production"
+  name        = "longshot-hrblock"
+  host        = "caps.hrblock.com"
+  pipeline    = "${heroku_pipeline.longshot.id}"
+  environment = "production"
 
   email_name    = "Kary at CAPS"
   email_address = "contracts@tmiagency.org"
 
   database_type = "db.t2.medium"
-  database_size = 100
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }

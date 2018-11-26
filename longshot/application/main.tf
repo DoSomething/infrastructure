@@ -1,51 +1,85 @@
-variable "pipeline" {}
-variable "pipeline_stage" {}
-variable "name" {}
-variable "host" {}
+# This template builds a Longshot application instance, with
+# database, queue, caching, and storage resources. Be sure to
+# set the application's required SSM parameters before
+# provisioning a new application as well:
+#   - /{name}/rds/username
+#   - /{name}/rds/password
+#   - /mandrill/api-key
 
+# Required variables:
+variable "environment" {
+  description = "The environment for this applicaiton: development, qa, or production."
+}
+
+variable "pipeline" {
+  description = "The Heroku pipeline ID this application should be created in."
+}
+
+variable "name" {
+  description = "The application name."
+}
+
+variable "host" {
+  description = "The hostname this application will be accessible at, e.g. longshot.dosomething.org"
+}
+
+variable "email_name" {
+  description = "The default 'from' name for this application's mail driver."
+}
+
+variable "email_address" {
+  description = "The default email address for this application's mail driver."
+}
+
+variable "papertrail_destination" {
+  description = "The Papertrail log destination for this application."
+}
+
+# Optional variables:
 variable "web_size" {
-  default = "Standard-1X"
+  description = "The Heroku dyno type for web processes."
+  default     = "Standard-1X"
 }
 
 variable "web_scale" {
-  default = "1"
+  description = "The number of web dynos this application should have."
+  default     = "1"
 }
 
 variable "queue_size" {
-  default = "Standard-1X"
+  description = "The Heroku dyno type for queue processes."
+  default     = "Standard-1X"
 }
 
 variable "queue_scale" {
-  default = "1"
+  description = "The number of queue dynos this application should have."
+  default     = "1"
 }
 
 variable "redis_type" {
-  default = "hobby-dev"
+  description = "The Heroku Redis add-on plan. See: https://goo.gl/3v3RXX"
+  default     = "hobby-dev"
 }
 
 variable "database_type" {
-  default = "db.t2.medium"
+  description = "The RDS instance class. See: https://goo.gl/vTMqx9"
+  default     = "db.t2.medium"
 }
 
 variable "database_subnet_group" {
-  default     = "default-vpc-7899331d"
   description = "The AWS subnet group name for this database."
+  default     = "default-vpc-7899331d"
 }
 
 variable "database_security_group" {
-  default     = "sg-c9a37db2"
   description = "The security group ID for this database."
+  default     = "sg-c9a37db2"
 }
 
-variable "database_size" {
-  default     = 100
+variable "database_size_gb" {
   description = "The amount of storage to allocate to the database, in GB."
+  default     = 100
 }
-
-variable "email_name" {}
-variable "email_address" {}
-
-variable "papertrail_destination" {}
 
 data "aws_ssm_parameter" "database_username" {
   name = "/${var.name}/rds/username"
@@ -59,6 +93,8 @@ data "aws_ssm_parameter" "mandrill_api_key" {
   name = "/mandrill/api-key"
 }
 
+# ----------------------------------------------------
+
 resource "heroku_app" "app" {
   name   = "${var.name}"
   region = "us"
@@ -69,7 +105,7 @@ resource "heroku_app" "app" {
 
   config_vars {
     # App settings:
-    APP_ENV                    = "production"
+    APP_ENV                    = "${var.environment}"
     APP_DEBUG                  = "false"
     APP_LOG                    = "errorlog"
     APP_URL                    = "https://${var.host}"
@@ -141,7 +177,9 @@ resource "heroku_drain" "papertrail" {
 resource "heroku_pipeline_coupling" "app" {
   app      = "${heroku_app.app.name}"
   pipeline = "${var.pipeline}"
-  stage    = "${var.pipeline_stage}"
+
+  # Heroku uses "staging" for what we call "qa":
+  stage = "${var.environment == "qa" ? "staging" : var.environment}"
 }
 
 resource "heroku_addon" "redis" {
@@ -154,9 +192,9 @@ resource "aws_db_instance" "database" {
   name       = "longshot"
 
   engine            = "mariadb"
-  engine_version    = "10.2"
+  engine_version    = "10.3"
   instance_class    = "${var.database_type}"
-  allocated_storage = "${var.database_size}"
+  allocated_storage = "${var.database_size_gb}"
 
   allow_major_version_upgrade = true
 
@@ -180,7 +218,7 @@ resource "aws_db_instance" "database" {
 
 resource "aws_sqs_queue" "queue" {
   name                      = "${var.name}"
-  message_retention_seconds = "${60 * 60 * 24 * 14}"
+  message_retention_seconds = "${60 * 60 * 24 * 14}" # 14 days (maximum).
 }
 
 resource "aws_s3_bucket" "storage" {
