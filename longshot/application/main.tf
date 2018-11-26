@@ -154,7 +154,7 @@ resource "aws_db_instance" "database" {
   name       = "longshot"
 
   engine            = "mariadb"
-  engine_version    = "10.2"
+  engine_version    = "10.3"
   instance_class    = "${var.database_type}"
   allocated_storage = "${var.database_size}"
 
