@@ -135,12 +135,10 @@ module "longshot" {
   papertrail_qa_destination   = "${var.papertrail_qa_destination}"
 }
 
-# Quasar is DoSomething's Data Platform. This is the QA environment
+# Quasar is DoSomething's Data Platform. This environment is
 # primarily used by Team Storm.
-module "quasar-qa" {
-  source = "quasar-qa"
-
-  vpc_id = "${module.shared.quasar_vpc}"
+module "quasar" {
+  source = "quasar"
 }
 
 # The redirects property handles redirects for old domains, like
