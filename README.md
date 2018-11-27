@@ -25,7 +25,7 @@ terraform init
 
 ## Usage
 
-Terraform allows us to create & modify infrastructure declaratively. You can see all your options in Terraform's provider documentation for [Fastly](https://www.terraform.io/docs/providers/fastly/), [Heroku](https://www.terraform.io/docs/providers/heroku/), and [AWS](https://www.terraform.io/docs/providers/aws/) (full access to S3 resources, read-only for everything else).
+Terraform allows us to create & modify infrastructure declaratively. You can see all your options in Terraform's provider documentation for [Fastly](https://www.terraform.io/docs/providers/fastly/), [Heroku](https://www.terraform.io/docs/providers/heroku/), and [AWS](https://www.terraform.io/docs/providers/aws/) (EC2, RDS, SQS, S3, IAM users, amongst others).
 
 You can run `make format` at any time to automatically format your code (or use an [hclfmt](https://github.com/fatih/hclfmt#editor-integration) plugin for your editor).
 
