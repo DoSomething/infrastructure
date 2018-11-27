@@ -14,6 +14,14 @@ resource "heroku_pipeline" "phoenix" {
   name = "phoenix"
 }
 
+resource "aws_vpc" "quasar" {
+  cidr_block = "10.255.0.0/16"
+
+  tags {
+    Name = "Quasar"
+  }
+}
+
 output "graphql_pipeline" {
   value = "${heroku_pipeline.graphql.id}"
 }
@@ -28,4 +36,8 @@ output "rogue_pipeline" {
 
 output "phoenix_pipeline" {
   value = "${heroku_pipeline.phoenix.id}"
+}
+
+output "quasar_vpc" {
+  value = "${aws_vpc.quasar.id}"
 }

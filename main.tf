@@ -135,6 +135,14 @@ module "longshot" {
   papertrail_qa_destination   = "${var.papertrail_qa_destination}"
 }
 
+# Quasar is DoSomething's Data Platform. This is the QA environment
+# primarily used by Team Storm.
+module "quasar-qa" {
+  source = "quasar-qa"
+
+  vpc_id = "${module.shared.quasar_vpc}"
+}
+
 # The redirects property handles redirects for old domains, like
 # 'northstar-thor.dosomething.org' to 'identity-qa.dosomething.org'.
 module "redirects" {
