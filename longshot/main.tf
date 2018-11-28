@@ -68,4 +68,5 @@ module "hrblock" {
   database_type = "db.t2.medium"
 
   papertrail_destination = "${var.papertrail_prod_destination}"
+  with_newrelic          = true
 }
