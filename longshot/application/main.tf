@@ -152,8 +152,8 @@ resource "heroku_app" "app" {
     S3_BUCKET         = "${aws_s3_bucket.storage.id}"
 
     # New Relic:
+    NEW_RELIC_ENABLED  = "${var.with_newrelic ? "true" : "false"}"
     NEW_RELIC_APP_NAME = "${var.with_newrelic ? var.name : ""}"
-    NEW_RELIC_LOG      = "${var.with_newrelic ? "stdout" : ""}"
 
     # We can't use a ternary on an optional resource, hence this hack! https://git.io/fp2pg
     NEW_RELIC_LICENSE_KEY = "${join("", data.aws_ssm_parameter.newrelic_api_key.*.value)}"
@@ -205,15 +205,6 @@ resource "heroku_pipeline_coupling" "app" {
 resource "heroku_addon" "redis" {
   app  = "${heroku_app.app.name}"
   plan = "heroku-redis:${var.redis_type}"
-}
-
-# Attach New Relic addon if enabled for this app. This
-# installs the New Relic PHP agent, and we use environment
-# variables on the app to connect it to our org account.
-resource "heroku_addon" "newrelic" {
-  count = "${var.with_newrelic ? 1 : 0}"
-  app   = "${heroku_app.app.name}"
-  plan  = "newrelic:wayne"
 }
 
 resource "aws_db_instance" "database" {
