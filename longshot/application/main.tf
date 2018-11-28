@@ -5,6 +5,9 @@
 #   - /{name}/rds/username
 #   - /{name}/rds/password
 #   - /mandrill/api-key
+#
+# And required if using New Relic:
+#   - /newrelic/api-key
 
 # Required variables:
 variable "environment" {
@@ -81,6 +84,11 @@ variable "database_size_gb" {
   default     = 100
 }
 
+variable "with_newrelic" {
+  description = "Should New Relic be configured for this app? Generally only used on prod."
+  default     = false
+}
+
 data "aws_ssm_parameter" "database_username" {
   name = "/${var.name}/rds/username"
 }
@@ -91,6 +99,11 @@ data "aws_ssm_parameter" "database_password" {
 
 data "aws_ssm_parameter" "mandrill_api_key" {
   name = "/mandrill/api-key"
+}
+
+data "aws_ssm_parameter" "newrelic_api_key" {
+  count = "${var.with_newrelic ? 1 : 0}"
+  name  = "/newrelic/api-key"
 }
 
 # ----------------------------------------------------
@@ -137,6 +150,13 @@ resource "heroku_app" "app" {
     SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.id}"
     S3_REGION         = "${aws_s3_bucket.storage.region}"
     S3_BUCKET         = "${aws_s3_bucket.storage.id}"
+
+    # New Relic:
+    NEW_RELIC_APP_NAME = "${var.with_newrelic ? var.name : ""}"
+    NEW_RELIC_LOG      = "${var.with_newrelic ? "stdout" : ""}"
+
+    # We can't use a ternary on an optional resource, hence this hack! https://git.io/fp2pg
+    NEW_RELIC_LICENSE_KEY = "${join("", data.aws_ssm_parameter.newrelic_api_key.*.value)}"
 
     # Additional secrets, set manually:
     # APP_KEY = ...
@@ -185,6 +205,15 @@ resource "heroku_pipeline_coupling" "app" {
 resource "heroku_addon" "redis" {
   app  = "${heroku_app.app.name}"
   plan = "heroku-redis:${var.redis_type}"
+}
+
+# Attach New Relic addon if enabled for this app. This
+# installs the New Relic PHP agent, and we use environment
+# variables on the app to connect it to our org account.
+resource "heroku_addon" "newrelic" {
+  count = "${var.with_newrelic ? 1 : 0}"
+  app   = "${heroku_app.app.name}"
+  plan  = "newrelic:wayne"
 }
 
 resource "aws_db_instance" "database" {
