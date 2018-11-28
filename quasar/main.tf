@@ -23,3 +23,96 @@ resource "aws_subnet" "subnet-b" {
     Name = "Quasar RDS - 1E"
   }
 }
+
+resource "aws_security_group" "bastion" {
+  name        = "Quasar-Bastion"
+  description = "22 from Everywhere"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "jenkins" {
+  name        = "Quasar-Jenkins"
+  description = "22 from Quasar-Bastion, 8080 from Quasar-HA-Proxy"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    security_groups = ["${aws_security_group.haproxy.id}"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = ["${aws_security_group.bastion.id}"]
+  }
+}
+
+resource "aws_security_group" "haproxy" {
+  name        = "Quasar-HA-Proxy"
+  description = "80/443 Everywhere, 22 from Quasar Bastion"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = ["${aws_security_group.bastion.id}, ${aws_security_group.jenkins.id}"]
+  }
+}
+
+resource "aws_security_group" "etl" {
+  name        = "Quasar-ETL"
+  description = "22 from Quasar-Bastion and Quasar-Jenkins"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = ["${aws_security_group.bastion.id}, ${aws_security_group.jenkins.id}"]
+  }
+}
+
+resource "aws_security_group" "rds" {
+  name        = "Quasar-PostgreSQL"
+  description = "Quasar PostgreSQL Connectivity"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    security_groups = ["${aws_security_group.etl.id}"]
+  }
+}
