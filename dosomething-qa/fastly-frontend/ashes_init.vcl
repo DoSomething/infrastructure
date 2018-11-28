@@ -282,7 +282,6 @@ table ashes_campaigns {
   "trash-or-treat": "true",
   "trash-scavenger-hunt": "true",
   "trash-stash": "true",
-  "treat-yo-friends": "true",
   "treats-troops": "true",
   "trick-or-treat-tp": "true",
   "turn-down-sexism": "true",
