@@ -152,8 +152,9 @@ resource "heroku_app" "app" {
     S3_BUCKET         = "${aws_s3_bucket.storage.id}"
 
     # New Relic:
-    NEW_RELIC_ENABLED  = "${var.with_newrelic ? "true" : "false"}"
-    NEW_RELIC_APP_NAME = "${var.with_newrelic ? var.name : ""}"
+    NEW_RELIC_ENABLED   = "${var.with_newrelic ? "true" : "false"}"
+    NEW_RELIC_APP_NAME  = "${var.with_newrelic ? var.name : ""}"
+    NEW_RELIC_LOG_LEVEL = "error"
 
     # We can't use a ternary on an optional resource, hence this hack! https://git.io/fp2pg
     NEW_RELIC_LICENSE_KEY = "${join("", data.aws_ssm_parameter.newrelic_api_key.*.value)}"
