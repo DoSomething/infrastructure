@@ -1,6 +1,6 @@
 # DoSomething.org Infrastructure
 
-This is a prototype for managing DoSomething.org's infrastructure as code, using [Terraform](https://www.terraform.io). We're currently evaluating whether this is the right tool for us, and migrating services piece-by-piece to test.
+This is DoSomething.org's infrastructure as code, built using [Terraform](https://www.terraform.io). We use it to manage and provision resources in [Fastly](https://www.terraform.io/docs/providers/fastly/), [Heroku](https://www.terraform.io/docs/providers/heroku/), and [AWS](https://www.terraform.io/docs/providers/aws/) (EC2, RDS, SQS, S3, IAM users, amongst others). It's a [work in progress](https://github.com/DoSomething/internal/issues/465).
 
 ## Installation
 
