@@ -43,6 +43,14 @@ resource "aws_security_group_rule" "bastion" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "bastion-egress" {
+  security_group_id = "${aws_security_group.bastion.id}"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+}
+
 resource "aws_security_group" "jenkins" {
   name        = "Quasar-Jenkins"
   description = "22 from Quasar-Bastion, 8080 from Quasar-HA-Proxy"
@@ -69,6 +77,14 @@ resource "aws_security_group_rule" "jenkins-haproxy" {
   to_port                  = 8080
   protocol                 = "tcp"
   source_security_group_id = "${aws_security_group.haproxy.id}"
+}
+
+resource "aws_security_group_rule" "jenkins-egress" {
+  security_group_id = "${aws_security_group.jenkins.id}"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
 }
 
 resource "aws_security_group" "haproxy" {
@@ -108,6 +124,14 @@ resource "aws_security_group_rule" "haproxy-bastion" {
   source_security_group_id = "${aws_security_group.bastion.id}"
 }
 
+resource "aws_security_group_rule" "haproxy-egress" {
+  security_group_id = "${aws_security_group.haproxy.id}"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+}
+
 resource "aws_security_group" "etl" {
   name        = "Quasar-ETL"
   description = "22 from Quasar-Bastion and Quasar-Jenkins"
@@ -136,6 +160,14 @@ resource "aws_security_group_rule" "etl-jenkins" {
   source_security_group_id = "${aws_security_group.jenkins.id}"
 }
 
+resource "aws_security_group_rule" "etl-egress" {
+  security_group_id = "${aws_security_group.etl.id}"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+}
+
 resource "aws_security_group" "rds" {
   name        = "Quasar-PostgreSQL"
   description = "Quasar PostgreSQL Connectivity"
@@ -162,4 +194,12 @@ resource "aws_security_group_rule" "rds-etl" {
   to_port                  = 5432
   protocol                 = "tcp"
   source_security_group_id = "${aws_security_group.etl.id}"
+}
+
+resource "aws_security_group_rule" "rds-egress" {
+  security_group_id = "${aws_security_group.rds.id}"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
 }
