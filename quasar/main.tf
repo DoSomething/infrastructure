@@ -43,18 +43,22 @@ resource "aws_security_group" "jenkins" {
   vpc_id      = "${aws_vpc.vpc.id}"
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    security_groups = ["${aws_security_group.haproxy.id}"]
-  }
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     security_groups = ["${aws_security_group.bastion.id}"]
   }
+}
+
+# Adding to clear up cycle error dependency between 
+# haproxy and jenkins security groups.
+resource "aws_security_group_rule" "haproxy-jenkins" {
+  security_group_id        = "${aws_security_group.jenkins.id}"
+  type                     = "ingress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.haproxy.id}"
 }
 
 resource "aws_security_group" "haproxy" {
@@ -77,9 +81,9 @@ resource "aws_security_group" "haproxy" {
   }
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     security_groups = ["${aws_security_group.bastion.id}, ${aws_security_group.jenkins.id}"]
   }
 }
@@ -90,9 +94,9 @@ resource "aws_security_group" "etl" {
   vpc_id      = "${aws_vpc.vpc.id}"
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     security_groups = ["${aws_security_group.bastion.id}, ${aws_security_group.jenkins.id}"]
   }
 }
@@ -110,9 +114,9 @@ resource "aws_security_group" "rds" {
   }
 
   ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
     security_groups = ["${aws_security_group.etl.id}"]
   }
 }
