@@ -48,7 +48,7 @@ resource "aws_security_group_rule" "bastion-egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"
+  protocol          = "-1"                               # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -85,7 +85,7 @@ resource "aws_security_group_rule" "jenkins-egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"
+  protocol          = "-1"                               # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -131,7 +131,7 @@ resource "aws_security_group_rule" "haproxy-egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"
+  protocol          = "-1"                               # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -168,7 +168,7 @@ resource "aws_security_group_rule" "etl-egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"
+  protocol          = "-1"                           # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -205,6 +205,6 @@ resource "aws_security_group_rule" "rds-egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"
+  protocol          = "-1"                           # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
