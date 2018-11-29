@@ -16,7 +16,7 @@ Next, configure secrets (see the "Terraform credentials" secure note in Lastpass
 # Configure 'terraform' AWS profile:
 aws configure --profile terraform
 
-# Initialize backend & install dependencies:
+# Connect to S3 backend & install dependencies:
 make init
 
 # Configure other backends w/ secrets from Lastpass:
