@@ -16,11 +16,11 @@ Next, configure secrets (see the "Terraform credentials" secure note in Lastpass
 # Configure 'terraform' AWS profile:
 aws configure --profile terraform
 
-# Configure other backends w/ variables:
-cp {example.,}terraform.tfvars && vi terraform.tfvars
+# Initialize backend & install dependencies:
+make init
 
-# Install dependencies:
-terraform init
+# Configure other backends w/ secrets from Lastpass:
+vi terraform.tfvars
 ```
 
 ## Usage
