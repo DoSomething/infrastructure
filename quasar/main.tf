@@ -234,7 +234,6 @@ data "aws_ssm_parameter" "qa_password" {
 
 resource "aws_db_instance" "quasar-qa" {
   allocated_storage     = 1000
-  storage_type          = "gp2"
   engine                = "postgres"
   engine_version        = "10.5"
   instance_class        = "db.m5.2xlarge"
@@ -247,7 +246,6 @@ resource "aws_db_instance" "quasar-qa" {
   copy_tags_to_snapshot = "true"
   monitoring_interval   = "60"
   publicly_accessible   = "true"
-  skip_final_snapshot   = "true"
 
   tags {
     workload-type = "other"
