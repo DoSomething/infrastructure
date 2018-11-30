@@ -208,3 +208,18 @@ resource "aws_security_group_rule" "rds-egress" {
   protocol          = "-1"                           # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
+
+resource "aws_db_parameter_group" "pg10" {
+  name   = "postgres10-repl"
+  family = "postgres10"
+
+  parameter {
+    name  = "rds_logical_replication"
+    value = "1"
+  }
+
+  parameter {
+    name  = "max_logical_replication_workers"
+    value = "500"
+  }
+}
