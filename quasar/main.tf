@@ -209,7 +209,7 @@ resource "aws_security_group_rule" "rds-egress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_db_parameter_group" "quasar" {
+resource "aws_db_parameter_group" "quasar-qa" {
   name   = "quasar"
   family = "postgres10"
 
