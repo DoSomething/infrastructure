@@ -16,8 +16,6 @@ module "longshot-qa" {
   email_name    = "Longshot QA"
   email_address = "devops@dosomething.org"
 
-  database_type    = "db.t2.micro"
-  database_size_gb = 5
   papertrail_destination = "${var.papertrail_qa_destination}"
 }
 
@@ -31,8 +29,6 @@ module "longshot-footlocker" {
 
   email_name    = "Foot Locker Scholar Athletes"
   email_address = "footlocker@tmiagency.org"
-
-  database_type = "db.t2.medium"
 
   papertrail_destination = "${var.papertrail_prod_destination}"
   with_newrelic          = true
@@ -49,8 +45,6 @@ module "longshot-footlocker-internal" {
   email_name    = "Foot Locker Scholar Athletes"
   email_address = "footlocker@tmiagency.org"
 
-  database_type = "db.t2.medium"
-
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
 
@@ -64,8 +58,6 @@ module "hrblock" {
 
   email_name    = "Kary at CAPS"
   email_address = "contracts@tmiagency.org"
-
-  database_type = "db.t2.medium"
 
   papertrail_destination = "${var.papertrail_prod_destination}"
   with_newrelic          = true

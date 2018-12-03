@@ -64,37 +64,9 @@ variable "redis_type" {
   default     = "hobby-dev"
 }
 
-variable "database_type" {
-  description = "The RDS instance class. See: https://goo.gl/vTMqx9"
-  default     = "db.t2.medium"
-}
-
-variable "database_subnet_group" {
-  description = "The AWS subnet group name for this database."
-  default     = "default-vpc-7899331d"
-}
-
-variable "database_security_group" {
-  description = "The security group ID for this database."
-  default     = "sg-c9a37db2"
-}
-
-variable "database_size_gb" {
-  description = "The amount of storage to allocate to the database, in GB."
-  default     = 100
-}
-
 variable "with_newrelic" {
   description = "Should New Relic be configured for this app? Generally only used on prod."
   default     = false
-}
-
-data "aws_ssm_parameter" "database_username" {
-  name = "/${var.name}/rds/username"
-}
-
-data "aws_ssm_parameter" "database_password" {
-  name = "/${var.name}/rds/password"
 }
 
 data "aws_ssm_parameter" "mandrill_api_key" {
@@ -138,11 +110,11 @@ resource "heroku_app" "app" {
     MANDRILL_APIKEY = "${data.aws_ssm_parameter.mandrill_api_key.value}"
 
     # Database:
-    DB_HOST     = "${aws_db_instance.database.address}"
-    DB_PORT     = "${aws_db_instance.database.port}"
-    DB_DATABASE = "${aws_db_instance.database.name}"
-    DB_USERNAME = "${data.aws_ssm_parameter.database_username.value}"
-    DB_PASSWORD = "${data.aws_ssm_parameter.database_password.value}"
+    DB_HOST     = "${module.database.address}"
+    DB_PORT     = "${module.database.port}"
+    DB_DATABASE = "${module.database.name}"
+    DB_USERNAME = "${module.database.username}"
+    DB_PASSWORD = "${module.database.password}"
 
     # S3 Bucket & SQS Queue:
     AWS_ACCESS_KEY    = "${module.iam_user.id}"
@@ -208,33 +180,12 @@ resource "heroku_addon" "redis" {
   plan = "heroku-redis:${var.redis_type}"
 }
 
-resource "aws_db_instance" "database" {
-  identifier = "${var.name}"
-  name       = "longshot"
+module "database" {
+  source = "../../shared/rds_instance"
 
-  engine            = "mariadb"
-  engine_version    = "10.3"
-  instance_class    = "${var.database_type}"
-  allocated_storage = "${var.database_size_gb}"
-
-  allow_major_version_upgrade = true
-
-  backup_retention_period = 7             # 7 days.
-  backup_window           = "06:00-07:00" # 1-2am ET.
-
-  username = "${data.aws_ssm_parameter.database_username.value}"
-  password = "${data.aws_ssm_parameter.database_password.value}"
-
-  # TODO: We should migrate our account out of EC2-Classic, create
-  # a default VPC, and let resources be created in there by default!
-  db_subnet_group_name = "${var.database_subnet_group}"
-
-  vpc_security_group_ids = ["${var.database_security_group}"]
-  publicly_accessible    = true
-
-  tags = {
-    Application = "${var.name}"
-  }
+  name              = "${var.name}"
+  instance_class    = "${var.environment == "production" ? "db.t2.medium" : "db.t2.micro"}"
+  allocated_storage = "${var.environment == "production" ? 100 : 5}"
 }
 
 module "iam_user" {
