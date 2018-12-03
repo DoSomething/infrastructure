@@ -38,6 +38,12 @@ variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
 
+variable "with_newrelic" {
+  # See usage below for default fallback. <https://stackoverflow.com/a/51758050/811624>
+  description = "Should New Relic be enabled for this app? Enabled by default on prod."
+  default     = ""
+}
+
 data "aws_ssm_parameter" "mandrill_api_key" {
   name = "/mandrill/api-key"
 }
@@ -75,7 +81,7 @@ module "app" {
   with_redis = true
 
   papertrail_destination = "${var.papertrail_destination}"
-  with_newrelic          = "${var.environment == "production"}"
+  with_newrelic          = "${coalesce(var.with_newrelic, var.environment == "production")}"
 }
 
 module "database" {
