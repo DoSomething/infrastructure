@@ -208,3 +208,45 @@ resource "aws_security_group_rule" "rds-egress" {
   protocol          = "-1"                           # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
+
+resource "aws_db_parameter_group" "quasar-qa" {
+  name   = "quasar"
+  family = "postgres10"
+
+  parameter {
+    name         = "rds.logical_replication"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
+  parameter {
+    name         = "max_logical_replication_workers"
+    value        = "500"
+    apply_method = "pending-reboot"
+  }
+}
+
+data "aws_ssm_parameter" "qa_username" {
+  name = "/quasar-qa/rds/username"
+}
+
+data "aws_ssm_parameter" "qa_password" {
+  name = "/quasar-qa/rds/password"
+}
+
+resource "aws_db_instance" "quasar-qa" {
+  allocated_storage      = 1000
+  engine                 = "postgres"
+  engine_version         = "10.5"
+  instance_class         = "db.m5.2xlarge"
+  name                   = "quasar"
+  username               = "${data.aws_ssm_parameter.qa_username.value}"
+  password               = "${data.aws_ssm_parameter.qa_password.value}"
+  parameter_group_name   = "${aws_db_parameter_group.quasar-qa.id}"
+  vpc_security_group_ids = ["${aws_security_group.rds.id}"]
+  deletion_protection    = true
+  storage_encrypted      = true
+  copy_tags_to_snapshot  = true
+  monitoring_interval    = "60"
+  publicly_accessible    = true
+}
