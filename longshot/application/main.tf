@@ -22,8 +22,8 @@ variable "name" {
   description = "The application name."
 }
 
-variable "host" {
-  description = "The hostname this application will be accessible at, e.g. longshot.dosomething.org"
+variable "domain" {
+  description = "The domain this application will be accessible at, e.g. longshot.dosomething.org"
 }
 
 variable "email_name" {
@@ -121,7 +121,7 @@ resource "heroku_app" "app" {
     APP_ENV                    = "${var.environment}"
     APP_DEBUG                  = "false"
     APP_LOG                    = "errorlog"
-    APP_URL                    = "https://${var.host}"
+    APP_URL                    = "https://${var.domain}"
     TRUSTED_PROXY_IP_ADDRESSES = "**"
 
     # Drivers:
@@ -187,7 +187,7 @@ resource "heroku_formation" "queue" {
 
 resource "heroku_domain" "domain" {
   app      = "${heroku_app.app.name}"
-  hostname = "${var.host}"
+  hostname = "${var.domain}"
 }
 
 resource "heroku_drain" "papertrail" {
@@ -288,11 +288,11 @@ resource "aws_iam_user_policy" "s3_policy" {
 }
 
 output "name" {
-  value = "${heroku_app.app.name}"
+  value = "${var.name}"
 }
 
 output "domain" {
-  value = "${heroku_domain.domain.hostname}"
+  value = "${var.domain}"
 }
 
 output "backend" {
