@@ -145,8 +145,8 @@ resource "heroku_app" "app" {
     DB_PASSWORD = "${data.aws_ssm_parameter.database_password.value}"
 
     # S3 Bucket & SQS Queue:
-    AWS_ACCESS_KEY    = "${aws_iam_access_key.aws_key.id}"
-    AWS_SECRET_KEY    = "${aws_iam_access_key.aws_key.secret}"
+    AWS_ACCESS_KEY    = "${module.iam_user.id}"
+    AWS_SECRET_KEY    = "${module.iam_user.secret}"
     SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.id}"
     S3_REGION         = "${aws_s3_bucket.storage.region}"
     S3_BUCKET         = "${aws_s3_bucket.storage.id}"
@@ -251,12 +251,9 @@ resource "aws_s3_bucket" "storage" {
   }
 }
 
-resource "aws_iam_user" "aws_user" {
-  name = "${var.name}"
-}
-
-resource "aws_iam_access_key" "aws_key" {
-  user = "${aws_iam_user.aws_user.name}"
+module "iam_user" {
+  source = "../../shared/iam_app_user"
+  name   = "${var.name}"
 }
 
 data "template_file" "sqs_policy" {
@@ -269,7 +266,7 @@ data "template_file" "sqs_policy" {
 
 resource "aws_iam_user_policy" "sqs_policy" {
   name   = "${var.name}-sqs"
-  user   = "${aws_iam_user.aws_user.name}"
+  user   = "${module.iam_user.name}"
   policy = "${data.template_file.sqs_policy.rendered}"
 }
 
@@ -283,7 +280,7 @@ data "template_file" "s3_policy" {
 
 resource "aws_iam_user_policy" "s3_policy" {
   name   = "${var.name}-s3"
-  user   = "${aws_iam_user.aws_user.name}"
+  user   = "${module.iam_user.name}"
   policy = "${data.template_file.s3_policy.rendered}"
 }
 
