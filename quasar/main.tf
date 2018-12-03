@@ -233,17 +233,18 @@ data "aws_ssm_parameter" "qa_password" {
 }
 
 resource "aws_db_instance" "quasar-qa" {
-  allocated_storage     = 1000
-  engine                = "postgres"
-  engine_version        = "10.5"
-  instance_class        = "db.m5.2xlarge"
-  name                  = "quasar"
-  username              = "${data.aws_ssm_parameter.qa_username.value}"
-  password              = "${data.aws_ssm_parameter.qa_password.value}"
-  parameter_group_name  = "${aws_db_parameter_group.quasar-qa.id}"
-  deletion_protection   = "true"
-  storage_encrypted     = "true"
-  copy_tags_to_snapshot = "true"
-  monitoring_interval   = "60"
-  publicly_accessible   = "true"
+  allocated_storage      = 1000
+  engine                 = "postgres"
+  engine_version         = "10.5"
+  instance_class         = "db.m5.2xlarge"
+  name                   = "quasar"
+  username               = "${data.aws_ssm_parameter.qa_username.value}"
+  password               = "${data.aws_ssm_parameter.qa_password.value}"
+  parameter_group_name   = "${aws_db_parameter_group.quasar-qa.id}"
+  vpc_security_group_ids = ["${aws_security_group.rds.id}"]
+  deletion_protection    = "true"
+  storage_encrypted      = "true"
+  copy_tags_to_snapshot  = "true"
+  monitoring_interval    = "60"
+  publicly_accessible    = "true"
 }
