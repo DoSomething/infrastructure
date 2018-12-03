@@ -214,7 +214,7 @@ resource "aws_db_parameter_group" "quasar-qa" {
   family = "postgres10"
 
   parameter {
-    name  = "rds_logical_replication"
+    name  = "rds.logical_replication"
     value = "1"
   }
 
