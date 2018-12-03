@@ -246,8 +246,4 @@ resource "aws_db_instance" "quasar-qa" {
   copy_tags_to_snapshot = "true"
   monitoring_interval   = "60"
   publicly_accessible   = "true"
-
-  tags {
-    workload-type = "other"
-  }
 }
