@@ -31,7 +31,6 @@ module "longshot-footlocker" {
   email_address = "footlocker@tmiagency.org"
 
   papertrail_destination = "${var.papertrail_prod_destination}"
-  with_newrelic          = true
 }
 
 module "longshot-footlocker-internal" {
@@ -60,5 +59,4 @@ module "hrblock" {
   email_address = "contracts@tmiagency.org"
 
   papertrail_destination = "${var.papertrail_prod_destination}"
-  with_newrelic          = true
 }
