@@ -148,8 +148,8 @@ resource "heroku_app" "app" {
     AWS_ACCESS_KEY    = "${module.iam_user.id}"
     AWS_SECRET_KEY    = "${module.iam_user.secret}"
     SQS_DEFAULT_QUEUE = "${module.sqs_queue.id}"
-    S3_REGION         = "${aws_s3_bucket.storage.region}"
-    S3_BUCKET         = "${aws_s3_bucket.storage.id}"
+    S3_REGION         = "${module.storage.region}"
+    S3_BUCKET         = "${module.storage.id}"
 
     # New Relic:
     NEW_RELIC_ENABLED   = "${var.with_newrelic ? "true" : "false"}"
@@ -237,15 +237,6 @@ resource "aws_db_instance" "database" {
   }
 }
 
-resource "aws_s3_bucket" "storage" {
-  bucket = "${var.name}"
-  acl    = "public-read"
-
-  tags {
-    Application = "${var.name}"
-  }
-}
-
 module "iam_user" {
   source = "../../shared/iam_app_user"
   name   = "${var.name}"
@@ -257,18 +248,10 @@ module "queue" {
   user   = "${module.iam_user.name}"
 }
 
-data "template_file" "s3_policy" {
-  template = "${file("${path.root}/shared/s3-policy.json.tpl")}"
-
-  vars {
-    bucket_arn = "${aws_s3_bucket.storage.arn}"
-  }
-}
-
-resource "aws_iam_user_policy" "s3_policy" {
-  name   = "${var.name}-s3"
+module "storage" {
+  source = "../../shared/s3_bucket"
+  name   = "${var.name}"
   user   = "${module.iam_user.name}"
-  policy = "${data.template_file.s3_policy.rendered}"
 }
 
 output "name" {
