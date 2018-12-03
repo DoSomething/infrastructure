@@ -42,8 +42,6 @@ data "aws_ssm_parameter" "mandrill_api_key" {
   name = "/mandrill/api-key"
 }
 
-# ----------------------------------------------------
-
 locals {
   # Environment variables for configuring Mandrill:
   mail_config = {
