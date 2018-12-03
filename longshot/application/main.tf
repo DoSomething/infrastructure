@@ -147,7 +147,7 @@ resource "heroku_app" "app" {
     # S3 Bucket & SQS Queue:
     AWS_ACCESS_KEY    = "${module.iam_user.id}"
     AWS_SECRET_KEY    = "${module.iam_user.secret}"
-    SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.id}"
+    SQS_DEFAULT_QUEUE = "${module.sqs_queue.id}"
     S3_REGION         = "${aws_s3_bucket.storage.region}"
     S3_BUCKET         = "${aws_s3_bucket.storage.id}"
 
@@ -237,11 +237,6 @@ resource "aws_db_instance" "database" {
   }
 }
 
-resource "aws_sqs_queue" "queue" {
-  name                      = "${var.name}"
-  message_retention_seconds = "${60 * 60 * 24 * 14}" # 14 days (maximum).
-}
-
 resource "aws_s3_bucket" "storage" {
   bucket = "${var.name}"
   acl    = "public-read"
@@ -256,18 +251,10 @@ module "iam_user" {
   name   = "${var.name}"
 }
 
-data "template_file" "sqs_policy" {
-  template = "${file("${path.root}/shared/sqs-policy.json.tpl")}"
-
-  vars {
-    queue_arn = "${aws_sqs_queue.queue.arn}"
-  }
-}
-
-resource "aws_iam_user_policy" "sqs_policy" {
-  name   = "${var.name}-sqs"
+module "queue" {
+  source = "../../shared/sqs_queue"
+  name   = "${var.name}"
   user   = "${module.iam_user.name}"
-  policy = "${data.template_file.sqs_policy.rendered}"
 }
 
 data "template_file" "s3_policy" {
