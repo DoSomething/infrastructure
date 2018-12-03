@@ -8,6 +8,11 @@ variable "instance_class" {
 }
 
 # Optional variables:
+variable "engine_version" {
+  description = "The version of MariaDB to use on this instance."
+  default     = "10.3"
+}
+
 variable "allocated_storage" {
   description = "The amount of storage to allocate to the database, in GB."
   default     = 100
@@ -37,7 +42,7 @@ resource "aws_db_instance" "database" {
   name       = "longshot"
 
   engine            = "mariadb"
-  engine_version    = "10.3"
+  engine_version    = "${var.engine_version}"
   instance_class    = "${var.instance_class}"
   allocated_storage = "${var.allocated_storage}"
 
