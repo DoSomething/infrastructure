@@ -252,12 +252,63 @@ resource "aws_db_parameter_group" "quasar-qa" {
   }
 }
 
+resource "aws_db_parameter_group" "quasar-prod" {
+  name   = "quasar-prod"
+  family = "postgres10"
+
+  # Required for DMS CDC Replication:
+  # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.PostgreSQL.html#CHAP_Source.PostgreSQL.v10
+  parameter {
+    name         = "rds.logical_replication"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
+  # Required for DMS CDC Replication:
+  # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.PostgreSQL.html#CHAP_Source.PostgreSQL.v10
+  parameter {
+    name         = "max_logical_replication_workers"
+    value        = "500"
+    apply_method = "pending-reboot"
+  }
+
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Sets effective RAM available to PG Query planner before using disk.
+  parameter {
+    name  = "effective_cache_size"
+    value = "48000000"
+  }
+
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Amount of RAM available for cleanup tasks like vacuum, reindex, etc.
+  parameter {
+    name  = "maintenance_work_mem"
+    value = "2000000"
+  }
+
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Amount of RAM available for joins/sort queries per connection.
+  # Based on 55 connections.
+  parameter {
+    name  = "work_mem"
+    value = "19065"
+  }
+}
+
 data "aws_ssm_parameter" "qa_username" {
   name = "/quasar-qa/rds/username"
 }
 
 data "aws_ssm_parameter" "qa_password" {
   name = "/quasar-qa/rds/password"
+}
+
+data "aws_ssm_parameter" "prod_username" {
+  name = "/quasar-prod/rds/username"
+}
+
+data "aws_ssm_parameter" "prod_password" {
+  name = "/quasar-prod/rds/password"
 }
 
 resource "aws_db_instance" "quasar-qa" {
@@ -269,6 +320,23 @@ resource "aws_db_instance" "quasar-qa" {
   username               = "${data.aws_ssm_parameter.qa_username.value}"
   password               = "${data.aws_ssm_parameter.qa_password.value}"
   parameter_group_name   = "${aws_db_parameter_group.quasar-qa.id}"
+  vpc_security_group_ids = ["${aws_security_group.rds.id}"]
+  deletion_protection    = true
+  storage_encrypted      = true
+  copy_tags_to_snapshot  = true
+  monitoring_interval    = "60"
+  publicly_accessible    = true
+}
+
+resource "aws_db_instance" "quasar" {
+  allocated_storage      = 4000
+  engine                 = "postgres"
+  engine_version         = "10.5"
+  instance_class         = "db.m5.4xlarge"
+  name                   = "quasar_prod_warehouse"
+  username               = "${data.aws_ssm_parameter.prod_username.value}"
+  password               = "${data.aws_ssm_parameter.prod_password.value}"
+  parameter_group_name   = "${aws_db_parameter_group.quasar-prod.id}"
   vpc_security_group_ids = ["${aws_security_group.rds.id}"]
   deletion_protection    = true
   storage_encrypted      = true
