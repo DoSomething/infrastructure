@@ -85,7 +85,7 @@ module "app" {
 }
 
 module "database" {
-  source = "../../shared/rds_instance"
+  source = "../../shared/mariadb_instance"
 
   name              = "${var.name}"
   instance_class    = "${var.environment == "production" ? "db.t2.medium" : "db.t2.micro"}"
