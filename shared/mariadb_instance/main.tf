@@ -28,6 +28,11 @@ variable "security_groups" {
   default     = ["sg-c9a37db2"]
 }
 
+variable "deletion_protection" {
+  description = "If enabled, this database cannot be deleted (by Terraform or anything else)."
+  default     = true
+}
+
 # Data resources:
 data "aws_ssm_parameter" "database_username" {
   name = "/${var.name}/rds/username"
@@ -60,6 +65,8 @@ resource "aws_db_instance" "database" {
 
   vpc_security_group_ids = "${var.security_groups}"
   publicly_accessible    = true
+
+  deletion_protection = "${var.deletion_protection}"
 
   tags = {
     Application = "${var.name}"
