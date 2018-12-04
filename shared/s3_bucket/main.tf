@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 data "template_file" "s3_policy" {
-  template = "${file("${path.root}/shared/s3-policy.json.tpl")}"
+  template = "${file("${path.module}/iam-policy.json.tpl")}"
 
   vars {
     bucket_arn = "${aws_s3_bucket.bucket.arn}"

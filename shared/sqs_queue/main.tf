@@ -13,7 +13,7 @@ resource "aws_sqs_queue" "queue" {
 }
 
 data "template_file" "sqs_policy" {
-  template = "${file("${path.root}/shared/sqs-policy.json.tpl")}"
+  template = "${file("${path.module}/iam-policy.json.tpl")}"
 
   vars {
     queue_arn = "${aws_sqs_queue.queue.arn}"
