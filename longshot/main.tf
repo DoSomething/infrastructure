@@ -9,15 +9,12 @@ module "longshot-qa" {
   source = "application"
 
   name        = "longshot-qa"
-  host        = "longshot-qa.dosomething.org"
+  domain      = "longshot-qa.dosomething.org"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "qa"
 
   email_name    = "Longshot QA"
   email_address = "devops@dosomething.org"
-
-  database_type    = "db.t2.micro"
-  database_size_gb = 5
 
   papertrail_destination = "${var.papertrail_qa_destination}"
 }
@@ -26,48 +23,41 @@ module "longshot-footlocker" {
   source = "application"
 
   name        = "longshot-footlocker"
-  host        = "footlockerscholarathletes.com"
+  domain      = "footlockerscholarathletes.com"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
 
   email_name    = "Foot Locker Scholar Athletes"
   email_address = "footlocker@tmiagency.org"
 
-  database_type = "db.t2.medium"
-
   papertrail_destination = "${var.papertrail_prod_destination}"
-  with_newrelic          = true
 }
 
 module "longshot-footlocker-internal" {
   source = "application"
 
   name        = "longshot-footlocker-internal"
-  host        = "footlocker-internal.dosomething.org"
+  domain      = "footlocker-internal.dosomething.org"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
 
   email_name    = "Foot Locker Scholar Athletes"
   email_address = "footlocker@tmiagency.org"
 
-  database_type = "db.t2.medium"
-
   papertrail_destination = "${var.papertrail_prod_destination}"
+  with_newrelic          = false
 }
 
 module "hrblock" {
   source = "application"
 
   name        = "longshot-hrblock"
-  host        = "caps.hrblock.com"
+  domain      = "caps.hrblock.com"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
 
   email_name    = "Kary at CAPS"
   email_address = "contracts@tmiagency.org"
 
-  database_type = "db.t2.medium"
-
   papertrail_destination = "${var.papertrail_prod_destination}"
-  with_newrelic          = true
 }
