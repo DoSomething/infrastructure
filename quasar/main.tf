@@ -210,7 +210,7 @@ resource "aws_security_group_rule" "rds-egress" {
 }
 
 resource "aws_db_parameter_group" "quasar-qa" {
-  name   = "quasar"
+  name   = "quasar-qa"
   family = "postgres10"
 
   parameter {
@@ -223,6 +223,21 @@ resource "aws_db_parameter_group" "quasar-qa" {
     name         = "max_logical_replication_workers"
     value        = "500"
     apply_method = "pending-reboot"
+  }
+
+  parameter {
+    name  = "effective_cache_size"
+    value = "24000000"
+  }
+
+  parameter {
+    name  = "maintenance_work_mem"
+    value = "2000000"
+  }
+
+  parameter {
+    name  = "work_mem"
+    value = "20971"
   }
 }
 
