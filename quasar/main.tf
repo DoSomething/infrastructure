@@ -288,10 +288,10 @@ resource "aws_db_parameter_group" "quasar-prod" {
 
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
   # Amount of RAM available for joins/sort queries per connection.
-  # Based on 55 connections.
+  # Based on 60 connections.
   parameter {
     name  = "work_mem"
-    value = "19065"
+    value = "17476"
   }
 }
 
