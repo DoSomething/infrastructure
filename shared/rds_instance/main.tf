@@ -86,7 +86,7 @@ output "password" {
   value = "${data.aws_ssm_parameter.database_password.value}"
 }
 
-output "laravel_config" {
+output "config_vars" {
   value = {
     DB_HOST     = "${aws_db_instance.database.address}"
     DB_PORT     = "${aws_db_instance.database.port}"

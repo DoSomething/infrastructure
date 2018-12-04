@@ -50,7 +50,7 @@ data "aws_ssm_parameter" "mandrill_api_key" {
 
 locals {
   # Environment variables for configuring Mandrill:
-  mail_config = {
+  mail_config_vars = {
     MAIL_DRIVER     = "mandrill"
     MAIL_HOST       = "smtp.mandrillapp.com"
     EMAIL_NAME      = "${var.email_name}"
@@ -68,11 +68,11 @@ module "app" {
   environment = "${var.environment}"
 
   config_vars = "${merge(
-    module.database.laravel_config,
-    module.queue.laravel_config,
-    module.storage.laravel_config,
-    module.iam_user.laravel_config,
-    local.mail_config
+    module.database.config_vars,
+    module.queue.config_vars,
+    module.storage.config_vars,
+    module.iam_user.config_vars,
+    local.mail_config_vars
   )}"
 
   web_scale   = 1

@@ -30,7 +30,7 @@ output "id" {
   value = "${aws_sqs_queue.queue.id}"
 }
 
-output "laravel_config" {
+output "config_vars" {
   value = {
     QUEUE_DRIVER      = "sqs"
     SQS_DEFAULT_QUEUE = "${aws_sqs_queue.queue.id}"

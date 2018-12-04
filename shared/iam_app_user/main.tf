@@ -22,7 +22,7 @@ output "secret" {
   value = "${aws_iam_access_key.aws_key.secret}"
 }
 
-output "laravel_config" {
+output "config_vars" {
   value = {
     AWS_ACCESS_KEY = "${aws_iam_access_key.aws_key.id}"
     AWS_SECRET_KEY = "${aws_iam_access_key.aws_key.secret}"

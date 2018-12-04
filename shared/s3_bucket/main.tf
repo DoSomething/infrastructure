@@ -38,7 +38,7 @@ output "region" {
   value = "${aws_s3_bucket.bucket.region}"
 }
 
-output "laravel_config" {
+output "config_vars" {
   value = {
     STORAGE_DRIVER = "s3"
     S3_REGION      = "${aws_s3_bucket.bucket.region}"
