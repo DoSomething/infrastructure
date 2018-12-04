@@ -213,28 +213,39 @@ resource "aws_db_parameter_group" "quasar-qa" {
   name   = "quasar-qa"
   family = "postgres10"
 
+  # Required for DMS CDC Replication:
+  # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.PostgreSQL.html#CHAP_Source.PostgreSQL.v10
   parameter {
     name         = "rds.logical_replication"
     value        = "1"
     apply_method = "pending-reboot"
   }
 
+  # Required for DMS CDC Replication:
+  # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.PostgreSQL.html#CHAP_Source.PostgreSQL.v10
   parameter {
     name         = "max_logical_replication_workers"
     value        = "500"
     apply_method = "pending-reboot"
   }
 
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Sets effective RAM available to PG Query planner before using disk.
   parameter {
     name  = "effective_cache_size"
     value = "24000000"
   }
 
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Amount of RAM available for cleanup tasks like vacuum, reindex, etc.
   parameter {
     name  = "maintenance_work_mem"
     value = "2000000"
   }
 
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Amount of RAM available for joins/sort queries per connection.
+  # Based on 50 connections.
   parameter {
     name  = "work_mem"
     value = "20971"
