@@ -286,12 +286,12 @@ resource "aws_db_parameter_group" "quasar-prod" {
     value = "2000000"
   }
 
-  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Updated to match Heroku Premium-5 config which we experienced
+  # as more performant when our data warehouse was hosted there.
   # Amount of RAM available for joins/sort queries per connection.
-  # Based on 60 connections.
   parameter {
     name  = "work_mem"
-    value = "17476"
+    value = "120000"
   }
 }
 
