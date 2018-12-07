@@ -22,11 +22,7 @@ else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(admin|image|openid\-connect|file|
   # Drupal built-in and third-party modules are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (
-  req.url.path ~
-  "(?i)\/((us|mx|br)\/)?(fact|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)\/"
-  && std.tolower(req.url.path) != "/us/about/our-press"
-) {
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(fact|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)\/") {
   # And our custom Ashes paths for DS.org content.
   set req.http.X-Fastly-Backend = "ashes";
 }
