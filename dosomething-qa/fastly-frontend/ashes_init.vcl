@@ -324,5 +324,6 @@ table phoenix_facts {
 # VCL supports dictionaries, but not arrays... hence an array of all "true"!
 table phoenix_about {
   "our-press": "true",
+  "who-we-are": "true",
   # ...
 }
