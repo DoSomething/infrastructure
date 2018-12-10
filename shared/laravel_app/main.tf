@@ -56,8 +56,9 @@ variable "with_redis" {
 }
 
 variable "redis_type" {
+  # See usage below for default value. <https://stackoverflow.com/a/51758050/811624>
   description = "The Heroku Redis add-on plan. See: https://goo.gl/3v3RXX"
-  default     = "hobby-dev"
+  default     = ""
 }
 
 data "aws_ssm_parameter" "newrelic_api_key" {
@@ -91,6 +92,10 @@ locals {
     NEW_RELIC_LICENSE_KEY = "${join("", data.aws_ssm_parameter.newrelic_api_key.*.value)}" # optional! <https://git.io/fp2pg>
     NEW_RELIC_LOG_LEVEL   = "error"
   }
+
+  # By default, use a paid Heroku Redis add-on plan, with 50MB storage and high
+  # availability, for production instances. Can be overridden with var.redis_type.
+  redis_default = "${var.environment == "production" ? "premium-0" : "hobby-dev"}"
 }
 
 resource "heroku_app" "app" {
@@ -147,7 +152,7 @@ resource "heroku_pipeline_coupling" "app" {
 resource "heroku_addon" "redis" {
   count = "${var.with_redis ? 1 : 0}"
   app   = "${heroku_app.app.name}"
-  plan  = "heroku-redis:${var.redis_type}"
+  plan  = "heroku-redis:${coalesce(var.redis_type, local.redis_default)}"
 }
 
 output "backend" {
