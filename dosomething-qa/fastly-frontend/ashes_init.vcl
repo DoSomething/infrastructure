@@ -16,6 +16,7 @@ table ashes_campaigns {
   "activist-text": "true",
   "all-access-petition": "true",
   "anti-shaming-shutdown": "true",
+  "baby-its-cold-inside": "true",
   "babysitters-club": "true",
   "backpack-attack": "true",
   "bake-sales-babies": "true",
