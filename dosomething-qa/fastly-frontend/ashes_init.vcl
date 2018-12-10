@@ -16,7 +16,6 @@ table ashes_campaigns {
   "activist-text": "true",
   "all-access-petition": "true",
   "anti-shaming-shutdown": "true",
-  "baby-its-cold-inside": "true",
   "babysitters-club": "true",
   "backpack-attack": "true",
   "bake-sales-babies": "true",
@@ -41,7 +40,6 @@ table ashes_campaigns {
   "bumble-bands": "true",
   "campfire-fighters": "true",
   "can-tribute": "true",
-  "caption-obvious": "true",
   "car-sticky-note-challange": "true",
   "career-tailgate": "true",
   "celebrate-pride": "true",
@@ -56,13 +54,10 @@ table ashes_campaigns {
   "color-care": "true",
   "comics-rescue": "true",
   "context-clues": "true",
-  "cookin-it-old-school": "true",
   "cool-carol-crew": "true",
   "coping-discrimination": "true",
   "crash-text-dummy": "true",
   "craziest-thing-i-did-save-money": "true",
-  "crisis-crew": "true",
-  "custodian-care": "true",
   "dancing-seniors": "true",
   "decade-thanks": "true",
   "digital-debates": "true",
@@ -72,7 +67,6 @@ table ashes_campaigns {
   "dog-days-winter": "true",
   "doggie-diy": "true",
   "doggy-de-stresser": "true",
-  "dont-be-sucker": "true",
   "dont-be-sucker-share": "true",
   "dont-be-trashy": "true",
   "dont-drive-intexticated": "true",
@@ -83,9 +77,7 @@ table ashes_campaigns {
   "driving-coach": "true",
   "dunk-you-very-much": "true",
   "e-waste-drive": "true",
-  "elephant-tusk-force": "true",
   "epic-book-drive": "true",
-  "everyday-superheroes": "true",
   "explain-pain-share": "true",
   "explain-pain-text": "true",
   "fake-id-real-impact": "true",
@@ -101,11 +93,8 @@ table ashes_campaigns {
   "four-legged-finishers": "true",
   "freaky-friday-walks": "true",
   "free-pee": "true",
-  "fun-real-sun": "true",
-  "game-winning-drive": "true",
   "get-lucky": "true",
   "get-some-consent": "true",
-  "get-well-cells": "true",
   "ggw-email": "true",
   "ggw-online-music": "true",
   "ggw-smartphones-and-tablets": "true",
@@ -121,9 +110,6 @@ table ashes_campaigns {
   "gtfo": "true",
   "guns-out": "true",
   "guns-out-advocate": "true",
-  "happy-howlidays": "true",
-  "happy-scrappy-holidays": "true",
-  "hate-free-halloween": "true",
   "headhunters": "true",
   "healing-oklahoma": "true",
   "heart-your-sleeve": "true",
@@ -133,12 +119,10 @@ table ashes_campaigns {
   "hunt": "true",
   "i-am-woman-hear-me-score": "true",
   "i-found-my-v-spot": "true",
-  "i-heart-dad": "true",
   "imaboss": "true",
   "improv-your-school": "true",
   "incognito-cleanup": "true",
   "innovation-inspiration": "true",
-  "journey-jars": "true",
   "just-because": "true",
   "just-dont-wear-blackface": "true",
   "keep-em-safe-behind-wheel": "true",
@@ -157,7 +141,6 @@ table ashes_campaigns {
   "meatless-mondays": "true",
   "mic-check-racism": "true",
   "mind-my-money": "true",
-  "momm-o-grams": "true",
   "more-score": "true",
   "music-march-out": "true",
   "musical-mix": "true",
@@ -190,7 +173,6 @@ table ashes_campaigns {
   "pineapple-push-ups": "true",
   "planet-zombie": "true",
   "planting-par-tay": "true",
-  "positivity-page": "true",
   "power-period": "true",
   "prank-it-forward": "true",
   "pregnancy-text": "true",
@@ -260,7 +242,6 @@ table ashes_campaigns {
   "super-shelter-pets": "true",
   "superhero-kits": "true",
   "supermarket-stakeout": "true",
-  "superstressface": "true",
   "support-ahmed-mohamed": "true",
   "support-board": "true",
   "suspended-what-advocate": "true",
@@ -311,4 +292,22 @@ table ashes_campaigns {
   # international campaigns on /campaigns prefix:
   "sua-mochila-pesada-pode-te-causar-muitos-problemas": "true",
   "sua-escola-": "true", # our slug regex only captures ASCII, hence no é-accessivel.
+}
+
+# This is an array of "fact" pages that should be routed to Phoenix. Fastly's
+# VCL supports dictionaries, but not arrays... hence an array of all "true"!
+table phoenix_facts {
+  "11-facts-about-addadhd": "true",
+  "11-facts-about-animal-cruelty": "true",
+  "11-facts-about-animals-entertainment": "true",
+  "11-facts-about-avalanches": "true",
+  "11-facts-about-birth-control": "true",
+  # ...
+}
+
+# This is an array of "about" pages that should be routed to Phoenix. Fastly's
+# VCL supports dictionaries, but not arrays... hence an array of all "true"!
+table phoenix_about {
+  "our-press": "true",
+  # ...
 }

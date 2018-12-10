@@ -22,11 +22,18 @@ else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(admin|image|openid\-connect|file|
   # Drupal built-in and third-party modules are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (
-  req.url.path ~ "(?i)\/((us|mx|br)\/)?(facts|fact|about|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)"
-) {
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(fact|sobre|volunteer|voluntario|reportback|ds\-share\-complete|api\/v1)\/") {
   # And our custom Ashes paths for DS.org content.
-  # NOTE: We've specifically overridden 'our-press' to Phoenix!
+  set req.http.X-Fastly-Backend = "ashes";
+}
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?about/([A-Za-z0-9_\-]+)" &&
+    ! table.lookup(phoenix_about, std.tolower(re.group.3))) {
+  # About pages default to Ashes, but we'll opt some paths to Phoenix.
+  set req.http.X-Fastly-Backend = "ashes";
+}
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?facts/([A-Za-z0-9_\-]+)" &&
+    ! table.lookup(phoenix_facts, std.tolower(re.group.3))) {
+  # Facts default to Ashes, but we'll opt some paths to Phoenix.
   set req.http.X-Fastly-Backend = "ashes";
 }
 else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?campaigns/([A-Za-z0-9_\-]+)" &&
