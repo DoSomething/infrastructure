@@ -11,7 +11,7 @@
 
 # Required variables:
 variable "environment" {
-  description = "The environment for this applicaiton: development, qa, or production."
+  description = "The environment for this application: development, qa, or production."
 }
 
 variable "pipeline" {
