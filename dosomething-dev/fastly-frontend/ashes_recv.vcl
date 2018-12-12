@@ -18,7 +18,7 @@ else if (req.url.path ~ "(?i)^\/index\.php$") {
   # The '/index.php' file is used by some Ashes admin pages:
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(admin|image|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
+else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(admin|batch|image|openid\-connect|file|sites|profiles|misc|user|taxonomy|modules|search|system|themes|node|js)") {
   # Drupal built-in and third-party modules are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
