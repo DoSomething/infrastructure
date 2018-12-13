@@ -1,12 +1,6 @@
-# This template builds a Longshot application instance, with
-# database, queue, caching, and storage resources. Be sure to
-# set the application's required SSM parameters before
-# provisioning a new application as well:
-#   - /{name}/rds/username
-#   - /{name}/rds/password
-#   - /mandrill/api-key
+# This template builds a Northstar application instance.
 #
-# And required if using New Relic:
+# Required SSM parameter if using New Relic:
 #   - /newrelic/api-key
 
 # Required variables:
