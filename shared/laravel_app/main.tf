@@ -30,6 +30,11 @@ variable "web_scale" {
   default     = "1"
 }
 
+variable "ignore_web" {
+  description = "Should we manage the web dyno with Terraform? Set to 'true' if auto-scaling."
+  default     = false
+}
+
 variable "queue_size" {
   description = "The Heroku dyno type for queue processes."
   default     = "Standard-1X"
@@ -117,6 +122,7 @@ resource "heroku_app" "app" {
 }
 
 resource "heroku_formation" "web" {
+  count    = "${var.ignore_web ? 0 : 1}"
   app      = "${heroku_app.app.name}"
   type     = "web"
   size     = "${var.web_size}"
