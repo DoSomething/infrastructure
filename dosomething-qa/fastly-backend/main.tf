@@ -4,9 +4,6 @@ variable "graphql_backend" {}
 variable "northstar_name" {}
 variable "northstar_domain" {}
 variable "northstar_backend" {}
-variable "phoenix_name" {}
-variable "phoenix_domain" {}
-variable "phoenix_backend" {}
 variable "rogue_name" {}
 variable "rogue_domain" {}
 variable "rogue_backend" {}
@@ -26,10 +23,6 @@ resource "fastly_service_v1" "backends-qa" {
 
   domain {
     name = "${var.northstar_domain}"
-  }
-
-  domain {
-    name = "${var.phoenix_domain}"
   }
 
   domain {
@@ -58,18 +51,6 @@ resource "fastly_service_v1" "backends-qa" {
     type      = "RESPONSE"
     name      = "response-northstar-qa"
     statement = "req.http.host == \"${var.northstar_domain}\""
-  }
-
-  condition {
-    type      = "REQUEST"
-    name      = "backend-phoenix-qa"
-    statement = "req.http.host == \"${var.phoenix_domain}\""
-  }
-
-  condition {
-    type      = "RESPONSE"
-    name      = "response-phoenix-qa"
-    statement = "req.http.host == \"${var.phoenix_domain}\""
   }
 
   condition {
@@ -103,15 +84,6 @@ resource "fastly_service_v1" "backends-qa" {
     address           = "${var.northstar_backend}"
     name              = "${var.northstar_name}"
     request_condition = "backend-northstar-qa"
-    shield            = "iad-va-us"
-    auto_loadbalance  = false
-    port              = 443
-  }
-
-  backend {
-    address           = "${var.phoenix_backend}"
-    name              = "${var.phoenix_name}"
-    request_condition = "backend-phoenix-qa"
     shield            = "iad-va-us"
     auto_loadbalance  = false
     port              = 443
@@ -210,14 +182,6 @@ resource "fastly_service_v1" "backends-qa" {
     port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "${var.papertrail_log_format}"
     response_condition = "response-northstar-qa"
-  }
-
-  papertrail {
-    name               = "phoenix-qa"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-phoenix-qa"
   }
 
   papertrail {
