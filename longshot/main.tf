@@ -6,7 +6,7 @@ resource "heroku_pipeline" "longshot" {
 }
 
 module "longshot-qa" {
-  source = "application"
+  source = "../applications/longshot"
 
   name        = "longshot-qa"
   domain      = "longshot-qa.dosomething.org"
@@ -20,7 +20,7 @@ module "longshot-qa" {
 }
 
 module "longshot-footlocker" {
-  source = "application"
+  source = "../applications/longshot"
 
   name        = "longshot-footlocker"
   domain      = "footlockerscholarathletes.com"
@@ -34,7 +34,7 @@ module "longshot-footlocker" {
 }
 
 module "longshot-footlocker-internal" {
-  source = "application"
+  source = "../applications/longshot"
 
   name        = "longshot-footlocker-internal"
   domain      = "footlocker-internal.dosomething.org"
@@ -49,7 +49,7 @@ module "longshot-footlocker-internal" {
 }
 
 module "hrblock" {
-  source = "application"
+  source = "../applications/longshot"
 
   name        = "longshot-hrblock"
   domain      = "caps.hrblock.com"
