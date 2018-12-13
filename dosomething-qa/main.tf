@@ -56,9 +56,12 @@ module "northstar" {
 }
 
 module "phoenix" {
-  source = "phoenix"
+  source = "../applications/phoenix"
 
-  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  environment            = "qa"
+  name                   = "dosomething-phoenix-qa"
+  domain                 = "qa.dosomething.org"
+  pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 

@@ -130,7 +130,7 @@ resource "heroku_formation" "web" {
 }
 
 resource "heroku_formation" "queue" {
-  count    = "${var.queue_size != 0 ? 1 : 0}"
+  count    = "${var.queue_scale != 0 ? 1 : 0}"
   app      = "${heroku_app.app.name}"
   type     = "queue"
   size     = "${var.queue_size}"

@@ -56,16 +56,22 @@ module "northstar" {
 }
 
 module "phoenix" {
-  source = "phoenix"
+  source = "../applications/phoenix"
 
-  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  environment            = "production"
+  name                   = "dosomething-phoenix"
+  domain                 = "www.dosomething.org"
+  pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "phoenix_preview" {
-  source = "phoenix-preview"
+  source = "../applications/phoenix"
 
-  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  environment            = "production"
+  name                   = "dosomething-phoenix-preview"
+  domain                 = "www-preview.dosomething.org"   # TODO: Just preview.dosomething.org!
+  pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
