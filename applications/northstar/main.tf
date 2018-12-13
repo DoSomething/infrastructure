@@ -13,7 +13,7 @@ variable "pipeline" {
 }
 
 variable "domain" {
-  description = "The domain this application will be accessible at, e.g. longshot.dosomething.org"
+  description = "The domain this application will be accessible at, e.g. identity.dosomething.org"
 }
 
 variable "name" {
