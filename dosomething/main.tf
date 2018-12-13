@@ -46,30 +46,43 @@ module "graphql" {
 }
 
 module "northstar" {
-  source = "northstar"
+  source = "../applications/northstar"
 
-  northstar_pipeline     = "${var.northstar_pipeline}"
+  environment            = "production"
+  name                   = "dosomething-northstar"
+  domain                 = "identity.dosomething.org"
+  pipeline               = "${var.northstar_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "phoenix" {
-  source = "phoenix"
+  source = "../applications/phoenix"
 
-  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  environment            = "production"
+  name                   = "dosomething-phoenix"
+  domain                 = "www.dosomething.org"
+  pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "phoenix_preview" {
-  source = "phoenix-preview"
+  source = "../applications/phoenix"
 
-  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  environment            = "production"
+  name                   = "dosomething-phoenix-preview"
+  domain                 = "www-preview.dosomething.org"   # TODO: Just preview.dosomething.org!
+  web_size               = "Hobby"                         # TODO: Should this be Standard-1X?
+  pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "rogue" {
-  source = "rogue"
+  source = "../applications/rogue"
 
-  rogue_pipeline         = "${var.rogue_pipeline}"
+  environment            = "production"
+  name                   = "dosomething-rogue"
+  domain                 = "activity.dosomething.org"
+  pipeline               = "${var.rogue_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 

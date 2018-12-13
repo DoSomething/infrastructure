@@ -46,23 +46,32 @@ module "graphql" {
 }
 
 module "northstar" {
-  source = "northstar"
+  source = "../applications/northstar"
 
-  northstar_pipeline     = "${var.northstar_pipeline}"
+  environment            = "development"
+  name                   = "dosomething-northstar-dev"
+  domain                 = "identity-dev.dosomething.org"
+  pipeline               = "${var.northstar_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "phoenix" {
-  source = "phoenix"
+  source = "../applications/phoenix"
 
-  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  environment            = "development"
+  name                   = "dosomething-phoenix-dev"
+  domain                 = "www-dev.dosomething.org"       # TODO: Just 'dev.dosomething.org'?
+  pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "rogue" {
-  source = "rogue"
+  source = "../applications/rogue"
 
-  rogue_pipeline         = "${var.rogue_pipeline}"
+  environment            = "development"
+  name                   = "dosomething-rogue-dev"
+  domain                 = "activity-dev.dosomething.org"
+  pipeline               = "${var.rogue_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 

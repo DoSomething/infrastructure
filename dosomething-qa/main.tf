@@ -27,10 +27,6 @@ module "fastly-backend" {
   northstar_domain  = "${module.northstar.domain}"
   northstar_backend = "${module.northstar.backend}"
 
-  phoenix_name    = "${module.phoenix.name}"
-  phoenix_domain  = "${module.phoenix.domain}"
-  phoenix_backend = "${module.phoenix.backend}"
-
   rogue_name    = "${module.rogue.name}"
   rogue_domain  = "${module.rogue.domain}"
   rogue_backend = "${module.rogue.backend}"
@@ -46,23 +42,32 @@ module "graphql" {
 }
 
 module "northstar" {
-  source = "northstar"
+  source = "../applications/northstar"
 
-  northstar_pipeline     = "${var.northstar_pipeline}"
+  environment            = "qa"
+  name                   = "dosomething-northstar-qa"
+  domain                 = "identity-qa.dosomething.org"
+  pipeline               = "${var.northstar_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "phoenix" {
-  source = "phoenix"
+  source = "../applications/phoenix"
 
-  phoenix_pipeline       = "${var.phoenix_pipeline}"
+  environment            = "qa"
+  name                   = "dosomething-phoenix-qa"
+  domain                 = "qa.dosomething.org"
+  pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "rogue" {
-  source = "rogue"
+  source = "../applications/rogue"
 
-  rogue_pipeline         = "${var.rogue_pipeline}"
+  environment            = "qa"
+  name                   = "dosomething-rogue-qa"
+  domain                 = "activity-qa.dosomething.org"
+  pipeline               = "${var.rogue_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
