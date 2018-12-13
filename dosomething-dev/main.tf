@@ -63,9 +63,12 @@ module "phoenix" {
 }
 
 module "rogue" {
-  source = "rogue"
+  source = "../applications/rogue"
 
-  rogue_pipeline         = "${var.rogue_pipeline}"
+  environment            = "development"
+  name                   = "dosomething-rogue-dev"
+  domain                 = "activity-dev.dosomething.org"
+  pipeline               = "${var.rogue_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 

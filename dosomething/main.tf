@@ -70,9 +70,12 @@ module "phoenix_preview" {
 }
 
 module "rogue" {
-  source = "rogue"
+  source = "../applications/rogue"
 
-  rogue_pipeline         = "${var.rogue_pipeline}"
+  environment            = "production"
+  name                   = "dosomething-rogue"
+  domain                 = "activity.dosomething.org"
+  pipeline               = "${var.rogue_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
