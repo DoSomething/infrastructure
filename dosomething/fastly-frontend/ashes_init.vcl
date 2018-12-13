@@ -55,7 +55,6 @@ table ashes_campaigns {
   "color-care": "true",
   "comics-rescue": "true",
   "context-clues": "true",
-  "cool-carol-crew": "true",
   "coping-discrimination": "true",
   "crash-text-dummy": "true",
   "craziest-thing-i-did-save-money": "true",
