@@ -46,9 +46,12 @@ module "graphql" {
 }
 
 module "northstar" {
-  source = "northstar"
+  source = "../applications/northstar"
 
-  northstar_pipeline     = "${var.northstar_pipeline}"
+  environment            = "development"
+  name                   = "dosomething-northstar-dev"
+  domain                 = "identity-dev.dosomething.org"
+  pipeline               = "${var.northstar_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
