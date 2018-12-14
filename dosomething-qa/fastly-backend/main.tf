@@ -72,7 +72,7 @@ resource "fastly_service_v1" "backends-qa" {
   }
 
   condition {
-    type      = "CACHE"
+    type      = "REQUEST"
     name      = "is-authenticated"
     statement = "req.http.authorization"
   }
