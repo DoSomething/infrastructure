@@ -27,7 +27,7 @@ else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(fact|sobre|volunteer|voluntario|r
   set req.http.X-Fastly-Backend = "ashes";
 }
 else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?about/([A-Za-z0-9_\-]+)" &&
-    table.lookup(phoenix_about, std.tolower(re.group.3))) {
+    table.lookup(ashes_about, std.tolower(re.group.3))) {
   # See if a given about page should be served by Ashes.
   set req.http.X-Fastly-Backend = "ashes";
 }
