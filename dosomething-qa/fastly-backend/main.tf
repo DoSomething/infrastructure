@@ -77,10 +77,10 @@ resource "fastly_service_v1" "backends-qa" {
     statement = "req.http.Authorization"
   }
 
-  cache_setting {
-    name            = "pass-authenticated"
-    cache_condition = "is-authenticated"
-    action          = "pass"
+  request_setting {
+    name              = "pass-authenticated"
+    request_condition = "is-authenticated"
+    action            = "pass"
   }
 
   backend {
