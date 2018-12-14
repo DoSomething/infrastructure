@@ -90,6 +90,18 @@ resource "fastly_service_v1" "backends-dev" {
     statement = "req.url.basename == \"robots.txt\""
   }
 
+  condition {
+    type      = "CACHE"
+    name      = "is-authenticated"
+    statement = "req.http.authenticated"
+  }
+
+  cache_setting {
+    name            = "pass-authenticated"
+    cache_condition = "is-authenticated"
+    action          = "pass"
+  }
+
   backend {
     address           = "${var.graphql_backend}"
     name              = "${var.graphql_name}"
