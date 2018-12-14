@@ -95,8 +95,8 @@ table phoenix_facts {
   # ...
 }
 
-# This is an array of "about" pages that should be routed to Phoenix. Fastly's
+# This is an array of "about" pages that should be routed to Ashes. Fastly's
 # VCL supports dictionaries, but not arrays... hence an array of all "true"!
-table phoenix_about {
+table ashes_about {
   # ...
 }
