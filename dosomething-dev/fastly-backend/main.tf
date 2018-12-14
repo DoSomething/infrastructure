@@ -93,7 +93,7 @@ resource "fastly_service_v1" "backends-dev" {
   condition {
     type      = "CACHE"
     name      = "is-authenticated"
-    statement = "req.http.authenticated"
+    statement = "req.http.authorization"
   }
 
   cache_setting {
