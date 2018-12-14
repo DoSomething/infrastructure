@@ -74,7 +74,7 @@ resource "fastly_service_v1" "backends-qa" {
   condition {
     type      = "REQUEST"
     name      = "is-authenticated"
-    statement = "req.http.authorization"
+    statement = "req.http.Authorization"
   }
 
   cache_setting {
