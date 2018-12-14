@@ -96,6 +96,18 @@ resource "fastly_service_v1" "backends" {
     request_condition = "path-robots-preview"
   }
 
+  condition {
+    type      = "REQUEST"
+    name      = "is-authenticated"
+    statement = "req.http.Authorization"
+  }
+
+  request_setting {
+    name              = "pass-authenticated"
+    request_condition = "is-authenticated"
+    action            = "pass"
+  }
+
   backend {
     address           = "${var.graphql_backend}"
     name              = "${var.graphql_name}"
