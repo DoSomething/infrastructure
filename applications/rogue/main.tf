@@ -43,6 +43,13 @@ module "app" {
   web_size  = "${var.environment == "production" ? "Standard-2x" : "Standard-1x"}"
   web_scale = "${var.environment == "production" ? 2 : 1}"
 
+  config_vars = "${merge(
+    module.database.config_vars,
+    module.storage.config_vars,
+    module.iam_user.config_vars,
+    module.queue.config_vars
+  )}"
+
   # We don't run a queue process on development right now. @TODO: Should we?
   queue_scale = "${var.environment == "development" ? 0 : 1}"
 
@@ -50,6 +57,30 @@ module "app" {
 
   papertrail_destination = "${var.papertrail_destination}"
   with_newrelic          = "${coalesce(var.with_newrelic, var.environment == "production")}"
+}
+
+module "database" {
+  source = "../../shared/mariadb_instance"
+
+  name           = "${var.name}"
+  instance_class = "${var.environment == "production" ? "db.m4.large" : "db.t2.medium"}"
+}
+
+module "iam_user" {
+  source = "../../shared/iam_app_user"
+  name   = "${var.name}"
+}
+
+module "queue" {
+  source = "../../shared/sqs_queue"
+  name   = "${var.name}"
+  user   = "${module.iam_user.name}"
+}
+
+module "storage" {
+  source = "../../shared/s3_bucket"
+  name   = "${var.name}"
+  user   = "${module.iam_user.name}"
 }
 
 output "name" {

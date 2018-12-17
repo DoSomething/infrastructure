@@ -47,6 +47,8 @@ module "app" {
   pipeline    = "${var.pipeline}"
   environment = "${var.environment}"
 
+  config_vars = "${module.database.config_vars}"
+
   web_size = "${coalesce(var.web_size, var.environment == "production" ? "Performance-M" : "Hobby")}"
 
   queue_scale = 0
@@ -56,6 +58,13 @@ module "app" {
 
   papertrail_destination = "${var.papertrail_destination}"
   with_newrelic          = "${coalesce(var.with_newrelic, var.environment == "production")}"
+}
+
+module "database" {
+  source = "../../shared/mariadb_instance"
+
+  name           = "${var.name}"
+  instance_class = "${var.environment == "production" ? "db.t2.large" : "db.t2.micro"}"
 }
 
 output "name" {
