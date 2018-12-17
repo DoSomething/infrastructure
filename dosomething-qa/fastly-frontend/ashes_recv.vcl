@@ -6,8 +6,8 @@
 unset req.http.X-Fastly-Backend;
 
 # Should this page be served by Ashes? Let's see:
-if (req.url.path ~ "(?i)^\/((us|mx|br)\/?)?$") {
-  # The homepage & international variants are served by Ashes:
+if (req.url.path ~ "(?i)^\/((mx|br)\/?)?$") {
+  # The international homepages are served by Ashes:
   set req.http.X-Fastly-Backend = "ashes";
 }
 else if (req.url.path ~ "(?i)^\/((mx|br)\/?)?campaigns\/?$") {
