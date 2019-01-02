@@ -59,7 +59,7 @@ data "aws_ssm_parameter" "contentful_space_id" {
 }
 
 data "aws_ssm_parameter" "contentful_api_key" {
-  # Grab the key for either Contentful's Content or Preview API, based on 'use_contentful_preview' setting.
+  # Grab the key for either Contentful's Content or Preview API, based on 'use_contentful_preview_api'.
   name = "/${var.name}/contentful/${var.use_contentful_preview_api ? "preview" : "content"}-api-key"
 }
 
