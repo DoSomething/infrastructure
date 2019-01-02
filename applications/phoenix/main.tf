@@ -1,12 +1,18 @@
 # This template builds a Phoenix application instance.
 #
-# Require SSM parameters for Contentful:
-#   - /contentful/phoenix/space-id
-#   - /{name}/contentful/content-api-key
-#   - /{name}/contentful/preview-api-key
+# Manual setup steps:
+#   - Create a Contentful API key for this application, and copy the generated values for both
+#     '/{name}/contentful/content-api-key' & '/{name}/contentful/preview-api-key' into SSM.
+#   - Set 'FACEBOOK_APP_ID', 'FACEBOOK_APP_SECRET', and 'FACEBOOK_REDIRECT_URL'
+#     to the appropriate settings for this app from <developers.facebook.com>.
+#   - Set 'APP_KEY' by running 'php artisan generate:key'.
+#   - Set 'BERTLY_API_KEY', 'BERTLY_URL', 'CUSTOMER_IO_ID', 'GOOGLE_ANALYTICS_ID',
+#     'GRAPHQL_URL', 'NORTHSTAR_AUTHORIZATION_ID', 'NORTHSTAR_AUTHORIZATION_SECRET',
+#     'NORTHSTAR_URL', 'NPS_SURVEY_ENABLED', 'PUCK_URL', 'ROGUE_URL', 'SIXPACK_BASE_URL',
+#     'SIXPACK_COOKIE_PREFIX', 'SIXPACK_ENABLED', and 'VOTER_REG_MODAL_ENABLED'.
+#   - Finally, set '/newrelic/api-key' in SSM to the New Relic API Key, if using.
 #
-# Required SSM parameter if using New Relic:
-#   - /newrelic/api-key
+# NOTE: We'll move more of these steps into Terraform over time!
 
 # Required variables:
 variable "environment" {

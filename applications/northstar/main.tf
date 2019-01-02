@@ -1,6 +1,8 @@
 # This template builds a Northstar application instance.
 #
 # Manual setup steps:
+#   - Set '/mandrill/api-key' to the Mandrill API Key.
+#   - Set '/newrelic/api-key' to the New Relic API Key, if using.
 #   - Configure a MongoDB Atlas database & set credentials in
 #     '/{name}/mongoatlas/host', '/{name}/mongoatlas/database',
 #     '/{name}/mongoatlas/username' & '/{name}/mongoatlas/password'.
@@ -13,6 +15,8 @@
 #     'php artisan generate:key'.
 #   - Finally, head to the S3 Bucket in AWS after provisioning, and go to the
 #     Permissions -> Public Access Settings screen. Check all the options.
+#
+# NOTE: We'll move more of these steps into Terraform over time!
 #
 # Required SSM parameters:
 #   - /{name}/mongoatlas/host
