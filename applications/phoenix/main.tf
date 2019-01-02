@@ -1,5 +1,10 @@
 # This template builds a Phoenix application instance.
 #
+# Require SSM parameters for Contentful:
+#   - /contentful/phoenix/space-id
+#   - /{name}/contentful/content-api-key
+#   - /{name}/contentful/preview-api-key
+#
 # Required SSM parameter if using New Relic:
 #   - /newrelic/api-key
 
@@ -31,13 +36,44 @@ variable "web_size" {
   default     = ""
 }
 
+variable "use_contentful_preview_api" {
+  description = "Should we use Contentful's Preview API for this app?"
+  default     = false
+}
+
 variable "with_newrelic" {
   # See usage below for default fallback. <https://stackoverflow.com/a/51758050/811624>
   description = "Should New Relic be enabled for this app? Enabled by default on prod."
   default     = ""
 }
 
-locals {}
+data "aws_ssm_parameter" "contentful_space_id" {
+  # All environments of this application use the same space.
+  name = "/contentful/phoenix/space-id"
+}
+
+data "aws_ssm_parameter" "contentful_api_key" {
+  # Grab the key for either Contentful's Content or Preview API, based on 'use_contentful_preview' setting.
+  name = "/${var.name}/contentful/${var.use_contentful_preview_api ? "preview" : "content"}-api-key"
+}
+
+locals {
+  # Map environment names to their corresponding "branches"
+  # on Contentful (e.g. they use 'master' for production).
+  contentful_environments = {
+    production  = "master"
+    qa          = "qa"
+    development = "dev"
+  }
+
+  contentful_config_vars = {
+    CONTENTFUL_ENVIRONMENT_ID  = "${local.contentful_environments[var.environment]}"
+    CONTENTFUL_SPACE_ID        = "${data.aws_ssm_parameter.contentful_space_id.value}"
+    CONTENTFUL_CONTENT_API_KEY = "${data.aws_ssm_parameter.contentful_api_key.value}"
+    CONTENTFUL_USE_PREVIEW_API = "${var.use_contentful_preview_api}"
+    CONTENTFUL_CACHE           = "${var.environment == "production"}"
+  }
+}
 
 module "app" {
   source = "../../shared/laravel_app"
@@ -47,7 +83,11 @@ module "app" {
   pipeline    = "${var.pipeline}"
   environment = "${var.environment}"
 
-  config_vars = "${module.database.config_vars}"
+  # TODO: Add 'module.database.config_vars' once we've migrated
+  # records over to the new database instance.
+  config_vars = "${merge(
+    local.contentful_config_vars
+  )}"
 
   web_size = "${coalesce(var.web_size, var.environment == "production" ? "Performance-M" : "Hobby")}"
 

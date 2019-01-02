@@ -74,6 +74,8 @@ module "phoenix_preview" {
   web_size               = "Hobby"                         # TODO: Should this be Standard-1X?
   pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
+
+  use_contentful_preview_api = true
 }
 
 module "rogue" {
