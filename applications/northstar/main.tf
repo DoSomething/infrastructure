@@ -161,6 +161,7 @@ module "storage" {
 
   name = "${var.name}"
   user = "${module.iam_user.name}"
+  acl  = "private"
 }
 
 output "name" {
