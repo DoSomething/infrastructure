@@ -43,11 +43,14 @@ module "app" {
   web_size  = "${var.environment == "production" ? "Standard-2x" : "Standard-1x"}"
   web_scale = "${var.environment == "production" ? 2 : 1}"
 
+  # TODO: Add 'module.database.config_vars' once we've migrated
+  # records over to the new database instance.
+  # TODO: Add 'module.storage.config_vars' once we've migrated
+  # files over to the new storage bucket.
+  # TODO: Add 'module.queue.config_vars' once we've updated this
+  # application to use the new IAM environment variables set below.
   config_vars = "${merge(
-    module.database.config_vars,
-    module.storage.config_vars,
     module.iam_user.config_vars,
-    module.queue.config_vars
   )}"
 
   # We don't run a queue process on development right now. @TODO: Should we?
