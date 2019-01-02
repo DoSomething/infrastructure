@@ -17,14 +17,6 @@
 #     Permissions -> Public Access Settings screen. Check all the options.
 #
 # NOTE: We'll move more of these steps into Terraform over time!
-#
-# Required SSM parameters:
-#   - /{name}/mongoatlas/host
-#   - /{name}/mongoatlas/database
-#   - /{name}/mongoatlas/username
-#   - /{name}/mongoatlas/password
-#   - /mandrill/api-key
-#   - /newrelic/api-key (if using New Relic)
 
 # Required variables:
 variable "environment" {
