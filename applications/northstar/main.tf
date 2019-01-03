@@ -85,7 +85,7 @@ locals {
   }
 
   queue_low_config_vars = {
-    SQS_LOW_PRIORITY_QUEUE = "${module.queue_low.arn}"
+    SQS_LOW_PRIORITY_QUEUE = "${module.queue_low.id}"
   }
 
   feature_config_vars = {
