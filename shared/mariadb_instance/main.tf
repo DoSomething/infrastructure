@@ -1,6 +1,6 @@
 # Required variables:
 variable "name" {
-  description = "The name for this database (usually the application name)."
+  description = "The identifier for the database instance (usually the application name)."
 }
 
 variable "instance_class" {
@@ -16,6 +16,12 @@ variable "engine_version" {
 variable "allocated_storage" {
   description = "The amount of storage to allocate to the database, in GB."
   default     = 100
+}
+
+variable "database_name" {
+  # See usage below for default value. <https://stackoverflow.com/a/51758050/811624>
+  description = "Optionally, the name for the database that should be provisioned at creation."
+  default     = ""
 }
 
 variable "subnet_group" {
@@ -44,7 +50,7 @@ data "aws_ssm_parameter" "database_password" {
 
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
-  name       = "longshot"
+  name       = "${coalesce(var.database_name, var.name)}"
 
   engine            = "mariadb"
   engine_version    = "${var.engine_version}"
