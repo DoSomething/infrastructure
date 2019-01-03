@@ -57,29 +57,6 @@ data "aws_ssm_parameter" "database_password" {
   name = "/${var.name}/rds/password"
 }
 
-resource "aws_iam_role" "rds_enhanced_monitoring" {
-  name               = "${var.name}-monitoring-role"
-  assume_role_policy = "${data.aws_iam_policy_document.rds_enhanced_monitoring.json}"
-}
-
-resource "aws_iam_role_policy" "rds_enhanced_monitoring" {
-  name   = "${var.name}-monitoring-attachment"
-  role   = "${aws_iam_role.rds_enhanced_monitoring.name}"
-  policy = "${file("${path.module}/monitoring-policy.json")}"
-}
-
-data "aws_iam_policy_document" "rds_enhanced_monitoring" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["monitoring.rds.amazonaws.com"]
-    }
-  }
-}
-
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
   name       = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
@@ -95,10 +72,7 @@ resource "aws_db_instance" "database" {
   backup_retention_period = "${var.environment == "production" ? 30 : 0}" # 30 days, or disabled.
   backup_window           = "06:00-07:00"                                 # 1-2am ET.
 
-  # Enable slow query log & enhanced monitoring. <https://goo.gl/xMx7GD>
   enabled_cloudwatch_logs_exports = ["error", "slowquery"]
-  monitoring_role_arn             = "${aws_iam_role.rds_enhanced_monitoring.arn}"
-  monitoring_interval             = 60
 
   username = "${data.aws_ssm_parameter.database_username.value}"
   password = "${data.aws_ssm_parameter.database_password.value}"
