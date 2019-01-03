@@ -57,6 +57,28 @@ data "aws_ssm_parameter" "database_password" {
   name = "/${var.name}/rds/password"
 }
 
+resource "aws_iam_role" "rds_enhanced_monitoring" {
+  name               = "${var.name}-monitoring-role"
+  assume_role_policy = "${data.aws_iam_policy_document.rds_enhanced_monitoring.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
+  role       = "${aws_iam_role.rds_enhanced_monitoring.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
+
+data "aws_iam_policy_document" "rds_enhanced_monitoring" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["monitoring.rds.amazonaws.com"]
+    }
+  }
+}
+
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
   name       = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
@@ -74,6 +96,7 @@ resource "aws_db_instance" "database" {
 
   # Enable slow query log & enhanced monitoring. <https://goo.gl/xMx7GD>
   enabled_cloudwatch_logs_exports = ["error", "slowquery"]
+  monitoring_role_arn             = "${aws_iam_role.rds_enhanced_monitoring.arn}"
   monitoring_interval             = 60
 
   username = "${data.aws_ssm_parameter.database_username.value}"
