@@ -24,6 +24,11 @@ variable "database_name" {
   default     = ""
 }
 
+variable "multi_az" {
+  description = "Should this instance be Multi-AZ for enhanced durability/availability? See: https://goo.gl/dqDazn"
+  default     = false
+}
+
 variable "subnet_group" {
   description = "The AWS subnet group name for this database."
   default     = "rds-mysql"
@@ -56,6 +61,7 @@ resource "aws_db_instance" "database" {
   engine_version    = "${var.engine_version}"
   instance_class    = "${var.instance_class}"
   allocated_storage = "${var.allocated_storage}"
+  multi_az          = "${var.multi_az}"
 
   allow_major_version_upgrade = true
 

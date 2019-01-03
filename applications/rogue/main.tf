@@ -79,6 +79,7 @@ module "database" {
 
   name           = "${var.name}"
   instance_class = "${var.environment == "production" ? "db.m4.large" : "db.t2.medium"}"
+  multi_az       = "${var.environment == "production"}"
 }
 
 module "iam_user" {
