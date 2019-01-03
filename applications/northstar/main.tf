@@ -88,6 +88,15 @@ locals {
     SQS_LOW_PRIORITY_QUEUE = "${module.queue_low.id}"
   }
 
+  # TODO: Remove these once application is updated to use new vars.
+  legacy_config_vars = {
+    SQS_BACKFILL_QUEUE = "${module.queue_low.id}"
+    S3_KEY             = "${module.iam_user.config_vars["AWS_ACCESS_KEY"]}"
+    S3_SECRET          = "${module.iam_user.config_vars["AWS_SECRET_KEY"]}"
+    SQS_PUBLIC_KEY     = "${module.iam_user.config_vars["AWS_ACCESS_KEY"]}"
+    SQS_SECRET_KEY     = "${module.iam_user.config_vars["AWS_SECRET_KEY"]}"
+  }
+
   feature_config_vars = {
     DS_ENABLE_PASSWORD_GRANT = false
     DS_ENABLE_RATE_LIMITING  = true
@@ -102,16 +111,15 @@ module "app" {
   pipeline    = "${var.pipeline}"
   environment = "${var.environment}"
 
-  # TODO: Add 'module.storage.config_vars' once we've migrated
-  # files over to the new storage buckets.
-  # TODO: Add 'module.queue_high.config_vars' once
-  # we're ready to swap to using new IAM config vars.
   config_vars = "${merge(
     module.iam_user.config_vars,
+    module.storage.config_vars,
+    module.queue_high.config_vars,
     local.database_config_vars,
     local.feature_config_vars,
     local.mail_config_vars,
-    local.queue_low_config_vars
+    local.queue_low_config_vars,
+    local.legacy_config_vars
   )}"
 
   # We use autoscaling in production, so don't try to manage dynos there.
