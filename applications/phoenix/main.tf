@@ -110,7 +110,7 @@ module "database" {
   source = "../../shared/mariadb_instance"
 
   name           = "${var.name}"
-  instance_class = "${var.environment == "production" ? "db.t2.large" : "db.t2.micro"}"
+  instance_class = "${var.environment == "production" ? "db.t2.medium" : "db.t2.micro"}"
 }
 
 output "name" {
