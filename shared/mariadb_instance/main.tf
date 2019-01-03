@@ -62,9 +62,10 @@ resource "aws_iam_role" "rds_enhanced_monitoring" {
   assume_role_policy = "${data.aws_iam_policy_document.rds_enhanced_monitoring.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
-  role       = "${aws_iam_role.rds_enhanced_monitoring.name}"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+resource "aws_iam_role_policy" "rds_enhanced_monitoring" {
+  name   = "${var.name}-monitoring-attachment"
+  role   = "${aws_iam_role.rds_enhanced_monitoring.name}"
+  policy = "${file("${path.module}/monitoring-policy.json")}"
 }
 
 data "aws_iam_policy_document" "rds_enhanced_monitoring" {
