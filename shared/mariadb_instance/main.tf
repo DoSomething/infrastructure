@@ -50,7 +50,7 @@ data "aws_ssm_parameter" "database_password" {
 
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
-  name       = "${coalesce(var.database_name, var.name)}"
+  name       = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
 
   engine            = "mariadb"
   engine_version    = "${var.engine_version}"
