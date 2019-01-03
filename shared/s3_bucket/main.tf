@@ -7,9 +7,15 @@ variable "user" {
   description = "The IAM user to grant permissions to read/write to this bucket."
 }
 
+# Optional variables:
+variable "acl" {
+  description = "The canned ACL for this bucket. See: https://goo.gl/TFnRSY"
+  default     = "public-read"
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "${var.name}"
-  acl    = "public-read"
+  acl    = "${var.acl}"
 
   tags {
     Application = "${var.name}"

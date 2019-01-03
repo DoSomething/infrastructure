@@ -1,6 +1,10 @@
 # Required variables:
 variable "name" {
-  description = "The name for this database (usually the application name)."
+  description = "The identifier for the database instance (usually the application name)."
+}
+
+variable "environment" {
+  description = "The environment for this database: development, qa, or production."
 }
 
 variable "instance_class" {
@@ -18,14 +22,25 @@ variable "allocated_storage" {
   default     = 100
 }
 
+variable "database_name" {
+  # See usage below for default value. <https://stackoverflow.com/a/51758050/811624>
+  description = "Optionally, the name for the database that should be provisioned at creation."
+  default     = ""
+}
+
+variable "multi_az" {
+  description = "Should this instance be Multi-AZ for enhanced durability/availability? See: https://goo.gl/dqDazn"
+  default     = false
+}
+
 variable "subnet_group" {
   description = "The AWS subnet group name for this database."
-  default     = "default-vpc-7899331d"
+  default     = "rds-mysql"
 }
 
 variable "security_groups" {
   description = "The security group IDs for this database."
-  default     = ["sg-c9a37db2"]
+  default     = ["sg-0dca7669"]
 }
 
 variable "deletion_protection" {
@@ -44,17 +59,20 @@ data "aws_ssm_parameter" "database_password" {
 
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
-  name       = "longshot"
+  name       = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
 
   engine            = "mariadb"
   engine_version    = "${var.engine_version}"
   instance_class    = "${var.instance_class}"
   allocated_storage = "${var.allocated_storage}"
+  multi_az          = "${var.multi_az}"
 
   allow_major_version_upgrade = true
 
-  backup_retention_period = 7             # 7 days.
-  backup_window           = "06:00-07:00" # 1-2am ET.
+  backup_retention_period = "${var.environment == "production" ? 30 : 0}" # 30 days, or disabled.
+  backup_window           = "06:00-07:00"                                 # 1-2am ET.
+
+  enabled_cloudwatch_logs_exports = ["error", "slowquery"]
 
   username = "${data.aws_ssm_parameter.database_username.value}"
   password = "${data.aws_ssm_parameter.database_password.value}"

@@ -88,8 +88,13 @@ module "database" {
   source = "../../shared/mariadb_instance"
 
   name              = "${var.name}"
+  environment       = "${var.environment}"
+  database_name     = "longshot"
   instance_class    = "${var.environment == "production" ? "db.t2.medium" : "db.t2.micro"}"
   allocated_storage = "${var.environment == "production" ? 100 : 5}"
+
+  subnet_group    = "default-vpc-7899331d"
+  security_groups = ["sg-c9a37db2"]
 }
 
 module "iam_user" {
