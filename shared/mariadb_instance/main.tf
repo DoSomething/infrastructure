@@ -72,6 +72,10 @@ resource "aws_db_instance" "database" {
   backup_retention_period = "${var.environment == "production" ? 30 : 0}" # 30 days, or disabled.
   backup_window           = "06:00-07:00"                                 # 1-2am ET.
 
+  # Enable slow query log & enhanced monitoring. <https://goo.gl/xMx7GD>
+  enabled_cloudwatch_logs_exports = ["error", "slowquery"]
+  monitoring_interval             = 60
+
   username = "${data.aws_ssm_parameter.database_username.value}"
   password = "${data.aws_ssm_parameter.database_password.value}"
 
