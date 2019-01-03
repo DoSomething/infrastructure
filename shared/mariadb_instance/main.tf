@@ -31,7 +31,7 @@ variable "subnet_group" {
 
 variable "security_groups" {
   description = "The security group IDs for this database."
-  default     = []
+  default     = ["sg-0dca7669"]
 }
 
 variable "deletion_protection" {
