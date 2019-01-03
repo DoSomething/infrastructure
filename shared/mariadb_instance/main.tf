@@ -3,6 +3,10 @@ variable "name" {
   description = "The identifier for the database instance (usually the application name)."
 }
 
+variable "environment" {
+  description = "The environment for this database: development, qa, or production."
+}
+
 variable "instance_class" {
   description = "The RDS instance class. See: https://goo.gl/vTMqx9"
 }
@@ -65,8 +69,8 @@ resource "aws_db_instance" "database" {
 
   allow_major_version_upgrade = true
 
-  backup_retention_period = 7             # 7 days.
-  backup_window           = "06:00-07:00" # 1-2am ET.
+  backup_retention_period = "${var.environment == "production" ? 30 : 0}" # 30 days, or disabled.
+  backup_window           = "06:00-07:00"                                 # 1-2am ET.
 
   username = "${data.aws_ssm_parameter.database_username.value}"
   password = "${data.aws_ssm_parameter.database_password.value}"
