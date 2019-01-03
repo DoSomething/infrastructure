@@ -20,12 +20,12 @@ variable "allocated_storage" {
 
 variable "subnet_group" {
   description = "The AWS subnet group name for this database."
-  default     = "default-vpc-7899331d"
+  default     = "rds-mysql"
 }
 
 variable "security_groups" {
   description = "The security group IDs for this database."
-  default     = ["sg-c9a37db2"]
+  default     = []
 }
 
 variable "deletion_protection" {
