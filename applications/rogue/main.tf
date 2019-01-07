@@ -42,7 +42,15 @@ variable "with_newrelic" {
   default     = ""
 }
 
-locals {}
+locals {
+  # TODO: Remove these once application is updated to use new vars.
+  legacy_config_vars = {
+    S3_KEY         = "${module.iam_user.config_vars["AWS_ACCESS_KEY"]}"
+    S3_SECRET      = "${module.iam_user.config_vars["AWS_SECRET_KEY"]}"
+    SQS_PUBLIC_KEY = "${module.iam_user.config_vars["AWS_ACCESS_KEY"]}"
+    SQS_SECRET_KEY = "${module.iam_user.config_vars["AWS_SECRET_KEY"]}"
+  }
+}
 
 module "app" {
   source = "../../shared/laravel_app"
@@ -57,12 +65,11 @@ module "app" {
 
   # TODO: Add 'module.database.config_vars' once we've migrated
   # records over to the new database instance.
-  # TODO: Add 'module.storage.config_vars' once we've migrated
-  # files over to the new storage bucket.
-  # TODO: Add 'module.queue.config_vars' once we've updated this
-  # application to use the new IAM environment variables set below.
   config_vars = "${merge(
+    module.queue.config_vars,
     module.iam_user.config_vars,
+    module.storage.config_vars,
+    local.legacy_config_vars,
   )}"
 
   # We don't run a queue process on development right now. @TODO: Should we?
