@@ -99,6 +99,8 @@ module "storage" {
   name   = "${var.name}"
   user   = "${module.iam_user.name}"
 
+  # TODO: We should remove anywhere we depend on this behavior,
+  # such as Rogue's admin inbox, and then disable this.
   force_public = true
 }
 
