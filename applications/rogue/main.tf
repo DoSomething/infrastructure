@@ -98,6 +98,8 @@ module "storage" {
   source = "../../shared/s3_bucket"
   name   = "${var.name}"
   user   = "${module.iam_user.name}"
+
+  force_public = true
 }
 
 output "name" {

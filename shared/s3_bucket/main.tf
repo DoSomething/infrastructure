@@ -13,6 +13,11 @@ variable "acl" {
   default     = "public-read"
 }
 
+variable "force_public" {
+  description = "Force 'public read' permissions for objects. Not recommended."
+  default     = false
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "${var.name}"
   acl    = "${var.acl}"
@@ -23,7 +28,7 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 data "template_file" "s3_policy" {
-  template = "${file("${path.module}/iam-policy.json.tpl")}"
+  template = "${file("${path.module}/${var.force_public ? "public-" : ""}iam-policy.json.tpl")}"
 
   vars {
     bucket_arn = "${aws_s3_bucket.bucket.arn}"
