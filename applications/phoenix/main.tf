@@ -89,9 +89,8 @@ module "app" {
   pipeline    = "${var.pipeline}"
   environment = "${var.environment}"
 
-  # TODO: Add 'module.database.config_vars' once we've migrated
-  # records over to the new database instance.
   config_vars = "${merge(
+    module.database.config_vars,
     local.contentful_config_vars
   )}"
 

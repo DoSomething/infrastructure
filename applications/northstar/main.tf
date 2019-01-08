@@ -102,16 +102,14 @@ module "app" {
   pipeline    = "${var.pipeline}"
   environment = "${var.environment}"
 
-  # TODO: Add 'module.storage.config_vars' once we've migrated
-  # files over to the new storage buckets.
-  # TODO: Add 'module.queue_high.config_vars' once
-  # we're ready to swap to using new IAM config vars.
   config_vars = "${merge(
     module.iam_user.config_vars,
+    module.storage.config_vars,
+    module.queue_high.config_vars,
+    local.queue_low_config_vars,
     local.database_config_vars,
     local.feature_config_vars,
-    local.mail_config_vars,
-    local.queue_low_config_vars
+    local.mail_config_vars
   )}"
 
   # We use autoscaling in production, so don't try to manage dynos there.

@@ -40,7 +40,10 @@ variable "subnet_group" {
 
 variable "security_groups" {
   description = "The security group IDs for this database."
-  default     = ["sg-0dca7669"]
+
+  # TODO: Either update default security group to work here, or import
+  # this as part of a "environment" module in Terraform 0.12.
+  default = ["sg-a37efac7"]
 }
 
 variable "deletion_protection" {
