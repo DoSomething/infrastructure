@@ -63,9 +63,8 @@ module "app" {
   web_size  = "${var.environment == "production" ? "Standard-2x" : "Standard-1x"}"
   web_scale = "${var.environment == "production" ? 2 : 1}"
 
-  # TODO: Add 'module.database.config_vars' once we've migrated
-  # records over to the new database instance.
   config_vars = "${merge(
+    module.database.config_vars,
     module.queue.config_vars,
     module.iam_user.config_vars,
     module.storage.config_vars,
