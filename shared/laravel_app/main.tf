@@ -71,6 +71,11 @@ data "aws_ssm_parameter" "newrelic_api_key" {
   name  = "/newrelic/api-key"
 }
 
+data "aws_ssm_parameter" "slack_deploy_webhook" {
+  count = "${var.environment == "production" ? 1 : 0}"
+  name  = "/slack/deploys-webhook"
+}
+
 locals {
   config_vars = {
     APP_URL = "https://${var.domain}"
@@ -153,6 +158,16 @@ resource "heroku_pipeline_coupling" "app" {
 
   # Heroku uses "staging" for what we call "qa":
   stage = "${var.environment == "qa" ? "staging" : var.environment}"
+}
+
+resource "heroku_addon" "webhook" {
+  count = "${var.environment == "production" ? 1 : 0}"
+  app   = "${heroku_app.app.name}"
+  plan  = "deployhooks:http"
+
+  config {
+    url = "${data.aws_ssm_parameter.slack_deploy_webhook.value}"
+  }
 }
 
 resource "heroku_addon" "redis" {
