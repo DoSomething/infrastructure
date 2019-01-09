@@ -26,11 +26,6 @@ else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?(fact|sobre|volunteer|voluntario|r
   # And our custom Ashes paths for DS.org content.
   set req.http.X-Fastly-Backend = "ashes";
 }
-else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?about/([A-Za-z0-9_\-]+)" &&
-    table.lookup(ashes_about, std.tolower(re.group.3))) {
-  # See if a given about page should be served by Ashes.
-  set req.http.X-Fastly-Backend = "ashes";
-}
 else if (req.url.path ~ "(?i)\/((us|mx|br)\/)?facts/([A-Za-z0-9_\-]+)" &&
     ! table.lookup(phoenix_facts, std.tolower(re.group.3))) {
   # Facts default to Ashes, but we'll opt some paths to Phoenix.
