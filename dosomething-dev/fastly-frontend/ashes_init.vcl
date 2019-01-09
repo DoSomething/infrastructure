@@ -94,9 +94,3 @@ table ashes_campaigns {
 table phoenix_facts {
   # ...
 }
-
-# This is an array of "about" pages that should be routed to Ashes. Fastly's
-# VCL supports dictionaries, but not arrays... hence an array of all "true"!
-table ashes_about {
-  # ...
-}
