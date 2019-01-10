@@ -46,6 +46,11 @@ variable "security_groups" {
   default = ["sg-a37efac7"]
 }
 
+variable "is_dms_source" {
+  description = "Is this an Amazon DMS source? If so, sets appropriate parameters."
+  default     = false
+}
+
 variable "deletion_protection" {
   description = "If enabled, this database cannot be deleted (by Terraform or anything else)."
   default     = true
@@ -60,6 +65,34 @@ data "aws_ssm_parameter" "database_password" {
   name = "/${var.name}/rds/password"
 }
 
+locals {
+  # Should backups be enabled, and if so for how long? We keep backups for
+  # the maximum window (30 days) on production, and otherwise the minimum
+  # amount in order to satisfy functionality.
+  base_backup_retention = "${var.is_dms_source ? 1 : 0}"
+
+  backup_retention = "${var.environment == "production" ? 30 : local.base_backup_retention}"
+}
+
+resource "aws_db_parameter_group" "replication_settings" {
+  count = "${var.is_dms_source ? 1 : 0}"
+
+  name   = "${var.name}"
+  family = "mariadb10.3"
+
+  # These two parameters are required for Amazon
+  # DMS replication sources. <https://goo.gl/yjNZ9u>
+  parameter {
+    name  = "binlog_format"
+    value = "ROW"
+  }
+
+  parameter {
+    name  = "binlog_checksum"
+    value = "NONE"
+  }
+}
+
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
   name       = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
@@ -70,10 +103,12 @@ resource "aws_db_instance" "database" {
   allocated_storage = "${var.allocated_storage}"
   multi_az          = "${var.multi_az}"
 
+  parameter_group_name = "${coalesce(join("", aws_db_parameter_group.replication_settings.*.id), "default.mariadb10.3")}"
+
   allow_major_version_upgrade = true
 
-  backup_retention_period = "${var.environment == "production" ? 30 : 0}" # 30 days, or disabled.
-  backup_window           = "06:00-07:00"                                 # 1-2am ET.
+  backup_retention_period = "${local.backup_retention}" # See above!
+  backup_window           = "06:00-07:00"               # 1-2am ET.
 
   enabled_cloudwatch_logs_exports = ["error", "slowquery"]
 
