@@ -87,6 +87,7 @@ module "database" {
   environment    = "${var.environment}"
   instance_class = "${var.environment == "production" ? "db.m4.large" : "db.t2.medium"}"
   multi_az       = "${var.environment == "production"}"
+  is_dms_source  = true
 }
 
 module "iam_user" {
