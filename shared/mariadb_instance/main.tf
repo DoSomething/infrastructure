@@ -129,6 +129,29 @@ resource "aws_db_instance" "database" {
   }
 }
 
+# Configure a MySQL provider for this instance.
+provider "mysql" {
+  version  = "~> 1.5"
+  endpoint = "${aws_db_instance.database.endpoint}"
+  username = "${aws_db_instance.database.username}"
+  password = "${aws_db_instance.database.password}"
+}
+
+resource "mysql_user" "readonly" {
+  user = "readonly"
+}
+
+resource "mysql_user_password" "readonly" {
+  user    = "${mysql_user.readonly.user}"
+  pgp_key = "keybase:dfurnes"
+}
+
+resource "mysql_grant" "readonly" {
+  user       = "${mysql_user.readonly.user}"
+  database   = "${aws_db_instance.database.name}"
+  privileges = ["SELECT"]
+}
+
 output "address" {
   value = "${aws_db_instance.database.address}"
 }
