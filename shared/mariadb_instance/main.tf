@@ -147,7 +147,7 @@ resource "mysql_user_password" "readonly" {
   # This resource automatically generates a password for the MySQL
   # user, encrypted by a PGP public key. The corresponding private
   # key & decryption instructions can be found in Lastpass.
-  pgp_key = "${base64encode(file("${path.root}/shared/pgp/public.key"))}"
+  pgp_key = "${chomp(file("${path.root}/shared/pgp/public.key"))}"
 }
 
 resource "mysql_grant" "readonly" {
