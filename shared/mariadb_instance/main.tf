@@ -151,7 +151,7 @@ resource "mysql_user" "app" {
   count              = "${var.deprecated ? 0 : 1}"
   user               = "${local.safe_name}"
   host               = "%"
-  plaintext_password = "${random_string.readonly_password.result}"
+  plaintext_password = "${random_string.app_password.result}"
 }
 
 resource "mysql_grant" "app" {
