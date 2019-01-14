@@ -155,11 +155,13 @@ resource "mysql_user" "app" {
 }
 
 resource "mysql_grant" "app" {
-  count      = "${var.deprecated ? 0 : 1}"
-  user       = "${mysql_user.app.user}"
-  host       = "${mysql_user.app.host}"
-  database   = "${aws_db_instance.database.name}"
-  privileges = ["ALL"]
+  count    = "${var.deprecated ? 0 : 1}"
+  user     = "${mysql_user.app.user}"
+  host     = "${mysql_user.app.host}"
+  database = "${aws_db_instance.database.name}"
+
+  # Grant minimum privileges necessary for table usage & running migrations.
+  privileges = ["ALTER", "CREATE", "DELETE", "DROP", "INDEX", "INSERT", "SELECT", "UPDATE"]
 }
 
 resource "random_string" "readonly_password" {
