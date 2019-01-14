@@ -51,9 +51,9 @@ variable "is_dms_source" {
   default     = false
 }
 
-variable "deletion_protection" {
-  description = "If enabled, this database cannot be deleted (by Terraform or anything else)."
-  default     = true
+variable "deprecated" {
+  description = "Deprecate this instance, removing users & allowing deletion."
+  default     = false
 }
 
 # Data resources:
@@ -122,11 +122,41 @@ resource "aws_db_instance" "database" {
   vpc_security_group_ids = "${var.security_groups}"
   publicly_accessible    = true
 
-  deletion_protection = "${var.deletion_protection}"
+  deletion_protection = "${! var.deprecated}"
 
   tags = {
     Application = "${var.name}"
   }
+}
+
+# Configure a MySQL provider for this instance.
+provider "mysql" {
+  version  = "~> 1.5"
+  endpoint = "${aws_db_instance.database.endpoint}"
+  username = "${aws_db_instance.database.username}"
+  password = "${aws_db_instance.database.password}"
+}
+
+resource "random_string" "readonly_password" {
+  length = 24
+
+  # We can't use '@' or '$' in MySQL passwords.
+  override_special = "!#%&*()-_=+[]{}<>:?"
+}
+
+resource "mysql_user" "readonly" {
+  count              = "${var.deprecated ? 0 : 1}"
+  user               = "readonly"
+  host               = "%"
+  plaintext_password = "${random_string.readonly_password.result}"
+}
+
+resource "mysql_grant" "readonly" {
+  count      = "${var.deprecated ? 0 : 1}"
+  user       = "${mysql_user.readonly.user}"
+  host       = "${mysql_user.readonly.host}"
+  database   = "${aws_db_instance.database.name}"
+  privileges = ["SELECT"]
 }
 
 output "address" {

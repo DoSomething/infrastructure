@@ -71,6 +71,11 @@ provider "template" {
   version = "~> 1.0"
 }
 
+# The random provider is used for secret generation.
+provider "random" {
+  version = "~> 2.0"
+}
+
 # ----------------------------------------------------
 
 # We separate our infrastructure into modules for
