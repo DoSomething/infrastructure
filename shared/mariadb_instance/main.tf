@@ -199,11 +199,11 @@ output "name" {
 }
 
 output "username" {
-  value = "${data.aws_ssm_parameter.database_username.value}"
+  value = "${join("", mysql_user.app.*.user)}"
 }
 
 output "password" {
-  value = "${data.aws_ssm_parameter.database_password.value}"
+  value = "${random_string.app_password.result}"
 }
 
 output "config_vars" {
@@ -211,7 +211,7 @@ output "config_vars" {
     DB_HOST     = "${aws_db_instance.database.address}"
     DB_PORT     = "${aws_db_instance.database.port}"
     DB_DATABASE = "${aws_db_instance.database.name}"
-    DB_USERNAME = "${data.aws_ssm_parameter.database_username.value}"
-    DB_PASSWORD = "${data.aws_ssm_parameter.database_password.value}"
+    DB_USERNAME = "${join("", mysql_user.app.*.user)}"
+    DB_PASSWORD = "${random_string.app_password.result}"
   }
 }
