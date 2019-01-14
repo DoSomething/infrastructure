@@ -147,6 +147,7 @@ resource "random_string" "readonly_password" {
 resource "mysql_user" "readonly" {
   count              = "${var.deprecated ? 0 : 1}"
   user               = "readonly"
+  host               = "%"
   plaintext_password = "${random_string.readonly_password.result}"
 }
 
