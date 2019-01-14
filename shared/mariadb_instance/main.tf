@@ -154,6 +154,7 @@ resource "mysql_user" "readonly" {
 resource "mysql_grant" "readonly" {
   count      = "${var.deprecated ? 0 : 1}"
   user       = "${mysql_user.readonly.user}"
+  host       = "${mysql_user.readonly.host}"
   database   = "${aws_db_instance.database.name}"
   privileges = ["SELECT"]
 }
