@@ -72,6 +72,9 @@ locals {
   base_backup_retention = "${var.is_dms_source ? 1 : 0}"
 
   backup_retention = "${var.environment == "production" ? 30 : local.base_backup_retention}"
+
+  # The name of the database instance, in snake_case.
+  safe_name = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
 }
 
 resource "aws_db_parameter_group" "replication_settings" {
@@ -95,7 +98,7 @@ resource "aws_db_parameter_group" "replication_settings" {
 
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
-  name       = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
+  name       = "${local.safe_name}"
 
   engine            = "mariadb"
   engine_version    = "${var.engine_version}"
@@ -135,6 +138,28 @@ provider "mysql" {
   endpoint = "${aws_db_instance.database.endpoint}"
   username = "${aws_db_instance.database.username}"
   password = "${aws_db_instance.database.password}"
+}
+
+resource "random_string" "app_password" {
+  length = 32
+
+  # We can't use '@' or '$' in MySQL passwords.
+  override_special = "!#%&*()-_=+[]{}<>:?"
+}
+
+resource "mysql_user" "app" {
+  count              = "${var.deprecated ? 0 : 1}"
+  user               = "${local.safe_name}"
+  host               = "%"
+  plaintext_password = "${random_string.readonly_password.result}"
+}
+
+resource "mysql_grant" "app" {
+  count      = "${var.deprecated ? 0 : 1}"
+  user       = "${mysql_user.app.user}"
+  host       = "${mysql_user.app.host}"
+  database   = "${aws_db_instance.database.name}"
+  privileges = ["ALL"]
 }
 
 resource "random_string" "readonly_password" {
