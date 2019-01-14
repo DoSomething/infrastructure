@@ -61,10 +61,6 @@ data "aws_ssm_parameter" "database_username" {
   name = "/${var.name}/rds/username"
 }
 
-data "aws_ssm_parameter" "database_password" {
-  name = "/${var.name}/rds/password"
-}
-
 locals {
   # Should backups be enabled, and if so for how long? We keep backups for
   # the maximum window (30 days) on production, and otherwise the minimum
@@ -96,6 +92,13 @@ resource "aws_db_parameter_group" "replication_settings" {
   }
 }
 
+resource "random_string" "master_password" {
+  length = 32
+
+  # We can't use '@' or '$' in MySQL passwords.
+  override_special = "!#%&*()-_=+[]{}<>:?"
+}
+
 resource "aws_db_instance" "database" {
   identifier = "${var.name}"
   name       = "${local.safe_name}"
@@ -116,7 +119,7 @@ resource "aws_db_instance" "database" {
   enabled_cloudwatch_logs_exports = ["error", "slowquery"]
 
   username = "${data.aws_ssm_parameter.database_username.value}"
-  password = "${data.aws_ssm_parameter.database_password.value}"
+  password = "${random_string.master_password.result}"
 
   # TODO: We should migrate our account out of EC2-Classic, create
   # a default VPC, and let resources be created in there by default!
