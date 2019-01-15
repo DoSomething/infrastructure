@@ -98,12 +98,6 @@ resource "fastly_service_v1" "frontend-dev" {
   }
 
   snippet {
-    name    = "Frontend - Ashes Campaigns"
-    type    = "init"
-    content = "${file("${path.module}/ashes_init.vcl")}"
-  }
-
-  snippet {
     name    = "Frontend - Ashes Routing"
     type    = "recv"
     content = "${file("${path.module}/ashes_recv.vcl")}"
