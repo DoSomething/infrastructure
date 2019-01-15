@@ -293,14 +293,3 @@ table ashes_campaigns {
   "sua-mochila-pesada-pode-te-causar-muitos-problemas": "true",
   "sua-escola-": "true", # our slug regex only captures ASCII, hence no é-accessivel.
 }
-
-# This is an array of "fact" pages that should be routed to Phoenix. Fastly's
-# VCL supports dictionaries, but not arrays... hence an array of all "true"!
-table phoenix_facts {
-  "11-facts-about-addadhd": "true",
-  "11-facts-about-animal-cruelty": "true",
-  "11-facts-about-animals-entertainment": "true",
-  "11-facts-about-avalanches": "true",
-  "11-facts-about-birth-control": "true",
-  # ...
-}
