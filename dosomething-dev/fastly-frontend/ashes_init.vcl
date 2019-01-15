@@ -88,9 +88,3 @@ table ashes_campaigns {
   "/us/volunteer/grandparents-gone-wired": "true",
   "/us/volunteer/high-holidays-high-impact": "true",
 }
-
-# This is an array of "fact" pages that should be routed to Phoenix. Fastly's
-# VCL supports dictionaries, but not arrays... hence an array of all "true"!
-table phoenix_facts {
-  # ...
-}
