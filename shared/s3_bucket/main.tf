@@ -13,6 +13,11 @@ variable "acl" {
   default     = "public-read"
 }
 
+variable "versioning" {
+  description = "Enable versioning on this bucket. See: https://goo.gl/idPRVV"
+  default     = false
+}
+
 variable "force_public" {
   description = "Force 'public read' permissions for objects. Not recommended."
   default     = false
@@ -21,6 +26,10 @@ variable "force_public" {
 resource "aws_s3_bucket" "bucket" {
   bucket = "${var.name}"
   acl    = "${var.acl}"
+
+  versioning {
+    enabled = "${var.versioning}"
+  }
 
   tags {
     Application = "${var.name}"
