@@ -120,7 +120,9 @@ resource "random_id" "lifecycle_rules" {
 }
 
 resource "aws_s3_bucket" "backup" {
-  count  = "${var.replication ? 1 : 0}"
+  provider = "aws.west"
+  count    = "${var.replication ? 1 : 0}"
+
   bucket = "${var.name}-backup"
   region = "us-west-1"
 
