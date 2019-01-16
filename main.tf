@@ -65,6 +65,13 @@ provider "aws" {
   profile = "terraform"
 }
 
+# In some cases, like backup buckets, we store resources
+# in Amazon's US West region.
+provider "aws" {
+  alias  = "west"
+  region = "us-west-1"
+}
+
 # The template provider is used to generate files with
 # interpolated variables (like JSON or VCL).
 provider "template" {
