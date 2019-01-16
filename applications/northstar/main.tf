@@ -149,9 +149,10 @@ module "queue_low" {
 module "storage" {
   source = "../../shared/s3_bucket"
 
-  name = "${var.name}"
-  user = "${module.iam_user.name}"
-  acl  = "private"
+  name       = "${var.name}"
+  user       = "${module.iam_user.name}"
+  acl        = "private"
+  versioning = true
 }
 
 output "name" {

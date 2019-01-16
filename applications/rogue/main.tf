@@ -102,9 +102,10 @@ module "queue" {
 }
 
 module "storage" {
-  source = "../../shared/s3_bucket"
-  name   = "${var.name}"
-  user   = "${module.iam_user.name}"
+  source      = "../../shared/s3_bucket"
+  name        = "${var.name}"
+  user        = "${module.iam_user.name}"
+  replication = "${var.environment == "production"}"
 
   # TODO: We should remove anywhere we depend on this behavior,
   # such as Rogue's admin inbox, and then disable this.
