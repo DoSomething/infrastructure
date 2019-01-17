@@ -1,13 +1,15 @@
 # This template builds a GraphQL application instance.
 #
 # Manual setup steps:
-#   - Create a Gambit Contentful API key for this application, and copy the generated value
-#     for '/{name}/contentful/gambit-content-api-key' into SSM.
-#   - Set the '{ENV}_NORTHSTAR_AUTH_ID' and '{ENV}_NORTHSTAR_AUTH_SECRET'
-#     config vars to allow login for the GraphiQL interface.
 #   - Set 'PRODUCTION_GAMBIT_CONVERSATIONS_USER' and 'PRODUCTION_GAMBIT_CONVERSATIONS_PASS'
 #     to the appropriate credentials.
 #   - Set 'APOLLO_ENGINE_API_KEY' to the Apollo Engine API key for this environment.
+#   - Create a Gambit Contentful API key for this application, and copy the content API
+#     key into '/{var.name}/contentful/gambit-content-api-key' in SSM.
+#   - Create a web Northstar OAuth client with the following settings and copy the
+#     client secret into '/northstar/{var.environment}/clients/{var.name}' in SSM:
+#         Redirect URI: http://{var.domain}/auth/callback
+#         Allowed Scopes: 'role:admin', 'role:staff', 'user', 'activity', 'write'
 #
 # NOTE: We'll move more of these steps into Terraform over time!
 
@@ -41,6 +43,10 @@ data "aws_ssm_parameter" "contentful_api_key" {
   name = "/${var.name}/contentful/gambit/content-api-key"
 }
 
+data "aws_ssm_parameter" "northstar_auth_secret" {
+  name = "/northstar/${var.environment}/clients/${var.name}"
+}
+
 locals {
   # Environment (e.g. 'dev' or 'DEV')
   env = "${var.environment == "development" ? "dev" : var.environment}"
@@ -65,6 +71,9 @@ module "app" {
 
     # TODO: Update application to expect 'development' here.
     QUERY_ENV = "${local.env}"
+
+    "${local.ENV}_NORTHSTAR_AUTH_ID"     = "${var.name}"
+    "${local.ENV}_NORTHSTAR_AUTH_SECRET" = "${data.aws_ssm_parameter.northstar_auth_secret.value}"
   }
 
   # This application doesn't have a queue.
