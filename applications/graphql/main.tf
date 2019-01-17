@@ -1,9 +1,6 @@
 # This template builds a GraphQL application instance.
 #
 # Manual setup steps:
-#   - Set 'PRODUCTION_GAMBIT_CONVERSATIONS_USER' and 'PRODUCTION_GAMBIT_CONVERSATIONS_PASS'
-#     to the appropriate credentials.
-#   - Set 'APOLLO_ENGINE_API_KEY' to the Apollo Engine API key for this environment.
 #   - Create a Gambit Contentful API key for this application, and copy the content API
 #     key into '/{var.name}/contentful/gambit-content-api-key' in SSM.
 #   - Create a web Northstar OAuth client with the following settings and copy the
@@ -47,10 +44,25 @@ data "aws_ssm_parameter" "northstar_auth_secret" {
   name = "/northstar/${var.environment}/clients/${var.name}"
 }
 
+data "aws_ssm_parameter" "gambit_username" {
+  name = "/gambit/${local.gambit_env}/username"
+}
+
+data "aws_ssm_parameter" "gambit_password" {
+  name = "/gambit/${local.gambit_env}/password"
+}
+
+data "aws_ssm_parameter" "apollo_engine_api_key" {
+  name = "/${var.name}/apollo/api-key"
+}
+
 locals {
   # Environment (e.g. 'dev' or 'DEV')
   env = "${var.environment == "development" ? "dev" : var.environment}"
   ENV = "${upper(local.env)}"
+
+  # Gambit only has a production & QA environment:
+  gambit_env = "${local.env == "dev" ? "qa" : local.env}"
 }
 
 resource "random_string" "app_secret" {
@@ -74,6 +86,12 @@ module "app" {
 
     "${local.ENV}_NORTHSTAR_AUTH_ID"     = "${var.name}"
     "${local.ENV}_NORTHSTAR_AUTH_SECRET" = "${data.aws_ssm_parameter.northstar_auth_secret.value}"
+
+    # TODO: Remove custom environment mapping once we have a 'dev' instance of Gambit Conversations.
+    "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = "${data.aws_ssm_parameter.gambit_username.value}"
+    "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = "${data.aws_ssm_parameter.gambit_password.value}"
+
+    APOLLO_ENGINE_API_KEY = "${data.aws_ssm_parameter.apollo_engine_api_key.value}"
   }
 
   # This application doesn't have a queue.
