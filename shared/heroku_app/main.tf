@@ -11,6 +11,11 @@ variable "name" {
   description = "The application name."
 }
 
+variable "stack" {
+  description = "The stack (e.g. 'laravel', 'express')."
+  default     = "laravel"
+}
+
 variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
@@ -78,34 +83,59 @@ data "aws_ssm_parameter" "slack_deploy_webhook" {
 
 locals {
   config_vars = {
-    APP_URL = "https://${var.domain}"
+    express = {
+      APP_URL = "https://${var.domain}"
+      APP_ENV = "${var.environment}"
 
-    # Set environment & ensure app isn't in debug mode:
-    APP_ENV   = "${var.environment}"
-    APP_DEBUG = "false"
+      # New Relic (if enabled for this app):
+      NEW_RELIC_ENABLED     = "${var.with_newrelic ? "true" : "false"}"
+      NEW_RELIC_APP_NAME    = "${var.with_newrelic ? var.name : ""}"
+      NEW_RELIC_LICENSE_KEY = "${join("", data.aws_ssm_parameter.newrelic_api_key.*.value)}" # optional! <https://git.io/fp2pg>
+      NEW_RELIC_LOG_LEVEL   = "error"
+    }
 
-    # Configure logging for Heroku drain:
-    APP_LOG = "errorlog"
+    laravel = {
+      APP_URL = "https://${var.domain}"
 
-    # Alongside the Trusted Proxy module, this allows us to use SSL behind
-    # Heroku's load balancer. Heroku strips these headers on incoming traffic
-    # so it's safe to trust all (and we can't know their specific IPs).
-    TRUSTED_PROXY_IP_ADDRESSES = "**"
+      # Set environment & ensure app isn't in debug mode:
+      APP_ENV   = "${var.environment}"
+      APP_DEBUG = "false"
 
-    # If we're using Redis for this app, tell Laravel to use that for cache & session store.
-    CACHE_DRIVER   = "${var.with_redis ? "redis" : "file"}"
-    SESSION_DRIVER = "${var.with_redis ? "redis" : "file"}"
+      # Configure logging for Heroku drain:
+      APP_LOG = "errorlog"
 
-    # New Relic (if enabled for this app):
-    NEW_RELIC_ENABLED     = "${var.with_newrelic ? "true" : "false"}"
-    NEW_RELIC_APP_NAME    = "${var.with_newrelic ? var.name : ""}"
-    NEW_RELIC_LICENSE_KEY = "${join("", data.aws_ssm_parameter.newrelic_api_key.*.value)}" # optional! <https://git.io/fp2pg>
-    NEW_RELIC_LOG_LEVEL   = "error"
+      # Alongside the Trusted Proxy module, this allows us to use SSL behind
+      # Heroku's load balancer. Heroku strips these headers on incoming traffic
+      # so it's safe to trust all (and we can't know their specific IPs).
+      TRUSTED_PROXY_IP_ADDRESSES = "**"
+
+      # If we're using Redis for this app, tell Laravel to use that for cache & session store.
+      CACHE_DRIVER   = "${var.with_redis ? "redis" : "file"}"
+      SESSION_DRIVER = "${var.with_redis ? "redis" : "file"}"
+
+      # New Relic (if enabled for this app):
+      NEW_RELIC_ENABLED     = "${var.with_newrelic ? "true" : "false"}"
+      NEW_RELIC_APP_NAME    = "${var.with_newrelic ? var.name : ""}"
+      NEW_RELIC_LICENSE_KEY = "${join("", data.aws_ssm_parameter.newrelic_api_key.*.value)}" # optional! <https://git.io/fp2pg>
+      NEW_RELIC_LOG_LEVEL   = "error"
+    }
   }
 
   # By default, use a paid Heroku Redis add-on plan, with 50MB storage and high
   # availability, for production instances. Can be overridden with var.redis_type.
   redis_default = "${var.environment == "production" ? "premium-0" : "hobby-dev"}"
+
+  # Decide which buildpacks to use based on our stack:
+  buildpacks = {
+    express = [
+      "heroku/nodejs",
+    ]
+
+    laravel = [
+      "heroku/nodejs",
+      "heroku/php",
+    ]
+  }
 }
 
 resource "heroku_app" "app" {
@@ -116,12 +146,9 @@ resource "heroku_app" "app" {
     name = "dosomething"
   }
 
-  config_vars = ["${merge(local.config_vars, var.config_vars)}"]
+  config_vars = ["${merge(local.config_vars[var.stack], var.config_vars)}"]
 
-  buildpacks = [
-    "heroku/nodejs",
-    "heroku/php",
-  ]
+  buildpacks = "${local.buildpacks[var.stack]}"
 
   acm = true
 }

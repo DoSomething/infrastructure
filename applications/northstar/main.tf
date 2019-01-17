@@ -95,8 +95,9 @@ locals {
 }
 
 module "app" {
-  source = "../../shared/laravel_app"
+  source = "../../shared/heroku_app"
 
+  stack       = "laravel"
   name        = "${var.name}"
   domain      = "${var.domain}"
   pipeline    = "${var.pipeline}"
