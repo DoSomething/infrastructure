@@ -11,9 +11,8 @@ variable "name" {
   description = "The application name."
 }
 
-variable "stack" {
-  description = "The stack (e.g. 'laravel', 'express')."
-  default     = "laravel"
+variable "framework" {
+  description = "The framework for this application (e.g. 'laravel', 'express')."
 }
 
 variable "papertrail_destination" {
@@ -127,7 +126,7 @@ locals {
   # availability, for production instances. Can be overridden with var.redis_type.
   redis_default = "${var.environment == "production" ? "premium-0" : "hobby-dev"}"
 
-  # Decide which buildpacks to use based on our stack:
+  # Decide which buildpacks to use based on our framework:
   buildpacks = {
     express = [
       "heroku/nodejs",
@@ -148,9 +147,9 @@ resource "heroku_app" "app" {
     name = "dosomething"
   }
 
-  config_vars = ["${merge(local.config_vars[var.stack], var.config_vars)}"]
+  config_vars = ["${merge(local.config_vars[var.framework], var.config_vars)}"]
 
-  buildpacks = "${local.buildpacks[var.stack]}"
+  buildpacks = "${local.buildpacks[var.framework]}"
 
   acm = true
 }

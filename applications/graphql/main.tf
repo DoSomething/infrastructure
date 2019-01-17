@@ -74,7 +74,7 @@ resource "random_string" "app_secret" {
 module "app" {
   source = "../../shared/heroku_app"
 
-  stack       = "express"
+  framework   = "express"
   name        = "${var.name}"
   domain      = "${var.domain}"
   pipeline    = "${var.pipeline}"
