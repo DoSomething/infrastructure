@@ -1,8 +1,10 @@
 # This template builds a GraphQL application instance.
 #
 # Manual setup steps:
-#   - Create a Gambit Contentful API key for this application, and copy the content API
-#     key into '/{var.name}/contentful/gambit-content-api-key' in SSM.
+#   - Create an Apollo Engine service for this application, and copy the API key
+#     into '/{$var.name}/apollo/api-key' in SSM.
+#   - Create a Gambit Contentful API key for this application, and copy the content
+#     API key into '/{var.name}/contentful/gambit-content-api-key' in SSM.
 #   - Create a web Northstar OAuth client with the following settings and copy the
 #     client secret into '/northstar/{var.environment}/clients/{var.name}' in SSM:
 #         Redirect URI: http://{var.domain}/auth/callback
