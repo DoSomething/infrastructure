@@ -35,9 +35,12 @@ module "fastly-backend" {
 }
 
 module "graphql" {
-  source = "graphql"
+  source = "../applications/graphql"
 
-  graphql_pipeline       = "${var.graphql_pipeline}"
+  environment            = "qa"
+  name                   = "dosomething-graphql-qa"
+  domain                 = "graphql-qa.dosomething.org"
+  pipeline               = "${var.graphql_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
 
