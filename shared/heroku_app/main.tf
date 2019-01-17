@@ -84,8 +84,10 @@ data "aws_ssm_parameter" "slack_deploy_webhook" {
 locals {
   config_vars = {
     express = {
-      APP_URL = "https://${var.domain}"
-      APP_ENV = "${var.environment}"
+      APP_URL   = "https://${var.domain}"
+      APP_ENV   = "${var.environment}"
+      NODE_ENV  = "production"
+      LOG_LEVEL = "info"
 
       # New Relic (if enabled for this app):
       NEW_RELIC_ENABLED     = "${var.with_newrelic ? "true" : "false"}"
