@@ -324,7 +324,7 @@ resource "aws_db_instance" "quasar-qa" {
   deletion_protection    = true
   storage_encrypted      = true
   copy_tags_to_snapshot  = true
-  monitoring_interval    = "60"
+  monitoring_interval    = "10"
   publicly_accessible    = true
 }
 
@@ -341,6 +341,6 @@ resource "aws_db_instance" "quasar" {
   deletion_protection    = true
   storage_encrypted      = true
   copy_tags_to_snapshot  = true
-  monitoring_interval    = "60"
+  monitoring_interval    = "10"
   publicly_accessible    = true
 }
