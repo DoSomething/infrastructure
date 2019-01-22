@@ -93,7 +93,9 @@ module "app" {
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = "${data.aws_ssm_parameter.gambit_username.value}"
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = "${data.aws_ssm_parameter.gambit_password.value}"
 
+    # TODO: Remove 'APOLLO_ENGINE_API_KEY' once dosomething/graphql#41 is deployed everywhere.
     APOLLO_ENGINE_API_KEY = "${data.aws_ssm_parameter.apollo_engine_api_key.value}"
+    ENGINE_API_KEY        = "${data.aws_ssm_parameter.apollo_engine_api_key.value}"
   }
 
   # This application doesn't have a queue.
