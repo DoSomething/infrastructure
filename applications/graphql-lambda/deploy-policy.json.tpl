@@ -2,27 +2,10 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "ListExistingRolesAndPolicies",
-            "Effect": "Allow",
-            "Action": [
-                "iam:ListRolePolicies",
-                "iam:ListRoles"
-            ],
-            "Resource": "*"
-        },
-        {
             "Sid": "CreateFunctionPermissions",
             "Effect": "Allow",
             "Action": [
-                "lambda:CreateFunction"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Sid": "PermissionToPassAnyRole",
-            "Effect": "Allow",
-            "Action": [
-                "iam:PassRole"
+                "lambda:UpdateFunctionCode"
             ],
             "Resource": "*"
         },
