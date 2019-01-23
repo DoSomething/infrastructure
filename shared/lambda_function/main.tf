@@ -1,10 +1,18 @@
 # Experimental: This module builds a serverless Lambda function.
+
+# Required variables:
 variable "environment" {
   description = "The environment for this application: development, qa, or production."
 }
 
 variable "name" {
   description = "The application name."
+}
+
+# Optional variables:
+variable "config_vars" {
+  description = "Environment variables for this application."
+  default     = {}
 }
 
 locals {
@@ -20,6 +28,10 @@ resource "aws_lambda_function" "function" {
   s3_key    = "${aws_s3_bucket_object.build.key}"
 
   runtime = "nodejs8.10"
+
+  environment {
+    variables = "${var.config_vars}"
+  }
 
   role = "${aws_iam_role.lambda_exec.arn}"
 }
