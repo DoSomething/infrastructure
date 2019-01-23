@@ -2,12 +2,9 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "CreateFunctionPermissions",
             "Effect": "Allow",
-            "Action": [
-                "lambda:UpdateFunctionCode"
-            ],
-            "Resource": "*"
+            "Action": ["lambda:UpdateFunctionCode"],
+            "Resource": ["${lambda_function_arn}"]
         },
         {
             "Effect": "Allow",

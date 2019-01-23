@@ -72,10 +72,8 @@ data "template_file" "deploy_policy" {
   template = "${file("${path.module}/deploy-policy.json.tpl")}"
 
   vars {
-    deploy_bucket_arn = "${aws_s3_bucket.deploy.arn}"
-
-    # TODO: Can we limit the IAM user to only deploying *this* function?
-    # function_arn      = "${aws_lambda_function.function.arn}"
+    deploy_bucket_arn   = "${aws_s3_bucket.deploy.arn}"
+    lambda_function_arn = "${aws_lambda_function.function.arn}"
   }
 }
 
