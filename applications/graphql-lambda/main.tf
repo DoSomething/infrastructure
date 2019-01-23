@@ -16,6 +16,18 @@ locals {
   safe_name = "${replace(var.name, "-", "_")}"
 }
 
+resource "aws_lambda_function" "function" {
+  function_name = "${var.name}"
+  handler       = "main.handler"
+
+  s3_bucket = "${aws_s3_bucket.deploy.id}"
+  s3_key    = "${aws_s3_bucket_object.build.key}"
+
+  runtime = "nodejs8.10"
+
+  role = "${aws_iam_role.lambda_exec.arn}"
+}
+
 resource "aws_s3_bucket" "deploy" {
   bucket = "${var.name}-deploy"
   acl    = "private"
@@ -31,16 +43,9 @@ resource "aws_s3_bucket_object" "build" {
   source = "${path.module}/example.zip"
 }
 
-resource "aws_lambda_function" "function" {
-  function_name = "${var.name}"
-  handler       = "main.handler"
-
-  s3_bucket = "${aws_s3_bucket.deploy.id}"
-  s3_key    = "${aws_s3_bucket_object.build.key}"
-
-  runtime = "nodejs8.10"
-
-  role = "${aws_iam_role.lambda_exec.arn}"
+resource "aws_cloudwatch_log_group" "log_group" {
+  name              = "/aws/lambda/${aws_lambda_function.function.function_name}"
+  retention_in_days = 14
 }
 
 # This is the "execution" role that is used to run this function:
@@ -63,9 +68,26 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 }
 
 # This is the "deploy" role that is used to deploy new Lambda releases.
-# TODO: Y'know, add this thing!
+data "template_file" "deploy_policy" {
+  template = "${file("${path.module}/deploy-policy.json.tpl")}"
 
-resource "aws_cloudwatch_log_group" "example" {
-  name              = "/aws/lambda/${aws_lambda_function.function.function_name}"
-  retention_in_days = 14
+  vars {
+    deploy_bucket_arn = "${aws_s3_bucket.deploy.arn}"
+
+    # TODO: Can we limit the IAM user to only deploying *this* function?
+    # function_arn      = "${aws_lambda_function.function.arn}"
+  }
+}
+
+resource "aws_iam_user" "lambda_deploy" {
+  name = "${var.name}-deploy"
+}
+
+resource "aws_iam_user_policy" "deploy_policy" {
+  user   = "${aws_iam_user.lambda_deploy.name}"
+  policy = "${data.template_file.deploy_policy.rendered}"
+}
+
+resource "aws_iam_access_key" "deploy_key" {
+  user = "${aws_iam_user.lambda_deploy.name}"
 }
