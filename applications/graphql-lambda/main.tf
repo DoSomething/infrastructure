@@ -28,7 +28,7 @@ resource "aws_s3_bucket" "deploy" {
 resource "aws_s3_bucket_object" "build" {
   bucket = "${aws_s3_bucket.deploy.id}"
   key    = "${local.safe_name}.zip"
-  source = "${file("${path.module}/example.zip")}"
+  source = "${path.module}/example.zip"
 }
 
 resource "aws_lambda_function" "function" {
