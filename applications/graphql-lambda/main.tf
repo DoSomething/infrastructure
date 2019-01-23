@@ -35,7 +35,6 @@ resource "aws_lambda_function" "function" {
   function_name = "${var.name}"
   handler       = "main.handler"
 
-  # The bucket name as created earlier with "aws s3api create-bucket"
   s3_bucket = "${aws_s3_bucket.deploy.id}"
   s3_key    = "${aws_s3_bucket_object.build.key}"
 
