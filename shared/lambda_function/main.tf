@@ -92,10 +92,7 @@ resource "aws_api_gateway_deployment" "deployment" {
   ]
 
   rest_api_id = "${aws_api_gateway_rest_api.gateway.id}"
-
-  # We want to deploy the the default stage, which
-  # is awkwardly denoted by an empty string.
-  stage_name = ""
+  stage_name  = "${var.environment}"
 }
 
 resource "aws_lambda_permission" "gateway_permission" {
