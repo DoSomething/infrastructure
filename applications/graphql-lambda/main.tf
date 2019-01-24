@@ -94,6 +94,26 @@ resource "aws_dynamodb_table" "cache" {
   }
 }
 
+data "template_file" "dynamodb_policy" {
+  template = "${file("${path.module}/dynamodb-policy.json.tpl")}"
+
+  vars {
+    dynamodb_table_arn = "${aws_dynamodb_table.cache.arn}"
+  }
+}
+
+resource "aws_iam_policy" "dynamodb_policy" {
+  name = "${var.name}-dynamodb"
+  path = "/"
+
+  policy = "${data.template_file.dynamodb_policy.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "dynamodb_policy" {
+  role       = "${module.app.lambda_role}"
+  policy_arn = "${aws_iam_policy.dynamodb_policy.arn}"
+}
+
 output "backend" {
   value = "${module.app.backend}"
 }

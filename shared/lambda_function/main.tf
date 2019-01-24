@@ -171,6 +171,10 @@ resource "aws_iam_access_key" "deploy_key" {
   user = "${aws_iam_user.lambda_deploy.name}"
 }
 
+output "lambda_role" {
+  value = "${aws_iam_role.lambda_exec.name}"
+}
+
 output "backend" {
   value = "${aws_api_gateway_deployment.deployment.invoke_url}"
 }
