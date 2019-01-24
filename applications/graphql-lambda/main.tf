@@ -76,6 +76,24 @@ module "app" {
   }
 }
 
+resource "aws_dynamodb_table" "cache" {
+  name         = "${var.name}-cache"
+  billing_mode = "PAY_PER_REQUEST"
+
+  hash_key  = "segment"
+  range_key = "id"
+
+  attribute {
+    name = "segment"
+    type = "S"
+  }
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+}
+
 output "backend" {
   value = "${module.app.backend}"
 }
