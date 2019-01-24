@@ -29,6 +29,8 @@ resource "aws_lambda_function" "function" {
 
   runtime = "nodejs8.10"
 
+  timeout = 15
+
   environment {
     variables = "${var.config_vars}"
   }
