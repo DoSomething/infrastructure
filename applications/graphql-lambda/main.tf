@@ -34,7 +34,7 @@ data "aws_ssm_parameter" "gambit_password" {
 }
 
 data "aws_ssm_parameter" "apollo_engine_api_key" {
-  name = "/${var.name}/apollo/api-key"
+  name = "/${var.name}-lambda/apollo/api-key"
 }
 
 resource "random_string" "app_secret" {
