@@ -62,6 +62,10 @@ module "app" {
     # TODO: Update application to expect 'development' here.
     QUERY_ENV = "${local.env}"
 
+    # Use DynamoDB for caching:
+    CACHE_DRIVER   = "dynamodb"
+    DYNAMODB_TABLE = "${aws_dynamodb_table.cache.name}"
+
     "${local.ENV}_NORTHSTAR_AUTH_ID"     = "${var.name}"
     "${local.ENV}_NORTHSTAR_AUTH_SECRET" = "${data.aws_ssm_parameter.northstar_auth_secret.value}"
 
