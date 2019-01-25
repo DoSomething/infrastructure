@@ -25,7 +25,7 @@ resource "aws_lambda_function" "function" {
   handler       = "main.handler"
 
   s3_bucket = "${aws_s3_bucket.deploy.id}"
-  s3_key    = "${aws_s3_bucket_object.build.key}"
+  s3_key    = "${aws_s3_bucket_object.release.key}"
 
   runtime = "nodejs8.10"
 
@@ -117,9 +117,9 @@ resource "aws_s3_bucket" "deploy" {
   }
 }
 
-resource "aws_s3_bucket_object" "build" {
+resource "aws_s3_bucket_object" "release" {
   bucket = "${aws_s3_bucket.deploy.id}"
-  key    = "${local.safe_name}.zip"
+  key    = "release.zip"
   source = "${path.module}/example.zip"
 }
 
