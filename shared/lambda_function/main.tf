@@ -150,6 +150,18 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = "${aws_iam_policy.lambda_logging.arn}"
 }
 
+resource "aws_iam_policy" "lambda_xray" {
+  name = "${var.name}-xray"
+  path = "/"
+
+  policy = "${file("${path.module}/xray-policy.json")}"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_xray" {
+  role       = "${aws_iam_role.lambda_exec.name}"
+  policy_arn = "${aws_iam_policy.lambda_xray.arn}"
+}
+
 # This is the "deploy" role that is used to deploy new code:
 resource "aws_iam_user" "lambda_deploy" {
   name = "${var.name}-deploy"

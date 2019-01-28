@@ -8,14 +8,6 @@
       },
       "Effect": "Allow",
       "Sid": ""
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "xray:PutTraceSegments",
-        "xray:PutTelemetryRecords"
-      ],
-      "Resource": ["*"]
     }
   ]
 }
