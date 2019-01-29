@@ -250,6 +250,12 @@ resource "aws_db_parameter_group" "quasar-qa" {
     name  = "work_mem"
     value = "20971"
   }
+
+  # Recommended to only allow SSL connections from clients.
+  parameter {
+    name  = "rds.force_ssl"
+    value = "1"
+  }
 }
 
 resource "aws_db_parameter_group" "quasar-prod" {
@@ -292,6 +298,12 @@ resource "aws_db_parameter_group" "quasar-prod" {
   parameter {
     name  = "work_mem"
     value = "120000"
+  }
+
+  # Recommended to only allow SSL connections from clients.
+  parameter {
+    name  = "rds.force_ssl"
+    value = "1"
   }
 }
 
