@@ -126,7 +126,7 @@ resource "aws_s3_bucket" "deploy" {
 resource "aws_s3_bucket_object" "release" {
   bucket = "${aws_s3_bucket.deploy.id}"
   key    = "release.zip"
-  source = "example.zip"
+  source = "./example.zip"
 }
 
 # Log group:
