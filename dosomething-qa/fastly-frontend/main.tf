@@ -140,6 +140,18 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   snippet {
+    name    = "ProjectPages - Trigger Redirect"
+    type    = "recv"
+    content = "${file("${path.module}/projectpages_recv.vcl")}"
+  }
+
+  snippet {
+    name    = "ProjectPages - Handle Redirect"
+    type    = "error"
+    content = "${file("${path.module}/projectpages_error.vcl")}"
+  }
+
+  snippet {
     name    = "GDPR - Redirects Table"
     type    = "init"
     content = "${file("${path.root}/shared/gdpr_init.vcl")}"
