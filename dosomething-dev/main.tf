@@ -48,6 +48,14 @@ module "graphql" {
   papertrail_destination = "${var.papertrail_destination}"
 }
 
+module "graphql_lambda" {
+  source = "../applications/graphql-lambda"
+
+  environment            = "development"
+  name                   = "dosomething-graphql-dev"
+  papertrail_destination = "${var.papertrail_destination}"
+}
+
 module "northstar" {
   source = "../applications/northstar"
 
