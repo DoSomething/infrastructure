@@ -29,6 +29,10 @@ resource "aws_lambda_function" "function" {
 
   runtime = "nodejs8.10"
 
+  # We increase our default RAM allocation in order to
+  # decrease worst-case cold start times. <...>
+  memory_size = 512 # MB.
+
   timeout = 15
 
   environment {
