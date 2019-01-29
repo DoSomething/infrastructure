@@ -33,6 +33,8 @@ resource "aws_lambda_function" "function" {
   # decrease worst-case cold start times. <...>
   memory_size = 512 # MB.
 
+  # We set a "sane default" 15 second timeout (matching
+  # our Fastly configs) to avoid runaway requests.
   timeout = 15
 
   environment {
