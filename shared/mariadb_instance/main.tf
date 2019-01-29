@@ -203,12 +203,20 @@ resource "mysql_user" "fivetran" {
   plaintext_password = "${random_string.fivetran_password.result}"
 }
 
-resource "mysql_grant" "fivetran" {
+resource "mysql_grant" "fivetran_select" {
   count      = "${var.deprecated ? 0 : 1}"
   user       = "${mysql_user.fivetran.user}"
   host       = "${mysql_user.fivetran.host}"
   database   = "${aws_db_instance.database.name}"
-  privileges = ["SELECT", "REPLICATION CLIENT", "REPLICATION SLAVE"]
+  privileges = ["SELECT"]
+}
+
+resource "mysql_grant" "fivetran_replication" {
+  count      = "${var.deprecated ? 0 : 1}"
+  user       = "${mysql_user.fivetran.user}"
+  host       = "${mysql_user.fivetran.host}"
+  database   = "*"
+  privileges = ["REPLICATION CLIENT", "REPLICATION SLAVE"]
 }
 
 output "address" {
