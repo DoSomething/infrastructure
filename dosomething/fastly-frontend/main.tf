@@ -138,7 +138,7 @@ resource "fastly_service_v1" "frontend" {
     type    = "error"
     content = "${file("${path.module}/projectpages_error.vcl")}"
   }
-  
+
   snippet {
     name    = "GDPR - Redirects Table"
     type    = "init"
