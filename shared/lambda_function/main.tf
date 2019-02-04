@@ -194,6 +194,18 @@ resource "aws_iam_access_key" "deploy_key" {
   user = "${aws_iam_user.lambda_deploy.name}"
 }
 
+resource "aws_ssm_parameter" "ssm_access_key" {
+  name  = "/circleci/${var.name}/AWS_ACCESS_KEY_ID"
+  type  = "SecureString"
+  value = "${aws_iam_access_key.deploy_key.id}"
+}
+
+resource "aws_ssm_parameter" "ssm_secret_key" {
+  name  = "/circleci/${var.name}/AWS_SECRET_ACCESS_KEY"
+  type  = "SecureString"
+  value = "${aws_iam_access_key.deploy_key.secret}"
+}
+
 output "lambda_role" {
   value = "${aws_iam_role.lambda_exec.name}"
 }
