@@ -131,6 +131,8 @@ resource "fastly_service_v1" "frontend-qa" {
     name    = "Frontend - Trigger Redirect"
     type    = "recv"
     content = "${file("${path.module}/redirect_recv.vcl")}"
+
+    priority = 10 # Specifying priority so Aurora redirects take precedence.
   }
 
   snippet {
@@ -142,13 +144,13 @@ resource "fastly_service_v1" "frontend-qa" {
   snippet {
     name    = "ProjectPages - Trigger Redirect"
     type    = "recv"
-    content = "${file("${path.module}/projectpages_recv.vcl")}"
+    content = "${file("${path.module}/legacy_redirects_recv.vcl")}"
   }
 
   snippet {
     name    = "ProjectPages - Handle Redirect"
     type    = "error"
-    content = "${file("${path.module}/projectpages_error.vcl")}"
+    content = "${file("${path.module}/legacy_redirects_error.vcl")}"
   }
 
   snippet {
