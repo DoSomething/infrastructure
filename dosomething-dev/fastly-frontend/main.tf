@@ -119,6 +119,8 @@ resource "fastly_service_v1" "frontend-dev" {
     name    = "Frontend - Trigger Redirect"
     type    = "recv"
     content = "${file("${path.module}/redirect_recv.vcl")}"
+
+    priority = 10 # Specifying priority so Aurora redirects take precedence.
   }
 
   snippet {
