@@ -11,12 +11,12 @@ if (obj.status == 778) {
   # let us simplify this.
   if (req.url ~ "^/([\?#].+)$") {
     set obj.http.Location = "/us" + re.group.1;
-    set obj.status = 302;
+    set obj.status = 301;
     return(deliver);
   }
   if (req.url ~ "^/$") {
     set obj.http.Location = "/us";
-    set obj.status = 302;
+    set obj.status = 301;
     return(deliver);
   }
 }
