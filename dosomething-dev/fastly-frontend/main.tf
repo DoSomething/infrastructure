@@ -132,13 +132,13 @@ resource "fastly_service_v1" "frontend-dev" {
   snippet {
     name    = "ProjectPages - Trigger Redirect"
     type    = "recv"
-    content = "${file("${path.module}/projectpages_recv.vcl")}"
+    content = "${file("${path.module}/legacy_redirects_recv.vcl")}"
   }
 
   snippet {
     name    = "ProjectPages - Handle Redirect"
     type    = "error"
-    content = "${file("${path.module}/projectpages_error.vcl")}"
+    content = "${file("${path.module}/legacy_redirects_error.vcl")}"
   }
 
   snippet {
