@@ -114,6 +114,10 @@ resource "aws_api_gateway_domain_name" "domain" {
 
   certificate_arn = "${data.aws_acm_certificate.certificate.arn}"
   domain_name     = "${var.domain}"
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_base_path_mapping" "test" {
