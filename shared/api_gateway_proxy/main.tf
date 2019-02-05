@@ -14,7 +14,9 @@ variable "function" {
 
 data "aws_lambda_function" "function" {
   function_name = "${var.function}"
-  qualifier     = ""
+
+  # Don't fetch the fully qualified ARN. <https://git.io/fh9WK>
+  qualifier = ""
 }
 
 resource "aws_api_gateway_rest_api" "gateway" {

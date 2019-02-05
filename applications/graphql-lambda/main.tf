@@ -21,10 +21,6 @@ data "aws_ssm_parameter" "contentful_api_key" {
   name = "/${var.name}/contentful/gambit/content-api-key"
 }
 
-data "aws_ssm_parameter" "northstar_auth_secret" {
-  name = "/northstar/${var.environment}/clients/${var.name}"
-}
-
 data "aws_ssm_parameter" "gambit_username" {
   name = "/gambit/${local.gambit_env}/username"
 }
@@ -35,10 +31,6 @@ data "aws_ssm_parameter" "gambit_password" {
 
 data "aws_ssm_parameter" "apollo_engine_api_key" {
   name = "/${var.name}-lambda/apollo/api-key"
-}
-
-resource "random_string" "app_secret" {
-  length = 32
 }
 
 locals {
@@ -76,12 +68,11 @@ module "app" {
 }
 
 module "gateway" {
-  source = "../../shared/api_gateway"
+  source = "../../shared/api_gateway_proxy"
 
   name        = "${var.name}"
   environment = "${var.environment}"
-
-  function = "${module.app.arn}"
+  function    = "${module.app.arn}"
 }
 
 resource "aws_dynamodb_table" "cache" {
