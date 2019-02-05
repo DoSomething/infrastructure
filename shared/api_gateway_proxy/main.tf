@@ -109,6 +109,21 @@ data "aws_acm_certificate" "certificate" {
   statuses = ["ISSUED"]
 }
 
+resource "aws_api_gateway_domain_name" "domain" {
+  count = "${var.domain == "" ? 0 : 1}"
+
+  certificate_arn = "${data.aws_acm_certificate.certificate.arn}"
+  domain_name     = "${var.domain}"
+}
+
+resource "aws_api_gateway_base_path_mapping" "test" {
+  count = "${var.domain == "" ? 0 : 1}"
+
+  api_id      = "${aws_api_gateway_rest_api.gateway.id}"
+  stage_name  = "${aws_api_gateway_deployment.deployment.stage_name}"
+  domain_name = "${var.domain}"
+}
+
 output "base_url" {
   value = "${aws_api_gateway_deployment.deployment.invoke_url}"
 }
