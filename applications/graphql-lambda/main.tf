@@ -8,8 +8,9 @@ variable "name" {
   description = "The application name."
 }
 
-variable "papertrail_destination" {
-  description = "The Papertrail log destination for this application."
+variable "domain" {
+  description = "The domain this application will be accessible at, e.g. graphql-lambda.dosomething.org"
+  default     = ""
 }
 
 data "aws_ssm_parameter" "contentful_gambit_space_id" {
@@ -74,6 +75,7 @@ module "gateway" {
   environment         = "${var.environment}"
   function_arn        = "${module.app.arn}"
   function_invoke_arn = "${module.app.invoke_arn}"
+  domain              = "${var.domain}"
 }
 
 module "cache" {

@@ -47,9 +47,10 @@ module "graphql" {
 module "graphql_lambda" {
   source = "../applications/graphql-lambda"
 
-  environment            = "qa"
-  name                   = "dosomething-graphql-qa"
-  papertrail_destination = "${var.papertrail_destination}"
+  environment = "qa"
+  name        = "dosomething-graphql-qa"
+
+  # domain      = "graphql-lambda-qa.dosomething.org"
 }
 
 module "northstar" {
