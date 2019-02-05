@@ -49,8 +49,7 @@ module "graphql_lambda" {
 
   environment = "qa"
   name        = "dosomething-graphql-qa"
-
-  # domain      = "graphql-lambda-qa.dosomething.org"
+  domain      = "graphql-lambda-qa.dosomething.org"
 }
 
 module "northstar" {
