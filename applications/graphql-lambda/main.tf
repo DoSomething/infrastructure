@@ -54,7 +54,7 @@ module "app" {
 
     # Use DynamoDB for caching:
     CACHE_DRIVER   = "dynamodb"
-    DYNAMODB_TABLE = "${aws_dynamodb_table.cache.name}"
+    DYNAMODB_TABLE = "${module.cache.name}"
 
     # TODO: Remove custom environment mapping once we have a 'dev' instance of Gambit Conversations.
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = "${data.aws_ssm_parameter.gambit_username.value}"
@@ -76,42 +76,11 @@ module "gateway" {
   function_invoke_arn = "${module.app.invoke_arn}"
 }
 
-resource "aws_dynamodb_table" "cache" {
-  name         = "${var.name}-cache"
-  billing_mode = "PAY_PER_REQUEST"
+module "cache" {
+  source = "../../shared/dynamodb_cache"
 
-  hash_key  = "segment"
-  range_key = "id"
-
-  attribute {
-    name = "segment"
-    type = "S"
-  }
-
-  attribute {
-    name = "id"
-    type = "S"
-  }
-}
-
-data "template_file" "dynamodb_policy" {
-  template = "${file("${path.module}/dynamodb-policy.json.tpl")}"
-
-  vars {
-    dynamodb_table_arn = "${aws_dynamodb_table.cache.arn}"
-  }
-}
-
-resource "aws_iam_policy" "dynamodb_policy" {
-  name = "${var.name}-dynamodb"
-  path = "/"
-
-  policy = "${data.template_file.dynamodb_policy.rendered}"
-}
-
-resource "aws_iam_role_policy_attachment" "dynamodb_policy" {
-  role       = "${module.app.lambda_role}"
-  policy_arn = "${aws_iam_policy.dynamodb_policy.arn}"
+  name = "${var.name}-cache"
+  role = "${module.app.lambda_role}"
 }
 
 output "backend" {
