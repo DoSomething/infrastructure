@@ -125,5 +125,5 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
 }
 
 output "base_url" {
-  value = "${aws_api_gateway_deployment.deployment.invoke_url}"
+  value = "${var.domain == "" ? aws_api_gateway_deployment.deployment.invoke_url : "https://${var.domain}"}"
 }
