@@ -80,6 +80,15 @@ module "app" {
   }
 }
 
+module "gateway" {
+  source = "../../shared/api_gateway"
+
+  name        = "${var.name}"
+  environment = "${var.environment}"
+
+  function = "${module.app.arn}"
+}
+
 resource "aws_dynamodb_table" "cache" {
   name         = "${var.name}-cache"
   billing_mode = "PAY_PER_REQUEST"
@@ -119,5 +128,5 @@ resource "aws_iam_role_policy_attachment" "dynamodb_policy" {
 }
 
 output "backend" {
-  value = "${module.app.backend}"
+  value = "${module.gateway.base_url}"
 }
