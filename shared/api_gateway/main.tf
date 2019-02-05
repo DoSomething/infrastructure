@@ -9,7 +9,7 @@ variable "name" {
 
 variable "function" {
   # TODO: This should be a key-value mapping of paths to functions.
-  description = "The Lambda function's invocation ARN."
+  description = "The Lambda function's ARN."
 }
 
 data "aws_lambda_function" "function" {
