@@ -7,7 +7,7 @@ variable "role" {
   description = "The IAM role which should have access to this resource."
 }
 
-resource "aws_dynamodb_table" "cache" {
+resource "aws_dynamodb_table" "table" {
   name         = "${var.name}"
   billing_mode = "PAY_PER_REQUEST"
 
@@ -29,7 +29,7 @@ data "template_file" "dynamodb_policy" {
   template = "${file("${path.module}/dynamodb-policy.json.tpl")}"
 
   vars {
-    dynamodb_table_arn = "${aws_dynamodb_table.cache.arn}"
+    dynamodb_table_arn = "${aws_dynamodb_table.table.arn}"
   }
 }
 
