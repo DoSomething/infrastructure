@@ -57,17 +57,12 @@ module "app" {
   environment = "${var.environment}"
 
   config_vars = {
-    APP_SECRET = "${random_string.app_secret.result}"
-
     # TODO: Update application to expect 'development' here.
     QUERY_ENV = "${local.env}"
 
     # Use DynamoDB for caching:
     CACHE_DRIVER   = "dynamodb"
     DYNAMODB_TABLE = "${aws_dynamodb_table.cache.name}"
-
-    "${local.ENV}_NORTHSTAR_AUTH_ID"     = "${var.name}"
-    "${local.ENV}_NORTHSTAR_AUTH_SECRET" = "${data.aws_ssm_parameter.northstar_auth_secret.value}"
 
     # TODO: Remove custom environment mapping once we have a 'dev' instance of Gambit Conversations.
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = "${data.aws_ssm_parameter.gambit_username.value}"
