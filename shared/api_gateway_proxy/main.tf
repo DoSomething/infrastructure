@@ -12,7 +12,7 @@ variable "function_arn" {
 }
 
 variable "function_invoke_arn" {
-  description = "The Lambda function's ARN."
+  description = "The Lambda function's invocation ARN."
 }
 
 resource "aws_api_gateway_rest_api" "gateway" {
