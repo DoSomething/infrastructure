@@ -7,27 +7,17 @@ variable "name" {
   description = "The application name."
 }
 
-variable "function" {
-  # TODO: This should be a key-value mapping of paths to functions.
+variable "function_arn" {
   description = "The Lambda function's ARN."
 }
 
-data "aws_lambda_function" "function" {
-  function_name = "${var.function}"
-
-  # Don't fetch the fully qualified ARN. <https://git.io/fh9WK>
-  qualifier = ""
+variable "function_invoke_arn" {
+  description = "The Lambda function's ARN."
 }
 
 resource "aws_api_gateway_rest_api" "gateway" {
   name        = "${var.name}"
   description = "Managed with Terraform."
-}
-
-resource "aws_api_gateway_resource" "proxy" {
-  rest_api_id = "${aws_api_gateway_rest_api.gateway.id}"
-  parent_id   = "${aws_api_gateway_rest_api.gateway.root_resource_id}"
-  path_part   = "{proxy+}"
 }
 
 # We need separate proxies for the "root" path '/' and everything else '/*'
@@ -47,7 +37,13 @@ resource "aws_api_gateway_integration" "lambda_root" {
   # Lambda functions can only be invoked via POST.
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = "${data.aws_lambda_function.function.invoke_arn}"
+  uri                     = "${var.function_invoke_arn}"
+}
+
+resource "aws_api_gateway_resource" "proxy" {
+  rest_api_id = "${aws_api_gateway_rest_api.gateway.id}"
+  parent_id   = "${aws_api_gateway_rest_api.gateway.root_resource_id}"
+  path_part   = "{proxy+}"
 }
 
 resource "aws_api_gateway_method" "proxy" {
@@ -65,7 +61,7 @@ resource "aws_api_gateway_integration" "lambda" {
   # Lambda functions can only be invoked via POST.
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = "${data.aws_lambda_function.function.invoke_arn}"
+  uri                     = "${var.function_invoke_arn}"
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
@@ -81,7 +77,7 @@ resource "aws_api_gateway_deployment" "deployment" {
 resource "aws_lambda_permission" "gateway_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "${var.function}"
+  function_name = "${var.function_arn}"
   principal     = "apigateway.amazonaws.com"
 
   # The /*/* portion grants access from any HTTP method on any resource.

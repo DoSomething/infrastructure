@@ -141,6 +141,10 @@ output "arn" {
   value = "${aws_lambda_function.function.arn}"
 }
 
+output "invoke_arn" {
+  value = "${aws_lambda_function.function.invoke_arn}"
+}
+
 output "lambda_role" {
   value = "${aws_iam_role.lambda_exec.name}"
 }
