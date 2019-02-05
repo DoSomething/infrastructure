@@ -24,6 +24,11 @@ variable "domain" {
   default = ""
 }
 
+locals {
+  # Hack! Check if `var.domain` is a DS.org subdomain. <https://stackoverflow.com/a/47243622/811624>
+  is_dosomething_domain = "${replace(var.domain, ".dosomething.org", "") != var.domain}"
+}
+
 resource "aws_api_gateway_rest_api" "gateway" {
   name        = "${var.name}"
   description = "Managed with Terraform."
@@ -91,6 +96,17 @@ resource "aws_lambda_permission" "gateway_permission" {
 
   # The /*/* portion grants access from any HTTP method on any resource.
   source_arn = "${aws_api_gateway_deployment.deployment.execution_arn}/*/*"
+}
+
+# Custom domain (optional):
+data "aws_acm_certificate" "certificate" {
+  count = "${var.domain == "" ? 0 : 1}"
+
+  # If this is a *.dosomething.org subdomain, use our wildcard ACM certificate.
+  # Otherwise, find a certificate for the provided domain (manually provisioned).
+  domain = "${local.is_dosomething_domain ? "*.dosomething.org" : var.domain}"
+
+  statuses = ["ISSUED"]
 }
 
 output "base_url" {
