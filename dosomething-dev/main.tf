@@ -98,7 +98,3 @@ module "papertrail" {
 module "ashes" {
   source = "ashes"
 }
-
-module "example" {
-  source = "hello-serverless"
-}
