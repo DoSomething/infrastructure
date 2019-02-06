@@ -34,13 +34,33 @@ $ aws lambda invoke --region=us-east-1 --function-name=hello-serverless /dev/std
 We're off to a great start! :rocket:
 
 ### Step 2: Add HTTP Endpoints (optional)
-Often, we want our Lambda functions to be accessible via the internet. To do so, let's add an [API Gateway](https://aws.amazon.com/api-gateway/):
+Often, we'll want our Lambda functions to be accessible via the internet. To do so, let's add an [API Gateway](https://aws.amazon.com/api-gateway/):
 
 ```terraform
+module "gateway" {
+  source = "shared/api_gateway_proxy"
 
+  name                = "hello-serverless"
+  environment         = "development"
+  function_arn        = "${module.app.arn}"
+  function_invoke_arn = "${module.app.invoke_arn}"
+}
 ```
 
-...
+<img width="1375" alt="screen shot 2019-02-06 at 4 56 08 pm" src="https://user-images.githubusercontent.com/583202/52376426-1f186500-2a30-11e9-8548-c043988c530e.png">
+
+We can now execute our Lambda function via the web!
+
+<img width="1375" alt="screen shot 2019-02-06 at 4 57 23 pm" src="https://user-images.githubusercontent.com/583202/52376506-4cfda980-2a30-11e9-904a-57663ab6abd8.png">
+
+If we want to set a custom domain, we just have to provide the `domain` variable to the gateway:
+
+```terraform
+module "gateway" {
+  # ...
+  domain = "hello-serverless.dosomething.org"
+}
+```
 
 ### Step 3: Deploying Code
 We deploy serverless applications using [CircleCI](https://circleci.com). 
