@@ -13,9 +13,8 @@ variable "papertrail_destination" {
 module "forwarder" {
   source = "../../shared/lambda_function"
 
-  name        = "${var.name}"
-  environment = "${var.environment}"
-  handler     = "handler.log"
+  name    = "${var.name}"
+  handler = "handler.log"
 
   config_vars = {
     PAPERTRAIL_HOST = "${element(split(":", var.papertrail_destination), 0)}"

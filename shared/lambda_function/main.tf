@@ -1,10 +1,6 @@
 # Experimental: This module builds a serverless Lambda function.
 
 # Required variables:
-variable "environment" {
-  description = "The environment for this application: development, qa, or production."
-}
-
 variable "name" {
   description = "The application name."
 }
