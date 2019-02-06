@@ -15,6 +15,20 @@ variable "function_invoke_arn" {
   description = "The Lambda function's invocation ARN."
 }
 
+# Optional variables:
+variable "domain" {
+  description = "The domain this application will be accessible at, e.g. lambda.dosomething.org"
+
+  # If omitted, we will just not attach a custom domain to this app. By default,
+  # you can access a Lambda function at a URL returned in the `base_url` output.
+  default = ""
+}
+
+locals {
+  # Hack! Check if `var.domain` is a DS.org subdomain. <https://stackoverflow.com/a/47243622/811624>
+  is_dosomething_domain = "${replace(var.domain, ".dosomething.org", "") != var.domain}"
+}
+
 resource "aws_api_gateway_rest_api" "gateway" {
   name        = "${var.name}"
   description = "Managed with Terraform."
@@ -84,6 +98,32 @@ resource "aws_lambda_permission" "gateway_permission" {
   source_arn = "${aws_api_gateway_deployment.deployment.execution_arn}/*/*"
 }
 
+# Custom domain (optional):
+data "aws_acm_certificate" "certificate" {
+  count = "${var.domain == "" ? 0 : 1}"
+
+  # If this is a *.dosomething.org subdomain, use our wildcard ACM certificate.
+  # Otherwise, find a certificate for the provided domain (manually provisioned).
+  domain = "${local.is_dosomething_domain ? "*.dosomething.org" : var.domain}"
+
+  statuses = ["ISSUED"]
+}
+
+resource "aws_api_gateway_domain_name" "domain" {
+  count = "${var.domain == "" ? 0 : 1}"
+
+  certificate_arn = "${data.aws_acm_certificate.certificate.arn}"
+  domain_name     = "${var.domain}"
+}
+
+resource "aws_api_gateway_base_path_mapping" "mapping" {
+  count = "${var.domain == "" ? 0 : 1}"
+
+  api_id      = "${aws_api_gateway_rest_api.gateway.id}"
+  stage_name  = "${aws_api_gateway_deployment.deployment.stage_name}"
+  domain_name = "${aws_api_gateway_domain_name.domain.domain_name}"
+}
+
 output "base_url" {
-  value = "${aws_api_gateway_deployment.deployment.invoke_url}"
+  value = "${var.domain == "" ? aws_api_gateway_deployment.deployment.invoke_url : "https://${var.domain}"}"
 }
