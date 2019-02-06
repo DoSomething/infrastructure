@@ -92,6 +92,15 @@ module "app" {
   name = "hello-serverless"
 }
 
+module "gateway" {
+  source = "../../shared/api_gateway_proxy"
+
+  name                = "${var.name}"
+  environment         = "${var.environment}"
+  function_arn        = "${module.app.arn}"
+  function_invoke_arn = "${module.app.invoke_arn}"
+}
+
 # We separate our infrastructure into modules for
 # organization & to make dependencies explicit by
 # importing and exporting variables.
