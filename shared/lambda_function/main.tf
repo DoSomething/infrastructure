@@ -142,6 +142,10 @@ resource "aws_ssm_parameter" "ssm_secret_key" {
   value = "${aws_iam_access_key.deploy_key.secret}"
 }
 
+output "name" {
+  value = "${aws_lambda_function.function.function_name}"
+}
+
 output "arn" {
   value = "${aws_lambda_function.function.arn}"
 }
