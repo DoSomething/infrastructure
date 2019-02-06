@@ -90,6 +90,16 @@ resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
   filter_pattern = ""
 }
 
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  count = "${var.logger == "" ? 0 : 1}"
+
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = "${var.logger}"
+  principal     = "logs.us-east-1.amazonaws.com"
+  source_arn    = "${aws_cloudwatch_log_group.log_group.arn}"
+}
+
 # This is the "execution" role that is used to run this function:
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.name}"

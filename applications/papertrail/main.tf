@@ -22,13 +22,6 @@ module "forwarder" {
   }
 }
 
-resource "aws_lambda_permission" "allow_cloudwatch" {
-  statement_id  = "AllowExecutionFromCloudWatch"
-  action        = "lambda:InvokeFunction"
-  function_name = "${module.forwarder.name}"
-  principal     = "logs.us-east-1.amazonaws.com"
-}
-
 output "arn" {
   value = "${module.forwarder.arn}"
 }
