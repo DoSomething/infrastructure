@@ -130,4 +130,4 @@ After adding this file to your application, [add the repostory as a "project"](h
 
 Now, any commits to `master` will automatically deploy [our Lambda function](https://github.com/DoSomething/hello-serverless)!
 
-<img width="1375" alt="screen shot 2019-02-06 at 6 00 59 pm" src="https://user-images.githubusercontent.com/583202/52379750-59d2cb00-2a39-11e9-986b-88794d0406a1.png">
+<a href="https://hello-serverless.dosomething.org"><img width="1375" alt="screen shot 2019-02-06 at 6 00 59 pm" src="https://user-images.githubusercontent.com/583202/52379750-59d2cb00-2a39-11e9-986b-88794d0406a1.png"></a>
