@@ -15,7 +15,7 @@ variable "name" {
 
 module "iam_user" {
   source = "../../shared/iam_app_user"
-  name = "${var.name}"
+  name   = "${var.name}"
 }
 
 module "storage" {
