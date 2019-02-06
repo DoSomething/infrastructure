@@ -8,11 +8,11 @@ new function. This will create a new function with the given name. It will also 
 
 **Note:** At the moment, we only support functions that run on Node.js 8.x.
 
-```terraform
+```hcl
 module "app" {
   source = "../shared/lambda_function"
 
-  name = "serverless-example"
+  name = "hello-serverless"
 }
 ```
 
@@ -36,7 +36,7 @@ We're off to a great start! :rocket:
 ### Step 2: Add HTTP Endpoints (optional)
 Often, we'll want our Lambda functions to be accessible via the internet. To do so, let's add an [API Gateway](https://aws.amazon.com/api-gateway/):
 
-```terraform
+```hcl
 module "gateway" {
   source = "shared/api_gateway_proxy"
 
@@ -53,9 +53,11 @@ We can now execute our Lambda function via the web!
 
 <img width="1375" alt="screen shot 2019-02-06 at 4 57 23 pm" src="https://user-images.githubusercontent.com/583202/52376506-4cfda980-2a30-11e9-904a-57663ab6abd8.png">
 
-If we want to set a custom domain, we just have to provide the `domain` variable to the gateway:
+#### Bonus: Add a Custom Domain
 
-```terraform
+If you want to set a custom domain, just set the `domain` variable on the gateway:
+
+```hcl
 module "gateway" {
   # ...
   domain = "hello-serverless.dosomething.org"
@@ -70,13 +72,15 @@ This will attach the custom domain to our API Gateway, and (if it's a [DoSomethi
 
 Once you've attached the custom domain, visit API Gateway's [Custom Domain Names](https://us-east-1.console.aws.amazon.com/apigateway/home?region=us-east-1#/custom-domain-names) panel to find out what `CNAME` to use for the application's DNS settings. Ask someone in `#dev-infrastructure` to attach it to the domain in our [DNSMadeEasy](https://dnsmadeeasy.com/) account. You may have to wait **up to 40 minutes** for the certificate & [CloudFront](https://aws.amazon.com/cloudfront/) distribution to finish provisioning.
 
-Eventually, though, your patience will be rewarded. Beautiful.
+Eventually, your patience will be rewarded. Beautiful.
 
-
+<img width="1375" alt="screen shot 2019-02-06 at 5 54 04 pm" src="https://user-images.githubusercontent.com/583202/52380110-77ecfb00-2a3a-11e9-9376-2029249dbf18.png">
 
 
 ### Step 3: Deploying Code
-Of course, the default "hello world" Lambda function may not be applicable for your use case. Luckily, deploying your own code is simple. We deploy serverless applications using [CircleCI](https://circleci.com). If you haven't already, add a `.circleci/config.yml` file to your project. You can use the template below to start, making sure to replace `hello-serverless` in the deploy step with the name of your Lambda function:
+Occasionally, the default "hello world" app may not address your needs. Luckily, deploying code to a Lambda is painless.
+
+We deploy our serverless applications using [CircleCI](https://circleci.com). If you haven't already, add a `.circleci/config.yml` file to your application's repository. You can use the template below to start, making sure to replace `hello-serverless` in the deploy step with the name of your Lambda function:
 
 ```yml
 # Javascript Node CircleCI 2.1 configuration file
@@ -122,7 +126,7 @@ workflows:
               only: master
 ```
 
-After adding this file to your repository, [add the repostory as a "project"](https://circleci.com/docs/2.0/project-build/#section=getting-started). Your first build may fail due to missing credentials - that's okay! Head to the project's "Build Settings" page and [import environment variables from an existing serverless project](https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project), such as `dosomething/graphql`.
+After adding this file to your application, [add the repostory as a "project"](https://circleci.com/docs/2.0/project-build/#section=getting-started). Your first build may fail due to missing credentials - that's okay! Head to the project's "Build Settings" page and [import environment variables](https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project) from an existing serverless project, such as `dosomething/graphql`.
 
 Now, any commits to `master` will automatically deploy [our Lambda function](https://github.com/DoSomething/hello-serverless)!
 
