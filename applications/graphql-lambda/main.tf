@@ -55,6 +55,7 @@ module "app" {
 
   name        = "${var.name}"
   environment = "${var.environment}"
+  logger      = "${var.logger}"
 
   config_vars = {
     # TODO: Update application to expect 'development' here.

@@ -9,6 +9,11 @@ variable "name" {
   description = "The application name."
 }
 
+variable "logger" {
+  description = "The Lambda function ARN to subscribe to this function's log group."
+  default     = ""
+}
+
 # Optional variables:
 variable "config_vars" {
   description = "Environment variables for this application."
@@ -72,8 +77,17 @@ resource "aws_s3_bucket_object" "release" {
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/aws/lambda/${aws_lambda_function.function.function_name}"
   retention_in_days = 14
+}
 
-  # TODO: How can we hook this up to our Papertrail forwarder?
+resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
+  count = "${var.logger == "" ? 0 : 1}"
+
+  name            = "papertrail_forwarder"
+  log_group_name  = "${aws_cloudwatch_log_group.log_group.name}"
+  destination_arn = "${var.logger}"
+
+  # Forward all log messages:
+  filter_pattern = ""
 }
 
 # This is the "execution" role that is used to run this function:
