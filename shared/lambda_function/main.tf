@@ -13,7 +13,10 @@ variable "logger" {
 # Optional variables:
 variable "config_vars" {
   description = "Environment variables for this application."
-  default     = {}
+
+  default = {
+    NODE_ENV = "production"
+  }
 }
 
 variable "handler" {
