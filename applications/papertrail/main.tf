@@ -15,6 +15,7 @@ module "forwarder" {
 
   name        = "${var.name}"
   environment = "${var.environment}"
+  handler     = "handler.log"
 
   config_vars = {
     PAPERTRAIL_HOST = "${element(split(":", var.papertrail_destination), 0)}"
