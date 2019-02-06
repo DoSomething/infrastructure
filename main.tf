@@ -89,7 +89,7 @@ provider "random" {
 module "app" {
   source = "shared/lambda_function"
 
-  name = "serverless-example-ds"
+  name = "lets-serverless-this"
 }
 
 # We separate our infrastructure into modules for
