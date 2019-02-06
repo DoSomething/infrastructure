@@ -86,6 +86,12 @@ provider "random" {
 
 # ----------------------------------------------------
 
+module "app" {
+  source = "shared/lambda_function"
+
+  name = "serverless-example"
+}
+
 # We separate our infrastructure into modules for
 # organization & to make dependencies explicit by
 # importing and exporting variables.
