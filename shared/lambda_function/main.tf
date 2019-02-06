@@ -15,6 +15,11 @@ variable "config_vars" {
   default     = {}
 }
 
+variable "handler" {
+  description = "The handler for this function."
+  default     = "main.handler"
+}
+
 locals {
   safe_name = "${replace(var.name, "-", "_")}"
 }
@@ -22,7 +27,7 @@ locals {
 # The lambda function and API gateway:
 resource "aws_lambda_function" "function" {
   function_name = "${var.name}"
-  handler       = "main.handler"
+  handler       = "${var.handler}"
 
   s3_bucket = "${aws_s3_bucket.deploy.id}"
   s3_key    = "${aws_s3_bucket_object.release.key}"

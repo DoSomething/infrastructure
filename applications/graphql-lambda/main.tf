@@ -1,5 +1,6 @@
 # Experimental: This module builds a serverless GraphQL instance.
 
+# Required variables:
 variable "environment" {
   description = "The environment for this application: development, qa, or production."
 }
@@ -8,8 +9,14 @@ variable "name" {
   description = "The application name."
 }
 
+# Optional variables:
 variable "domain" {
   description = "The domain this application will be accessible at, e.g. graphql-lambda.dosomething.org"
+  default     = ""
+}
+
+variable "logger" {
+  description = "The Lambda function ARN to subscribe to this function's log group."
   default     = ""
 }
 
