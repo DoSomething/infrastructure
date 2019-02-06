@@ -10,6 +10,8 @@ variable "papertrail_destination" {
   description = "The Papertrail log destination to forward to."
 }
 
+data "aws_caller_identity" "current" {}
+
 module "forwarder" {
   source = "../../shared/lambda_function"
 
@@ -27,7 +29,7 @@ resource "aws_lambda_permission" "allow_cloudwatch" {
   action        = "lambda:InvokeFunction"
   function_name = "${module.forwarder.name}"
   principal     = "events.amazonaws.com"
-  source_arn    = "arn:aws:events:eu-west-1:111122223333:rule/RunDaily"
+  source_arn    = "arn:aws:events:us-east-1:${data.aws_caller_identity.current.account_id}:rule/*"
   qualifier     = "${aws_lambda_alias.latest.name}"
 }
 
