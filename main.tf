@@ -93,10 +93,10 @@ module "app" {
 }
 
 module "gateway" {
-  source = "../../shared/api_gateway_proxy"
+  source = "shared/api_gateway_proxy"
 
-  name                = "${var.name}"
-  environment         = "${var.environment}"
+  name                = "hello-serverless"
+  environment         = "development"
   function_arn        = "${module.app.arn}"
   function_invoke_arn = "${module.app.invoke_arn}"
 }
