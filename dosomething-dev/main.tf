@@ -95,6 +95,10 @@ module "papertrail" {
   papertrail_destination = "${var.papertrail_destination}"
 }
 
+module "example" {
+  source = "../applications/serverless-example"
+}
+
 module "ashes" {
   source = "ashes"
 }
