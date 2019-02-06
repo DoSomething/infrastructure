@@ -54,6 +54,7 @@ module "graphql_lambda" {
   environment = "production"
   name        = "dosomething-graphql"
   domain      = "graphql-lambda.dosomething.org"
+  logger      = "${module.papertrail.arn}"
 }
 
 module "northstar" {
@@ -96,6 +97,14 @@ module "rogue" {
   name                   = "dosomething-rogue"
   domain                 = "activity.dosomething.org"
   pipeline               = "${var.rogue_pipeline}"
+  papertrail_destination = "${var.papertrail_destination}"
+}
+
+module "papertrail" {
+  source = "../applications/papertrail"
+
+  environment            = "production"
+  name                   = "papertrail"
   papertrail_destination = "${var.papertrail_destination}"
 }
 

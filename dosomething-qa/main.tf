@@ -50,6 +50,7 @@ module "graphql_lambda" {
   environment = "qa"
   name        = "dosomething-graphql-qa"
   domain      = "graphql-lambda-qa.dosomething.org"
+  logger      = "${module.papertrail.arn}"
 }
 
 module "northstar" {
@@ -79,6 +80,14 @@ module "rogue" {
   name                   = "dosomething-rogue-qa"
   domain                 = "activity-qa.dosomething.org"
   pipeline               = "${var.rogue_pipeline}"
+  papertrail_destination = "${var.papertrail_destination}"
+}
+
+module "papertrail" {
+  source = "../applications/papertrail"
+
+  environment            = "qa"
+  name                   = "papertrail-qa"
   papertrail_destination = "${var.papertrail_destination}"
 }
 

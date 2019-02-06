@@ -9,10 +9,20 @@ variable "name" {
   description = "The application name."
 }
 
+variable "logger" {
+  description = "The Lambda function ARN to subscribe to this function's log group."
+  default     = ""
+}
+
 # Optional variables:
 variable "config_vars" {
   description = "Environment variables for this application."
   default     = {}
+}
+
+variable "handler" {
+  description = "The handler for this function."
+  default     = "main.handler"
 }
 
 locals {
@@ -22,7 +32,7 @@ locals {
 # The lambda function and API gateway:
 resource "aws_lambda_function" "function" {
   function_name = "${var.name}"
-  handler       = "main.handler"
+  handler       = "${var.handler}"
 
   s3_bucket = "${aws_s3_bucket.deploy.id}"
   s3_key    = "${aws_s3_bucket_object.release.key}"
@@ -67,8 +77,27 @@ resource "aws_s3_bucket_object" "release" {
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/aws/lambda/${aws_lambda_function.function.function_name}"
   retention_in_days = 14
+}
 
-  # TODO: How can we hook this up to our Papertrail forwarder?
+resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
+  count = "${var.logger == "" ? 0 : 1}"
+
+  name            = "papertrail_forwarder"
+  log_group_name  = "${aws_cloudwatch_log_group.log_group.name}"
+  destination_arn = "${var.logger}"
+
+  # Forward all log messages:
+  filter_pattern = ""
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  count = "${var.logger == "" ? 0 : 1}"
+
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = "${var.logger}"
+  principal     = "logs.us-east-1.amazonaws.com"
+  source_arn    = "${aws_cloudwatch_log_group.log_group.arn}"
 }
 
 # This is the "execution" role that is used to run this function:
@@ -135,6 +164,10 @@ resource "aws_ssm_parameter" "ssm_secret_key" {
   name  = "/circleci/${var.name}/AWS_SECRET_ACCESS_KEY"
   type  = "SecureString"
   value = "${aws_iam_access_key.deploy_key.secret}"
+}
+
+output "name" {
+  value = "${aws_lambda_function.function.function_name}"
 }
 
 output "arn" {
