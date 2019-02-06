@@ -37,7 +37,7 @@ module "longshot-footlocker-internal" {
   source = "../applications/longshot"
 
   name        = "longshot-footlocker-internal"
-  domain      = "footlocker-internal.dosomething.org"
+  domain      = "www.flscholarship.com"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
 
