@@ -79,16 +79,16 @@ resource "aws_cloudwatch_log_group" "log_group" {
   retention_in_days = 14
 }
 
-# resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
-#   count = "${var.logger == "" ? 0 : 1}"
+resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
+  count = "${var.logger == "" ? 0 : 1}"
 
-#   name            = "papertrail_forwarder"
-#   log_group_name  = "${aws_cloudwatch_log_group.log_group.name}"
-#   destination_arn = "${var.logger}"
+  name            = "papertrail_forwarder"
+  log_group_name  = "${aws_cloudwatch_log_group.log_group.name}"
+  destination_arn = "${var.logger}"
 
-#   # Forward all log messages:
-#   filter_pattern = ""
-# }
+  # Forward all log messages:
+  filter_pattern = ""
+}
 
 # This is the "execution" role that is used to run this function:
 resource "aws_iam_role" "lambda_exec" {
