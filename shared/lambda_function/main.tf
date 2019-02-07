@@ -92,7 +92,6 @@ resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
 resource "aws_lambda_permission" "allow_cloudwatch" {
   count = "${var.logger == "" ? 0 : 1}"
 
-  statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = "${var.logger}"
   principal     = "logs.us-east-1.amazonaws.com"

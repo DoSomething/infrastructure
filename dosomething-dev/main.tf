@@ -95,6 +95,12 @@ module "papertrail" {
   papertrail_destination = "${var.papertrail_destination}"
 }
 
+module "example" {
+  source = "../applications/hello-serverless"
+
+  logger = "${module.papertrail.arn}"
+}
+
 module "ashes" {
   source = "ashes"
 }
