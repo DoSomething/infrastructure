@@ -38,6 +38,8 @@ We're off to a great start! :rocket:
 ### Step 2: Add HTTP Endpoints (optional)
 Often, we'll want our functions to be accessible via the internet. To do so, let's add an [API Gateway](https://aws.amazon.com/api-gateway/):
 
+**Note:** At the moment, we only "officially" support using API Gateway as a proxy.
+
 ```hcl
 module "gateway" {
   source = "shared/api_gateway_proxy"
