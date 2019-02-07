@@ -17,4 +17,5 @@ module "gateway" {
   environment         = "development"
   function_arn        = "${module.app.arn}"
   function_invoke_arn = "${module.app.invoke_arn}"
+  domain              = "hello-serverless.dosomething.org"
 }
