@@ -53,9 +53,8 @@ locals {
 module "app" {
   source = "../../shared/lambda_function"
 
-  name        = "${var.name}"
-  environment = "${var.environment}"
-  logger      = "${var.logger}"
+  name   = "${var.name}"
+  logger = "${var.logger}"
 
   config_vars = {
     # TODO: Update application to expect 'development' here.

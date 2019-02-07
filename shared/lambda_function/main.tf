@@ -1,10 +1,6 @@
 # Experimental: This module builds a serverless Lambda function.
 
 # Required variables:
-variable "environment" {
-  description = "The environment for this application: development, qa, or production."
-}
-
 variable "name" {
   description = "The application name."
 }
@@ -17,7 +13,10 @@ variable "logger" {
 # Optional variables:
 variable "config_vars" {
   description = "Environment variables for this application."
-  default     = {}
+
+  default = {
+    NODE_ENV = "production"
+  }
 }
 
 variable "handler" {
