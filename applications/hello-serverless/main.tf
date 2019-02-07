@@ -6,5 +6,14 @@ variable "logger" {
 module "app" {
   source = "../../shared/lambda_function"
 
-  name = "hello-serverless"
+  name   = "hello-serverless"
+  logger = "${var.logger}"
+}
+
+module "gateway" {
+  source = "../../shared/api_gateway_proxy"
+
+  name                = "hello-serverless"
+  function_arn        = "${module.app.arn}"
+  function_invoke_arn = "${module.app.invoke_arn}"
 }
