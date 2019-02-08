@@ -17,7 +17,7 @@ module "app" {
 }
 ```
 
-You can configure [Papertrail logging](https://github.com/DoSomething/communal-docs/blob/master/Monitoring/papertrail.md) by setting the `logger` variable (using one the `papertrail` module from `dosomething`, `dosomething-qa,` or `dosomething-dev`):
+You can configure [Papertrail logging](https://github.com/DoSomething/communal-docs/blob/master/Monitoring/papertrail.md) by setting the `logger` variable (using one the `papertrail` modules from either `dosomething`, `dosomething-qa,` or `dosomething-dev`):
 
 ```hcl
 module "app" {
