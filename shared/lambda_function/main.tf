@@ -12,7 +12,7 @@ resource "aws_lambda_function" "function" {
   s3_bucket = "${aws_s3_bucket.deploy.id}"
   s3_key    = "${aws_s3_bucket_object.release.key}"
 
-  runtime = "nodejs8.10"
+  runtime = "${var.runtime}"
 
   # We increase our function's memory allocation in order to
   # decrease worst-case cold start times. <https://git.io/fh1qE>
@@ -45,7 +45,7 @@ resource "aws_s3_bucket_object" "release" {
 
   # We hard-code this module's path (from the root) here to avoid an issue
   # where ${path.module} marks this as "dirty" on different machines.
-  source = "shared/lambda_function/example.zip"
+  source = "shared/lambda_function/default-${var.runtime}.zip"
 }
 
 # Log group:

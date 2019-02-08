@@ -1,13 +1,13 @@
 variable "logger" {
   description = "The Lambda function ARN to subscribe to this function's log group."
-  default     = ""
 }
 
 module "app" {
   source = "../../shared/lambda_function"
 
-  name   = "hello-serverless"
-  logger = "${var.logger}"
+  name    = "hello-serverless"
+  runtime = "nodejs8.10"
+  logger  = "${var.logger}"
 }
 
 module "gateway" {

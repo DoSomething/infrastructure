@@ -8,13 +8,12 @@
 We manage our serverless infrastructure with Terraform. To start, use the `lambda_function` module to provision a
 new function. This will create a new function with the given name. It will also create a log group, execution role, deployment bucket, and limited deployment credentials.
 
-**Note:** At the moment, we only support functions that run on Node.js 8.x.
-
 ```hcl
 module "app" {
   source = "../shared/lambda_function"
 
-  name = "hello-serverless"
+  name    = "hello-serverless"
+  runtime = "nodejs8.10"
 }
 ```
 

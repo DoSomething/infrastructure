@@ -3,9 +3,13 @@ variable "name" {
   description = "The application name."
 }
 
-variable "logger" {
-  description = "The Lambda function ARN to subscribe to this function's log group."
-  default     = ""
+variable "runtime" {
+  description = "The Lambda runtime to use. We support nodejs8.10, python2.7, and python3.7"
+}
+
+variable "handler" {
+  description = "The handler for this Lambda, in the format 'file_name.function_name'."
+  default     = "main.handler"
 }
 
 # Optional variables:
@@ -17,7 +21,7 @@ variable "config_vars" {
   }
 }
 
-variable "handler" {
-  description = "The handler for this function."
-  default     = "main.handler"
+variable "logger" {
+  description = "The Lambda function ARN to subscribe to this function's log group."
+  default     = ""
 }
