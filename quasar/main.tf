@@ -1,3 +1,11 @@
+# Our Slack Lookerbot instance needs access to an S3 bucket to publish
+# visualizations.
+module "lookerbot" {
+  source = "../applications/lookerbot"
+
+  name = "lookerbot"
+}
+
 resource "aws_vpc" "vpc" {
   cidr_block = "10.255.0.0/16"
 
