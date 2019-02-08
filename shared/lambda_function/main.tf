@@ -1,29 +1,5 @@
 # Experimental: This module builds a serverless Lambda function.
 
-# Required variables:
-variable "name" {
-  description = "The application name."
-}
-
-variable "logger" {
-  description = "The Lambda function ARN to subscribe to this function's log group."
-  default     = ""
-}
-
-# Optional variables:
-variable "config_vars" {
-  description = "Environment variables for this application."
-
-  default = {
-    NODE_ENV = "production"
-  }
-}
-
-variable "handler" {
-  description = "The handler for this function."
-  default     = "main.handler"
-}
-
 locals {
   safe_name = "${replace(var.name, "-", "_")}"
 }
@@ -162,20 +138,4 @@ resource "aws_ssm_parameter" "ssm_secret_key" {
   name  = "/circleci/${var.name}/AWS_SECRET_ACCESS_KEY"
   type  = "SecureString"
   value = "${aws_iam_access_key.deploy_key.secret}"
-}
-
-output "name" {
-  value = "${aws_lambda_function.function.function_name}"
-}
-
-output "arn" {
-  value = "${aws_lambda_function.function.arn}"
-}
-
-output "invoke_arn" {
-  value = "${aws_lambda_function.function.invoke_arn}"
-}
-
-output "lambda_role" {
-  value = "${aws_iam_role.lambda_exec.name}"
 }
