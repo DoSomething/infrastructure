@@ -51,7 +51,7 @@ locals {
 }
 
 module "app" {
-  source = "../../shared/lambda_function"
+  source = "../../components/lambda_function"
 
   name    = "${var.name}"
   runtime = "nodejs8.10"
@@ -77,7 +77,7 @@ module "app" {
 }
 
 module "gateway" {
-  source = "../../shared/api_gateway_proxy"
+  source = "../../components/api_gateway_proxy"
 
   name                = "${var.name}"
   environment         = "${var.environment}"
@@ -87,7 +87,7 @@ module "gateway" {
 }
 
 module "cache" {
-  source = "../../shared/dynamodb_cache"
+  source = "../../components/dynamodb_cache"
 
   name = "${var.name}-cache"
   role = "${module.app.lambda_role}"

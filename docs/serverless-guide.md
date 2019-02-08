@@ -5,12 +5,12 @@
 > :bulb: We use "lower-case" serverless – the [architecture](https://martinfowler.com/articles/serverless.html), not [the name-brand framework](https://serverless.com). ([Why?](https://github.com/DoSomething/infrastructure/issues/129))
 
 ### Step 1: Creating our Function
-We manage our serverless infrastructure with Terraform. To start, use the [`lambda_function`](https://github.com/DoSomething/infrastructure/tree/master/shared/lambda_function) module to provision a
+We manage our serverless infrastructure with Terraform. To start, use the [`lambda_function`](https://github.com/DoSomething/infrastructure/tree/master/components/lambda_function) module to provision a
 new function. This will create a new function with the given name. It will also create a log group, execution role, deployment bucket, and limited deployment credentials.
 
 ```hcl
 module "app" {
-  source = "../shared/lambda_function"
+  source = "../components/lambda_function"
 
   name    = "hello-serverless"
   runtime = "nodejs8.10"
@@ -35,11 +35,11 @@ $ aws lambda invoke --function-name=hello-serverless /dev/stdout
 We're off to a great start! :rocket:
 
 ### Step 2: Add HTTP Endpoints (optional)
-Often, we'll want our functions to be accessible via the internet. To do so, we can use the [`api_gateway_proxy`](https://github.com/DoSomething/infrastructure/tree/master/shared/api_gateway_proxy) module:
+Often, we'll want our functions to be accessible via the internet. To do so, we can use the [`api_gateway_proxy`](https://github.com/DoSomething/infrastructure/tree/master/components/api_gateway_proxy) module:
 
 ```hcl
 module "gateway" {
-  source = "shared/api_gateway_proxy"
+  source = "../components/api_gateway_proxy"
 
   name                = "hello-serverless"
   environment         = "development"

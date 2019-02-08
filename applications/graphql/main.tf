@@ -72,7 +72,7 @@ resource "random_string" "app_secret" {
 }
 
 module "app" {
-  source = "../../shared/heroku_app"
+  source = "../../components/heroku_app"
 
   framework   = "express"
   name        = "${var.name}"

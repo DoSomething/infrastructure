@@ -95,7 +95,7 @@ locals {
 }
 
 module "app" {
-  source = "../../shared/heroku_app"
+  source = "../../components/heroku_app"
 
   framework   = "laravel"
   name        = "${var.name}"
@@ -127,19 +127,19 @@ module "app" {
 }
 
 module "iam_user" {
-  source = "../../shared/iam_app_user"
+  source = "../../components/iam_app_user"
   name   = "${var.name}"
 }
 
 module "queue_high" {
-  source = "../../shared/sqs_queue"
+  source = "../../components/sqs_queue"
 
   name = "${var.name}-high"
   user = "${module.iam_user.name}"
 }
 
 module "queue_low" {
-  source = "../../shared/sqs_queue"
+  source = "../../components/sqs_queue"
 
   name = "${var.name}-low"
   user = "${module.iam_user.name}"
@@ -148,7 +148,7 @@ module "queue_low" {
 // TODO: Attach 'aws_s3_bucket_public_access_block' once this
 // is merged in to the AWS provider. <https://git.io/fpxqg>
 module "storage" {
-  source = "../../shared/s3_bucket"
+  source = "../../components/s3_bucket"
 
   name       = "${var.name}"
   user       = "${module.iam_user.name}"
