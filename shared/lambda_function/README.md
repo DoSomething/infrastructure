@@ -2,7 +2,7 @@
 
 This module creates a Lambda function. It will also create a CloudWatch log group, IAM execution role, deployment S3 bucket, and limited deployment credentials for CircleCI.
 
-For all options, see the [variables](#) this module accepts & [outputs](#) it generates.
+For all options, see the [variables](https://github.com/DoSomething/infrastructure/blob/master/shared/lambda_function/variables.tf) this module accepts & [outputs](https://github.com/DoSomething/infrastructure/blob/master/shared/lambda_function/outputs.tf) it generates.
 
 > :wave: Check out the [Getting Started](https://github.com/DoSomething/infrastructure/blob/master/docs/serverless-guide.md) guide for a step-by-step walkthrough!
 

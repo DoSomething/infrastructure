@@ -2,7 +2,7 @@
 
 This module creates an [API Gateway](https://aws.amazon.com/api-gateway/). It's used to expose Lambda functions over the internet. At the moment, this module only supports using API Gateway as a "proxy" (so all requests to the given domain are forwarded to a single Lambda function, which handles routing internally).
 
-For all options, see the [variables](#) this module accepts & [outputs](#) it generates.
+For all options, see the [variables](https://github.com/DoSomething/infrastructure/blob/master/shared/api_gateway_proxy/variables.tf) this module accepts & [outputs](https://github.com/DoSomething/infrastructure/blob/master/shared/api_gateway_proxy/outputs.tf) it generates.
 
 > :wave: Check out the [Getting Started](https://github.com/DoSomething/infrastructure/blob/master/docs/serverless-guide.md) guide for a step-by-step walkthrough!
 
