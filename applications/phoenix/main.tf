@@ -82,7 +82,7 @@ locals {
 }
 
 module "app" {
-  source = "../../shared/heroku_app"
+  source = "../../components/heroku_app"
 
   framework   = "laravel"
   name        = "${var.name}"
@@ -107,7 +107,7 @@ module "app" {
 }
 
 module "database" {
-  source = "../../shared/mariadb_instance"
+  source = "../../components/mariadb_instance"
 
   name           = "${var.name}"
   environment    = "${var.environment}"

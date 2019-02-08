@@ -53,7 +53,7 @@ locals {
 }
 
 module "app" {
-  source = "../../shared/heroku_app"
+  source = "../../components/heroku_app"
 
   framework   = "laravel"
   name        = "${var.name}"
@@ -82,7 +82,7 @@ module "app" {
 }
 
 module "database" {
-  source = "../../shared/mariadb_instance"
+  source = "../../components/mariadb_instance"
 
   name           = "${var.name}"
   environment    = "${var.environment}"
@@ -92,18 +92,18 @@ module "database" {
 }
 
 module "iam_user" {
-  source = "../../shared/iam_app_user"
+  source = "../../components/iam_app_user"
   name   = "${var.name}"
 }
 
 module "queue" {
-  source = "../../shared/sqs_queue"
+  source = "../../components/sqs_queue"
   name   = "${var.name}"
   user   = "${module.iam_user.name}"
 }
 
 module "storage" {
-  source      = "../../shared/s3_bucket"
+  source      = "../../components/s3_bucket"
   name        = "${var.name}"
   user        = "${module.iam_user.name}"
   replication = "${var.environment == "production"}"

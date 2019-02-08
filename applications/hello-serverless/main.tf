@@ -3,7 +3,7 @@ variable "logger" {
 }
 
 module "app" {
-  source = "../../shared/lambda_function"
+  source = "../../components/lambda_function"
 
   name    = "hello-serverless"
   runtime = "nodejs8.10"
@@ -11,7 +11,7 @@ module "app" {
 }
 
 module "gateway" {
-  source = "../../shared/api_gateway_proxy"
+  source = "../../components/api_gateway_proxy"
 
   name                = "hello-serverless"
   environment         = "development"

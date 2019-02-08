@@ -11,7 +11,7 @@ variable "papertrail_destination" {
 }
 
 module "forwarder" {
-  source = "../../shared/lambda_function"
+  source = "../../components/lambda_function"
 
   name    = "${var.name}"
   runtime = "nodejs8.10"

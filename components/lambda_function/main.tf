@@ -45,7 +45,7 @@ resource "aws_s3_bucket_object" "release" {
 
   # We hard-code this module's path (from the root) here to avoid an issue
   # where ${path.module} marks this as "dirty" on different machines.
-  source = "shared/lambda_function/default-${var.runtime}.zip"
+  source = "components/lambda_function/default-${var.runtime}.zip"
 }
 
 # Log group:

@@ -20,12 +20,12 @@ variable "name" {
 }
 
 module "iam_user" {
-  source = "../../shared/iam_app_user"
+  source = "../../components/iam_app_user"
   name   = "${var.name}"
 }
 
 module "storage" {
-  source = "../../shared/s3_bucket"
+  source = "../../components/s3_bucket"
 
   name = "${var.name}"
   user = "${module.iam_user.name}"
