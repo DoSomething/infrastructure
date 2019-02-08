@@ -16,6 +16,8 @@ variable "handler" {
 variable "config_vars" {
   description = "Environment variables for this application."
 
+  # Lambda pouts if we provide an empty map here, so
+  # let's just default to something reasonable.
   default = {
     NODE_ENV = "production"
   }
