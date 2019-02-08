@@ -3,7 +3,7 @@
 module "lookerbot" {
   source = "../applications/lookerbot"
 
-  name = "dosomething-lookerbot-resources"
+  name = "dosomething-lookerbot"
 }
 
 resource "aws_vpc" "vpc" {
