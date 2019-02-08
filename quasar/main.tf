@@ -334,7 +334,7 @@ data "aws_ssm_parameter" "prod_password" {
 resource "aws_db_instance" "quasar-qa" {
   allocated_storage      = 1000
   engine                 = "postgres"
-  engine_version         = "10.5"
+  engine_version         = "10.6"
   instance_class         = "db.m5.2xlarge"
   name                   = "quasar"
   username               = "${data.aws_ssm_parameter.qa_username.value}"
@@ -351,7 +351,7 @@ resource "aws_db_instance" "quasar-qa" {
 resource "aws_db_instance" "quasar" {
   allocated_storage      = 4000
   engine                 = "postgres"
-  engine_version         = "10.5"
+  engine_version         = "10.6"
   instance_class         = "db.m5.4xlarge"
   name                   = "quasar_prod_warehouse"
   username               = "${data.aws_ssm_parameter.prod_username.value}"
