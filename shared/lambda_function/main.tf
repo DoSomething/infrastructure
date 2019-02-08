@@ -1,29 +1,5 @@
 # Experimental: This module builds a serverless Lambda function.
 
-# Required variables:
-variable "name" {
-  description = "The application name."
-}
-
-variable "logger" {
-  description = "The Lambda function ARN to subscribe to this function's log group."
-  default     = ""
-}
-
-# Optional variables:
-variable "config_vars" {
-  description = "Environment variables for this application."
-
-  default = {
-    NODE_ENV = "production"
-  }
-}
-
-variable "handler" {
-  description = "The handler for this function."
-  default     = "main.handler"
-}
-
 locals {
   safe_name = "${replace(var.name, "-", "_")}"
 }
@@ -36,7 +12,7 @@ resource "aws_lambda_function" "function" {
   s3_bucket = "${aws_s3_bucket.deploy.id}"
   s3_key    = "${aws_s3_bucket_object.release.key}"
 
-  runtime = "nodejs8.10"
+  runtime = "${var.runtime}"
 
   # We increase our function's memory allocation in order to
   # decrease worst-case cold start times. <https://git.io/fh1qE>
@@ -69,7 +45,7 @@ resource "aws_s3_bucket_object" "release" {
 
   # We hard-code this module's path (from the root) here to avoid an issue
   # where ${path.module} marks this as "dirty" on different machines.
-  source = "shared/lambda_function/example.zip"
+  source = "shared/lambda_function/default-${var.runtime}.zip"
 }
 
 # Log group:
@@ -162,20 +138,4 @@ resource "aws_ssm_parameter" "ssm_secret_key" {
   name  = "/circleci/${var.name}/AWS_SECRET_ACCESS_KEY"
   type  = "SecureString"
   value = "${aws_iam_access_key.deploy_key.secret}"
-}
-
-output "name" {
-  value = "${aws_lambda_function.function.function_name}"
-}
-
-output "arn" {
-  value = "${aws_lambda_function.function.arn}"
-}
-
-output "invoke_arn" {
-  value = "${aws_lambda_function.function.invoke_arn}"
-}
-
-output "lambda_role" {
-  value = "${aws_iam_role.lambda_exec.name}"
 }

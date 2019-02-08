@@ -14,6 +14,7 @@ module "forwarder" {
   source = "../../shared/lambda_function"
 
   name    = "${var.name}"
+  runtime = "nodejs8.10"
   handler = "handler.log"
 
   config_vars = {

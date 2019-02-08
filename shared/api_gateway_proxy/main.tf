@@ -1,29 +1,3 @@
-# Required variables:
-variable "environment" {
-  description = "The environment for this application: development, qa, or production."
-}
-
-variable "name" {
-  description = "The application name."
-}
-
-variable "function_arn" {
-  description = "The Lambda function's ARN."
-}
-
-variable "function_invoke_arn" {
-  description = "The Lambda function's invocation ARN."
-}
-
-# Optional variables:
-variable "domain" {
-  description = "The domain this application will be accessible at, e.g. lambda.dosomething.org"
-
-  # If omitted, we will just not attach a custom domain to this app. By default,
-  # you can access a Lambda function at a URL returned in the `base_url` output.
-  default = ""
-}
-
 locals {
   # Hack! Check if `var.domain` is a DS.org subdomain. <https://stackoverflow.com/a/47243622/811624>
   is_dosomething_domain = "${replace(var.domain, ".dosomething.org", "") != var.domain}"
@@ -122,8 +96,4 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
   api_id      = "${aws_api_gateway_rest_api.gateway.id}"
   stage_name  = "${aws_api_gateway_deployment.deployment.stage_name}"
   domain_name = "${aws_api_gateway_domain_name.domain.domain_name}"
-}
-
-output "base_url" {
-  value = "${var.domain == "" ? aws_api_gateway_deployment.deployment.invoke_url : "https://${var.domain}"}"
 }
