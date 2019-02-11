@@ -89,7 +89,10 @@ module "app" {
     "${local.ENV}_NORTHSTAR_AUTH_ID"     = "${var.name}"
     "${local.ENV}_NORTHSTAR_AUTH_SECRET" = "${data.aws_ssm_parameter.northstar_auth_secret.value}"
 
-    # TODO: Remove custom environment mapping once we have a 'dev' instance of Gambit Conversations.
+    # TODO: Remove custom environment mapping once we have a 'dev' instance of Gambit.
+    "${upper(local.gambit_env)}_GAMBIT_BASIC_AUTH_USER" = "${data.aws_ssm_parameter.gambit_username.value}"
+    "${upper(local.gambit_env)}_GAMBIT_BASIC_AUTH_PASS" = "${data.aws_ssm_parameter.gambit_password.value}"
+    # TODO: Remove Gambit Conversations vars once https://github.com/DoSomething/graphql/pull/57 is deployed everywhere.
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = "${data.aws_ssm_parameter.gambit_username.value}"
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = "${data.aws_ssm_parameter.gambit_password.value}"
 
