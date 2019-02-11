@@ -20,7 +20,8 @@ module "gateway" {
   # The root function (required) responds to `/` requests:
   root_function        = "${module.app.arn}"
   # root_method        = "ANY" (optional)
-  # root_authorization = "NONE" (optional)
+  # root_authorization = "NONE" (optional, set to 'CUSTOM' for custom authorizer)
+  # root_authorizer_id = "${module.authorizer.invoke_arn}" (optional, if 'CUSTOM')
 
   # Any other routes can be defined in this list, with each route
   # expressed as a map of { path, function, method, authorization }
@@ -29,7 +30,8 @@ module "gateway" {
       path            = "{proxy+}"
       function        = "${module.app.invoke_arn}"
       # method        = "ANY" (optional)
-      # authorization = "NONE" (optional)
+      # authorization = "NONE" (optional, set to 'CUSTOM' for custom authorizer)
+      # authorizer_id = "${module.authorizer.invoke_arn}" (optional, if 'CUSTOM')
     },
   ]
 }

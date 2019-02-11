@@ -14,6 +14,7 @@ resource "aws_api_gateway_method" "proxy_root" {
   resource_id   = "${aws_api_gateway_rest_api.gateway.root_resource_id}"
   http_method   = "${var.root_method}"
   authorization = "${var.root_authorization}"
+  authorizer_id = "${var.root_authorizer_id}"
 }
 
 resource "aws_api_gateway_integration" "lambda_root" {
@@ -43,6 +44,7 @@ resource "aws_api_gateway_method" "method" {
   resource_id   = "${aws_api_gateway_resource.resource.*.id[count.index]}"
   http_method   = "${lookup(var.routes[count.index], "method", "ANY")}"
   authorization = "${lookup(var.routes[count.index], "authorization", "NONE")}"
+  authorizer_id = "${lookup(var.routes[count.index], "authorizer_id", "")}"
 }
 
 resource "aws_api_gateway_integration" "integration" {

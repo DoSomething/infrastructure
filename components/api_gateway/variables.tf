@@ -23,6 +23,11 @@ variable "root_authorization" {
   default     = "NONE"
 }
 
+variable "root_authorizer_id" {
+  description = "If 'var.root_authorization' is 'CUSTOM', the Lambda to authorize with."
+  default     = ""
+}
+
 # Additional routes:
 variable "routes" {
   description = "A list of routes this gateway can respond to."
