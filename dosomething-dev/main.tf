@@ -53,7 +53,7 @@ module "graphql_lambda" {
 
   environment = "development"
   name        = "dosomething-graphql-dev"
-  domain      = "graphql-lambda-dev.dosomething.org"
+  domain      = "graphql-dev.dosomething.org"
   logger      = "${module.papertrail.arn}"
 }
 
