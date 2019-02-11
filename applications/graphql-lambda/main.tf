@@ -80,7 +80,6 @@ module "gateway" {
   source = "../../components/api_gateway_proxy"
 
   name                = "${var.name}"
-  environment         = "${var.environment}"
   function_arn        = "${module.app.arn}"
   function_invoke_arn = "${module.app.invoke_arn}"
   domain              = "${var.domain}"
