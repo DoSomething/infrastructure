@@ -58,6 +58,8 @@ module "app" {
   logger  = "${var.logger}"
 
   config_vars = {
+    NODE_ENV = "production"
+
     # TODO: Update application to expect 'development' here.
     QUERY_ENV = "${local.env}"
 
