@@ -363,7 +363,4 @@ resource "aws_db_instance" "quasar" {
   copy_tags_to_snapshot  = true
   monitoring_interval    = "10"
   publicly_accessible    = true
-
-  # TEMPORARY: from @sheyd's testing over the weekend.
-  iops = 10000
 }
