@@ -50,7 +50,7 @@ module "longshot-footlocker-internal" {
 
 # Attach base domain for FLScholarship.com as well.
 # TODO: Is there a better way to handle ANAMEs?
-resource "heroku_domain" "domain" {
+resource "heroku_domain" "flscholarship_base_domain" {
   app      = "${module.longshot-footlocker-internal.name}"
   hostname = "flscholarship.com"
 }
