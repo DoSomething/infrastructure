@@ -48,6 +48,13 @@ module "longshot-footlocker-internal" {
   with_newrelic          = false
 }
 
+# Attach base domain for FLScholarship.com as well.
+# TODO: Is there a better way to handle ANAMEs?
+resource "heroku_domain" "flscholarship_base_domain" {
+  app      = "${module.longshot-footlocker-internal.name}"
+  hostname = "flscholarship.com"
+}
+
 module "hrblock" {
   source = "../applications/longshot"
 
