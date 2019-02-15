@@ -77,7 +77,7 @@ locals {
     CONTENTFUL_SPACE_ID        = "${data.aws_ssm_parameter.contentful_space_id.value}"
     CONTENTFUL_CONTENT_API_KEY = "${data.aws_ssm_parameter.contentful_api_key.value}"
     CONTENTFUL_USE_PREVIEW_API = "${var.use_contentful_preview_api}"
-    CONTENTFUL_CACHE           = "${var.environment == "production"}"
+    CONTENTFUL_CACHE           = "${!var.use_contentful_preview_api}"
   }
 }
 
