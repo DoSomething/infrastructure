@@ -117,7 +117,7 @@ module "app" {
   ignore_web = "${var.environment == "production"}"
 
   # We don't run a queue process on development right now. @TODO: Should we?
-  queue_scale = "${var.environment == "development" ? 0 : 1}"
+  queue_scale = "${lookup(map("development", 0, "qa", 1, "production", 3), var.environment)}"
 
   with_redis = true
   redis_type = "${var.environment == "production" ? "premium-1" : "hobby-dev"}"
