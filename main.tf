@@ -103,7 +103,6 @@ module "shared" {
 module "dosomething" {
   source = "dosomething"
 
-  graphql_pipeline              = "${module.shared.graphql_pipeline}"
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
   phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
   rogue_pipeline                = "${module.shared.rogue_pipeline}"
@@ -117,7 +116,6 @@ module "dosomething" {
 module "dosomething-qa" {
   source = "dosomething-qa"
 
-  graphql_pipeline              = "${module.shared.graphql_pipeline}"
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
   phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
   rogue_pipeline                = "${module.shared.rogue_pipeline}"
@@ -131,7 +129,6 @@ module "dosomething-qa" {
 module "dosomething-dev" {
   source = "dosomething-dev"
 
-  graphql_pipeline              = "${module.shared.graphql_pipeline}"
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
   phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
   rogue_pipeline                = "${module.shared.rogue_pipeline}"

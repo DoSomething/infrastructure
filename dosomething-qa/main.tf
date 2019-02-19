@@ -1,4 +1,3 @@
-variable "graphql_pipeline" {}
 variable "northstar_pipeline" {}
 variable "phoenix_pipeline" {}
 variable "rogue_pipeline" {}
@@ -19,10 +18,6 @@ module "fastly-frontend" {
 module "fastly-backend" {
   source = "fastly-backend"
 
-  graphql_name    = "${module.graphql.name}"
-  graphql_domain  = "${module.graphql.domain}"
-  graphql_backend = "${module.graphql.backend}"
-
   northstar_name    = "${module.northstar.name}"
   northstar_domain  = "${module.northstar.domain}"
   northstar_backend = "${module.northstar.backend}"
@@ -36,16 +31,6 @@ module "fastly-backend" {
 
 module "graphql" {
   source = "../applications/graphql"
-
-  environment            = "qa"
-  name                   = "dosomething-graphql-qa"
-  domain                 = "graphql-qa.dosomething.org"
-  pipeline               = "${var.graphql_pipeline}"
-  papertrail_destination = "${var.papertrail_destination}"
-}
-
-module "graphql_lambda" {
-  source = "../applications/graphql-lambda"
 
   environment = "qa"
   name        = "dosomething-graphql-qa"
