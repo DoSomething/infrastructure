@@ -160,6 +160,12 @@ resource "fastly_service_v1" "frontend" {
   }
 
   snippet {
+    name    = "GeoIP - Set State Header"
+    type    = "deliver"
+    content = "${file("${path.root}/shared/state_deliver.vcl")}"
+  }
+
+  snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = "${file("${path.root}/shared/origin_name.vcl")}"

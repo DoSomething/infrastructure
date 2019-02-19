@@ -142,6 +142,12 @@ resource "fastly_service_v1" "frontend-dev" {
   }
 
   snippet {
+    name    = "GeoIP - Set State Header"
+    type    = "deliver"
+    content = "${file("${path.root}/shared/state_deliver.vcl")}"
+  }
+
+  snippet {
     name    = "GDPR - Redirects Table"
     type    = "init"
     content = "${file("${path.root}/shared/gdpr_init.vcl")}"
