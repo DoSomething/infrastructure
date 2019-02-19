@@ -33,8 +33,8 @@ module "fastly-backend" {
   papertrail_destination = "${var.papertrail_destination_fastly}"
 }
 
-module "graphql_lambda" {
-  source = "../applications/graphql-lambda"
+module "graphql" {
+  source = "../applications/graphql"
 
   environment = "production"
   name        = "dosomething-graphql"
