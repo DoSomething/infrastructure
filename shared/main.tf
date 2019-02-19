@@ -41,10 +41,6 @@ resource "heroku_pipeline" "phoenix" {
   name = "phoenix"
 }
 
-output "graphql_pipeline" {
-  value = "${heroku_pipeline.graphql.id}"
-}
-
 output "northstar_pipeline" {
   value = "${heroku_pipeline.northstar.id}"
 }
