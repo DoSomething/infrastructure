@@ -1,6 +1,3 @@
-variable "graphql_name" {}
-variable "graphql_domain" {}
-variable "graphql_backend" {}
 variable "northstar_name" {}
 variable "northstar_domain" {}
 variable "northstar_backend" {}
@@ -21,10 +18,6 @@ resource "fastly_service_v1" "backends" {
   force_destroy = true
 
   domain {
-    name = "${var.graphql_domain}"
-  }
-
-  domain {
     name = "${var.northstar_domain}"
   }
 
@@ -34,18 +27,6 @@ resource "fastly_service_v1" "backends" {
 
   domain {
     name = "${var.rogue_domain}"
-  }
-
-  condition {
-    type      = "REQUEST"
-    name      = "backend-graphql"
-    statement = "req.http.host == \"${var.graphql_domain}\""
-  }
-
-  condition {
-    type      = "RESPONSE"
-    name      = "response-graphql"
-    statement = "req.http.host == \"${var.graphql_domain}\""
   }
 
   condition {
@@ -106,15 +87,6 @@ resource "fastly_service_v1" "backends" {
     name              = "pass-authenticated"
     request_condition = "is-authenticated"
     action            = "pass"
-  }
-
-  backend {
-    address           = "${var.graphql_backend}"
-    name              = "${var.graphql_name}"
-    request_condition = "backend-graphql"
-    shield            = "iad-va-us"
-    auto_loadbalance  = false
-    port              = 443
   }
 
   backend {

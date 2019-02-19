@@ -1,6 +1,3 @@
-variable "graphql_name" {}
-variable "graphql_domain" {}
-variable "graphql_backend" {}
 variable "northstar_name" {}
 variable "northstar_domain" {}
 variable "northstar_backend" {}
@@ -18,27 +15,11 @@ resource "fastly_service_v1" "backends-qa" {
   force_destroy = true
 
   domain {
-    name = "${var.graphql_domain}"
-  }
-
-  domain {
     name = "${var.northstar_domain}"
   }
 
   domain {
     name = "${var.rogue_domain}"
-  }
-
-  condition {
-    type      = "REQUEST"
-    name      = "backend-graphql-qa"
-    statement = "req.http.host == \"${var.graphql_domain}\""
-  }
-
-  condition {
-    type      = "RESPONSE"
-    name      = "response-graphql-qa"
-    statement = "req.http.host == \"${var.graphql_domain}\""
   }
 
   condition {
@@ -81,15 +62,6 @@ resource "fastly_service_v1" "backends-qa" {
     name              = "pass-authenticated"
     request_condition = "is-authenticated"
     action            = "pass"
-  }
-
-  backend {
-    address           = "${var.graphql_backend}"
-    name              = "${var.graphql_name}"
-    request_condition = "backend-graphql-qa"
-    shield            = "iad-va-us"
-    auto_loadbalance  = false
-    port              = 443
   }
 
   backend {
@@ -202,13 +174,5 @@ resource "fastly_service_v1" "backends-qa" {
     port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "${var.papertrail_log_format}"
     response_condition = "response-rogue-qa"
-  }
-
-  papertrail {
-    name               = "graphql-qa"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-graphql-qa"
   }
 }

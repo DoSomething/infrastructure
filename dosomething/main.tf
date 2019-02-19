@@ -19,10 +19,6 @@ module "fastly-frontend" {
 module "fastly-backend" {
   source = "fastly-backend"
 
-  graphql_name    = "${module.graphql.name}"
-  graphql_domain  = "${module.graphql.domain}"
-  graphql_backend = "${module.graphql.backend}"
-
   phoenix_preview_name    = "${module.phoenix_preview.name}"
   phoenix_preview_domain  = "${module.phoenix_preview.domain}"
   phoenix_preview_backend = "${module.phoenix_preview.backend}"
@@ -36,16 +32,6 @@ module "fastly-backend" {
   rogue_backend = "${module.rogue.backend}"
 
   papertrail_destination = "${var.papertrail_destination_fastly}"
-}
-
-module "graphql" {
-  source = "../applications/graphql"
-
-  environment            = "production"
-  name                   = "dosomething-graphql"
-  domain                 = "graphql.dosomething.org"
-  pipeline               = "${var.graphql_pipeline}"
-  papertrail_destination = "${var.papertrail_destination}"
 }
 
 module "graphql_lambda" {
