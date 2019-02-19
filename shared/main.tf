@@ -29,10 +29,6 @@ resource "aws_iam_access_key" "circleci_key" {
 }
 
 # Heroku pipelines
-resource "heroku_pipeline" "graphql" {
-  name = "graphql"
-}
-
 resource "heroku_pipeline" "northstar" {
   name = "northstar"
 }
