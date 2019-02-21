@@ -108,7 +108,7 @@ resource "fastly_service_v1" "frontend-qa" {
     name        = "Region Code"
     type        = "request"
     action      = "set"
-    source      = "geoip.region"
+    source      = "client.geo.region"
     destination = "http.X-Fastly-Region-Code"
   }
 
@@ -116,7 +116,7 @@ resource "fastly_service_v1" "frontend-qa" {
     name        = "Region Code (Debug)"
     type        = "response"
     action      = "set"
-    source      = "geoip.region"
+    source      = "client.geo.region"
     destination = "http.X-Fastly-Region-Code"
   }
 
