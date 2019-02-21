@@ -86,6 +86,22 @@ resource "fastly_service_v1" "frontend-dev" {
     destination = "http.X-Fastly-Country-Code"
   }
 
+  header {
+    name        = "Region Code"
+    type        = "request"
+    action      = "set"
+    source      = "geoip.region"
+    destination = "http.X-Fastly-Region-Code"
+  }
+
+  header {
+    name        = "Region Code (Debug)"
+    type        = "response"
+    action      = "set"
+    source      = "geoip.region"
+    destination = "http.X-Fastly-Region-Code"
+  }
+
   request_setting {
     name      = "Force SSL"
     force_ssl = true
@@ -139,12 +155,6 @@ resource "fastly_service_v1" "frontend-dev" {
     name    = "ProjectPages - Handle Redirect"
     type    = "error"
     content = "${file("${path.module}/legacy_redirects_error.vcl")}"
-  }
-
-  snippet {
-    name    = "GeoIP - Set State Header"
-    type    = "deliver"
-    content = "${file("${path.root}/shared/state_deliver.vcl")}"
   }
 
   snippet {
