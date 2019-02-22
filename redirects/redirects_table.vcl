@@ -32,6 +32,7 @@ table redirects {
 
   # Phoenix:
   "phoenix-preview.dosomething.org": "https://www-preview.dosomething.org",
+  "www-dev.dosomething.org": "https://dev.dosomething.org",
 
   # Rogue:
   "rogue.dosomething.org": "https://activity.dosomething.org",
