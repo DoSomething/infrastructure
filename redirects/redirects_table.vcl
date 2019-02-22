@@ -31,7 +31,9 @@ table redirects {
   "profile.dosomething.org": "https://identity.dosomething.org",
 
   # Phoenix:
-  "phoenix-preview.dosomething.org": "https://www-preview.dosomething.org",
+  "phoenix-preview.dosomething.org": "https://preview.dosomething.org",
+  "www-preview.dosomething.org": "https://preview.dosomething.org",
+  "www-dev.dosomething.org": "https://dev.dosomething.org",
 
   # Rogue:
   "rogue.dosomething.org": "https://activity.dosomething.org",

@@ -22,10 +22,6 @@ resource "fastly_service_v1" "backends-dev" {
   }
 
   domain {
-    name = "${var.phoenix_domain}"
-  }
-
-  domain {
     name = "${var.rogue_domain}"
   }
 
@@ -39,18 +35,6 @@ resource "fastly_service_v1" "backends-dev" {
     type      = "RESPONSE"
     name      = "response-northstar-dev"
     statement = "req.http.host == \"${var.northstar_domain}\""
-  }
-
-  condition {
-    type      = "REQUEST"
-    name      = "backend-phoenix-dev"
-    statement = "req.http.host == \"${var.phoenix_domain}\""
-  }
-
-  condition {
-    type      = "RESPONSE"
-    name      = "response-phoenix-dev"
-    statement = "req.http.host == \"${var.phoenix_domain}\""
   }
 
   condition {
@@ -87,15 +71,6 @@ resource "fastly_service_v1" "backends-dev" {
     address           = "${var.northstar_backend}"
     name              = "${var.northstar_name}"
     request_condition = "backend-northstar-dev"
-    shield            = "iad-va-us"
-    auto_loadbalance  = false
-    port              = 443
-  }
-
-  backend {
-    address           = "${var.phoenix_backend}"
-    name              = "${var.phoenix_name}"
-    request_condition = "backend-phoenix-dev"
     shield            = "iad-va-us"
     auto_loadbalance  = false
     port              = 443
@@ -194,14 +169,6 @@ resource "fastly_service_v1" "backends-dev" {
     port               = "${element(split(":", var.papertrail_destination), 1)}"
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "response-northstar-dev"
-  }
-
-  papertrail {
-    name               = "phoenix-dev"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-phoenix-dev"
   }
 
   papertrail {

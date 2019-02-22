@@ -67,8 +67,8 @@ module "phoenix_preview" {
 
   environment            = "production"
   name                   = "dosomething-phoenix-preview"
-  domain                 = "www-preview.dosomething.org"   # TODO: Just preview.dosomething.org!
-  web_size               = "Hobby"                         # TODO: Should this be Standard-1X?
+  domain                 = "preview.dosomething.org"
+  web_size               = "Standard-1x"
   pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 

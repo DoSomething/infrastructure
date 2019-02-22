@@ -8,7 +8,7 @@ resource "fastly_service_v1" "frontend-dev" {
   force_destroy = true
 
   domain {
-    name = "staging.dosomething.org"
+    name = "dev.dosomething.org"
   }
 
   condition {
@@ -29,8 +29,8 @@ resource "fastly_service_v1" "frontend-dev" {
     address           = "${var.ashes_backend}"
     name              = "ashes-staging"
     request_condition = "backend-ashes-dev"
-    ssl_cert_hostname = "staging.dosomething.org"
-    ssl_sni_hostname  = "staging.dosomething.org"
+    ssl_cert_hostname = "dev.dosomething.org"
+    ssl_sni_hostname  = "dev.dosomething.org"
     auto_loadbalance  = false
     use_ssl           = true
     port              = 443

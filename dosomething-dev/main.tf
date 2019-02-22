@@ -57,7 +57,7 @@ module "phoenix" {
 
   environment            = "development"
   name                   = "dosomething-phoenix-dev"
-  domain                 = "www-dev.dosomething.org"       # TODO: Just 'dev.dosomething.org'?
+  domain                 = "dev.dosomething.org"
   pipeline               = "${var.phoenix_pipeline}"
   papertrail_destination = "${var.papertrail_destination}"
 }
