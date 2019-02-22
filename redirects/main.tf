@@ -152,6 +152,10 @@ resource "fastly_service_v1" "redirects2" {
     name = "www-dev.dosomething.org"
   }
 
+  domain {
+    name = "www-preview.dosomething.org"
+  }
+
   # Note: Fastly requires at least one backend per service,
   # so our AWS HAProxy instance is included here.
   backend {
