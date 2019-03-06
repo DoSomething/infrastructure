@@ -254,14 +254,22 @@ resource "aws_db_parameter_group" "quasar-qa" {
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
   # Amount of RAM available for joins/sort queries per connection.
   # Based on 50 connections.
+  # Prev Setting is 20971, changing to see if helps with large sorts
   parameter {
     name  = "work_mem"
-    value = "20971"
+    value = "64000"
   }
 
   # Recommended to only allow SSL connections from clients.
   parameter {
     name  = "rds.force_ssl"
+    value = "1"
+  }
+
+  # Based on https://amplitude.engineering/how-a-single-postgresql-config-change-improved-slow-query-performance-by-50x-85593b8991b0
+  # Attempting to set random_page_cost to 1 since we use gp2 SSD in RDS. This is a testing setting.
+  parameter {
+    name  = "random_page_cost"
     value = "1"
   }
 }
