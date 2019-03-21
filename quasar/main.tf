@@ -264,6 +264,24 @@ resource "aws_db_parameter_group" "quasar-qa" {
     name  = "rds.force_ssl"
     value = "1"
   }
+
+  # Only log queries with a duration longer than this to get slow queries.
+  parameter {
+    name  = "log_min_duration_statement"
+    value = "1000"
+  }
+
+  # Log duration of queries.
+  parameter {
+    name  = "log_duration"
+    value = "on"
+  }
+
+  # Temporarily only log slow queries.
+  parameter {
+    name  = "log_statement"
+    value = "none"
+  }
 }
 
 resource "aws_db_parameter_group" "quasar-prod" {
@@ -312,6 +330,24 @@ resource "aws_db_parameter_group" "quasar-prod" {
   parameter {
     name  = "rds.force_ssl"
     value = "1"
+  }
+
+  # Only log queries with a duration longer than this to get slow queries.
+  parameter {
+    name  = "log_min_duration_statement"
+    value = "1000"
+  }
+
+  # Log duration of queries.
+  parameter {
+    name  = "log_duration"
+    value = "on"
+  }
+
+  # Temporarily only log slow queries.
+  parameter {
+    name  = "log_statement"
+    value = "none"
   }
 }
 
