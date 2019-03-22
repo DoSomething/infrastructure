@@ -271,12 +271,6 @@ resource "aws_db_parameter_group" "quasar-qa" {
     value = "1000"
   }
 
-  # Log duration of queries.
-  parameter {
-    name  = "log_duration"
-    value = "on"
-  }
-
   # Temporarily only log slow queries.
   parameter {
     name  = "log_statement"
@@ -338,12 +332,6 @@ resource "aws_db_parameter_group" "quasar-prod" {
     value = "1000"
   }
 
-  # Log duration of queries.
-  parameter {
-    name  = "log_duration"
-    value = "on"
-  }
-
   # Temporarily only log slow queries.
   parameter {
     name  = "log_statement"
@@ -368,35 +356,37 @@ data "aws_ssm_parameter" "prod_password" {
 }
 
 resource "aws_db_instance" "quasar-qa" {
-  allocated_storage      = 1000
-  engine                 = "postgres"
-  engine_version         = "10.6"
-  instance_class         = "db.m5.2xlarge"
-  name                   = "quasar"
-  username               = "${data.aws_ssm_parameter.qa_username.value}"
-  password               = "${data.aws_ssm_parameter.qa_password.value}"
-  parameter_group_name   = "${aws_db_parameter_group.quasar-qa.id}"
-  vpc_security_group_ids = ["${aws_security_group.rds.id}"]
-  deletion_protection    = true
-  storage_encrypted      = true
-  copy_tags_to_snapshot  = true
-  monitoring_interval    = "10"
-  publicly_accessible    = true
+  allocated_storage               = 1000
+  engine                          = "postgres"
+  engine_version                  = "10.6"
+  instance_class                  = "db.m5.2xlarge"
+  name                            = "quasar"
+  username                        = "${data.aws_ssm_parameter.qa_username.value}"
+  password                        = "${data.aws_ssm_parameter.qa_password.value}"
+  parameter_group_name            = "${aws_db_parameter_group.quasar-qa.id}"
+  vpc_security_group_ids          = ["${aws_security_group.rds.id}"]
+  deletion_protection             = true
+  storage_encrypted               = true
+  copy_tags_to_snapshot           = true
+  monitoring_interval             = "10"
+  publicly_accessible             = true
+  enabled_cloudwatch_logs_exports = ["postgresql"]
 }
 
 resource "aws_db_instance" "quasar" {
-  allocated_storage      = 4000
-  engine                 = "postgres"
-  engine_version         = "10.6"
-  instance_class         = "db.m5.4xlarge"
-  name                   = "quasar_prod_warehouse"
-  username               = "${data.aws_ssm_parameter.prod_username.value}"
-  password               = "${data.aws_ssm_parameter.prod_password.value}"
-  parameter_group_name   = "${aws_db_parameter_group.quasar-prod.id}"
-  vpc_security_group_ids = ["${aws_security_group.rds.id}"]
-  deletion_protection    = true
-  storage_encrypted      = true
-  copy_tags_to_snapshot  = true
-  monitoring_interval    = "10"
-  publicly_accessible    = true
+  allocated_storage               = 4000
+  engine                          = "postgres"
+  engine_version                  = "10.6"
+  instance_class                  = "db.m5.4xlarge"
+  name                            = "quasar_prod_warehouse"
+  username                        = "${data.aws_ssm_parameter.prod_username.value}"
+  password                        = "${data.aws_ssm_parameter.prod_password.value}"
+  parameter_group_name            = "${aws_db_parameter_group.quasar-prod.id}"
+  vpc_security_group_ids          = ["${aws_security_group.rds.id}"]
+  deletion_protection             = true
+  storage_encrypted               = true
+  copy_tags_to_snapshot           = true
+  monitoring_interval             = "10"
+  publicly_accessible             = true
+  enabled_cloudwatch_logs_exports = ["postgresql"]
 }
