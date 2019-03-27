@@ -271,6 +271,12 @@ resource "aws_db_parameter_group" "quasar-qa" {
     value = "1000"
   }
 
+  # Only log slow queries.
+  parameter {
+    name  = "log_statement"
+    value = "none"
+  }
+
   # Testing turning synchronization off to see if improves performance
   parameter {
     name  = "synchronous_commit"
