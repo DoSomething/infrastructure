@@ -271,11 +271,27 @@ resource "aws_db_parameter_group" "quasar-qa" {
     value = "1000"
   }
 
-  # Temporarily only log slow queries.
+  # Only log slow queries.
   parameter {
     name  = "log_statement"
     value = "none"
   }
+
+  parameter {
+    name  = "log_duration"
+    value = "0"
+  }
+
+  # Testing turning synchronization off to see if improves performance
+  parameter {
+    name  = "synchronous_commit"
+    value = "off"
+  }
+
+  #   parameter {
+  #     name  = "random_page_cost"
+  #     value = "1"
+  #  }
 }
 
 resource "aws_db_parameter_group" "quasar-prod" {
@@ -336,6 +352,11 @@ resource "aws_db_parameter_group" "quasar-prod" {
   parameter {
     name  = "log_statement"
     value = "none"
+  }
+
+  parameter {
+    name  = "log_duration"
+    value = "0"
   }
 }
 
