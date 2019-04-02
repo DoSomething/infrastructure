@@ -25,8 +25,11 @@ data "aws_ssm_parameter" "contentful_phoenix_space_id" {
   name = "/contentful/phoenix/space-id"
 }
 
-data "aws_ssm_parameter" "contentful_phoenix_api_key" {
-  # TODO: How should we support the Preview API for preview.dosomething.org?
+data "aws_ssm_parameter" "contentful_phoenix_preview_api_key" {
+  name = "/${var.name}/contentful/preview-api-key"
+}
+
+data "aws_ssm_parameter" "contentful_phoenix_content_api_key" {
   name = "/${var.name}/contentful/content-api-key"
 }
 
@@ -35,7 +38,7 @@ data "aws_ssm_parameter" "contentful_gambit_space_id" {
   name = "/contentful/gambit/space-id"
 }
 
-data "aws_ssm_parameter" "contentful_gambit_api_key" {
+data "aws_ssm_parameter" "contentful_gambit_content_api_key" {
   name = "/${var.name}/contentful/gambit/content-api-key"
 }
 
@@ -85,11 +88,12 @@ module "app" {
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = "${data.aws_ssm_parameter.gambit_username.value}"
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = "${data.aws_ssm_parameter.gambit_password.value}"
 
-    PHOENIX_CONTENTFUL_SPACE_ID     = "${data.aws_ssm_parameter.contentful_phoenix_space_id.value}"
-    PHOENIX_CONTENTFUL_ACCESS_TOKEN = "${data.aws_ssm_parameter.contentful_phoenix_api_key.value}"
+    PHOENIX_CONTENTFUL_SPACE_ID      = "${data.aws_ssm_parameter.contentful_phoenix_space_id.value}"
+    PHOENIX_CONTENTFUL_ACCESS_TOKEN  = "${data.aws_ssm_parameter.contentful_phoenix_content_api_key.value}"
+    PHOENIX_CONTENTFUL_PREVIEW_TOKEN = "${data.aws_ssm_parameter.contentful_phoenix_preview_api_key.value}"
 
     GAMBIT_CONTENTFUL_SPACE_ID     = "${data.aws_ssm_parameter.contentful_gambit_space_id.value}"
-    GAMBIT_CONTENTFUL_ACCESS_TOKEN = "${data.aws_ssm_parameter.contentful_gambit_api_key.value}"
+    GAMBIT_CONTENTFUL_ACCESS_TOKEN = "${data.aws_ssm_parameter.contentful_gambit_content_api_key.value}"
 
     ENGINE_API_KEY = "${data.aws_ssm_parameter.apollo_engine_api_key.value}"
   }
