@@ -55,7 +55,7 @@ data "aws_ssm_parameter" "apollo_engine_api_key" {
 }
 
 locals {
-  # Environment (e.g. 'dev' or 'DEV')
+  # Environment (e.g. 'dev' or 'DEV'). TODO: Update application to expect 'development'.
   env = "${var.environment == "development" ? "dev" : var.environment}"
   ENV = "${upper(local.env)}"
 
@@ -67,16 +67,13 @@ module "app" {
   source = "../../components/lambda_function"
 
   name    = "${var.name}"
+  handler = "main.handler"
   runtime = "nodejs8.10"
   logger  = "${var.logger}"
 
   config_vars = {
-    NODE_ENV = "production"
-
-    # TODO: Update application to expect 'development' here.
-    QUERY_ENV = "${local.env}"
-
-    # Use DynamoDB for caching:
+    NODE_ENV       = "production"
+    QUERY_ENV      = "${local.env}"
     CACHE_DRIVER   = "dynamodb"
     DYNAMODB_TABLE = "${module.cache.name}"
 
@@ -101,12 +98,20 @@ module "app" {
 }
 
 module "gateway" {
-  source = "../../components/api_gateway_proxy"
+  source = "../../components/api_gateway"
 
-  name                = "${var.name}"
-  function_arn        = "${module.app.arn}"
-  function_invoke_arn = "${module.app.invoke_arn}"
-  domain              = "${var.domain}"
+  name   = "${var.name}"
+  domain = "${var.domain}"
+
+  functions     = ["${module.app.arn}"]
+  root_function = "${module.app.invoke_arn}" # TODO: Is this right? Update docs if so.
+
+  routes = [
+    {
+      path     = "graphql"
+      function = "${module.app.invoke_arn}"
+    },
+  ]
 }
 
 module "cache" {

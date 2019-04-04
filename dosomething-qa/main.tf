@@ -30,7 +30,7 @@ module "fastly-backend" {
 }
 
 module "graphql" {
-  source = "../applications/graphql-beta"
+  source = "../applications/graphql"
 
   environment = "qa"
   name        = "dosomething-graphql-qa"
