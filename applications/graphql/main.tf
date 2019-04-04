@@ -97,6 +97,10 @@ module "app" {
   }
 }
 
+resource "random_string" "webhook_secret" {
+  length = 32
+}
+
 module "contentful_webhook" {
   source = "../../components/lambda_function"
 
@@ -110,6 +114,7 @@ module "contentful_webhook" {
     QUERY_ENV      = "${local.env}"
     CACHE_DRIVER   = "dynamodb"
     DYNAMODB_TABLE = "${module.cache.name}"
+    WEBHOOK_SECRET = "${random_string.webhook_secret.result}"
   }
 }
 
