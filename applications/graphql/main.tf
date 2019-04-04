@@ -97,19 +97,39 @@ module "app" {
   }
 }
 
+module "contentful_webhook" {
+  source = "../../components/lambda_function"
+
+  name    = "${var.name}-webhook"
+  handler = "webhook.handler"
+  runtime = "nodejs8.10"
+  logger  = "${var.logger}"
+
+  config_vars = {
+    NODE_ENV       = "production"
+    QUERY_ENV      = "${local.env}"
+    CACHE_DRIVER   = "dynamodb"
+    DYNAMODB_TABLE = "${module.cache.name}"
+  }
+}
+
 module "gateway" {
   source = "../../components/api_gateway"
 
   name   = "${var.name}"
   domain = "${var.domain}"
 
-  functions     = ["${module.app.arn}"]
+  functions     = ["${module.app.arn}", "${module.contentful_webhook.arn}"]
   root_function = "${module.app.invoke_arn}"
 
   routes = [
     {
       path     = "graphql"
       function = "${module.app.invoke_arn}"
+    },
+    {
+      path     = "contentful"
+      function = "${module.contentful_webhook.invoke_arn}"
     },
   ]
 }
