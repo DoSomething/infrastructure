@@ -3,8 +3,9 @@ variable "name" {
   description = "The application name."
 }
 
-variable "role" {
-  description = "The IAM role which should have access to this resource."
+variable "roles" {
+  description = "The IAM roles which should have access to this resource."
+  type        = "list"
 }
 
 resource "aws_dynamodb_table" "table" {
@@ -41,7 +42,8 @@ resource "aws_iam_policy" "dynamodb_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "dynamodb_policy" {
-  role       = "${var.role}"
+  count      = "${length(var.roles)}"
+  role       = "${var.roles[count.index]}"
   policy_arn = "${aws_iam_policy.dynamodb_policy.arn}"
 }
 

@@ -143,8 +143,8 @@ module "gateway" {
 module "cache" {
   source = "../../components/dynamodb_cache"
 
-  name = "${var.name}-cache"
-  role = "${module.app.lambda_role}"
+  name  = "${var.name}-cache"
+  roles = ["${module.app.lambda_role}", "${module.contentful_webhook.lambda_role}"]
 }
 
 output "backend" {
