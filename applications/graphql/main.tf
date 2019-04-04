@@ -128,6 +128,7 @@ module "gateway" {
       function = "${module.app.invoke_arn}"
     },
     {
+      method   = "POST"
       path     = "contentful"
       function = "${module.contentful_webhook.invoke_arn}"
     },
