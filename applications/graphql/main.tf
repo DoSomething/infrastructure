@@ -124,8 +124,11 @@ module "gateway" {
   name   = "${var.name}"
   domain = "${var.domain}"
 
-  functions     = ["${module.app.arn}", "${module.contentful_webhook.arn}"]
-  root_function = "${module.app.invoke_arn}"
+  functions_count = 2
+  functions       = ["${module.app.arn}", "${module.contentful_webhook.arn}"]
+  root_function   = "${module.app.invoke_arn}"
+
+  routes_count = 2
 
   routes = [
     {
