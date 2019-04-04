@@ -18,7 +18,7 @@ module "gateway" {
   functions           = ["${module.app.arn}"]
 
   # The root function (required) responds to `/` requests:
-  root_function        = "${module.app.arn}"
+  root_function        = "${module.app.invoke_arn}"
   # root_method        = "ANY" (optional)
   # root_authorization = "NONE" (optional, set to 'CUSTOM' for custom authorizer)
   # root_authorizer_id = "${module.authorizer.invoke_arn}" (optional, if 'CUSTOM')
