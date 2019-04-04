@@ -88,6 +88,10 @@ resource "aws_api_gateway_deployment" "deployment" {
 
   rest_api_id = "${aws_api_gateway_rest_api.gateway.id}"
   stage_name  = "default"
+
+  # HACK: We need to re-trigger a deployment if the routes for this API Gateway
+  # change. We can do so by modifying the stage description. <https://git.io/fjLs3>
+  stage_description = "Hash: ${md5(jsonencode(var.routes))}"
 }
 
 # Verify that the count matches the list <https://git.io/fjLYC>
