@@ -104,7 +104,7 @@ module "gateway" {
   domain = "${var.domain}"
 
   functions     = ["${module.app.arn}"]
-  root_function = "${module.app.arn}"
+  root_function = "${module.app.invoke_arn}" # TODO: Is this right? Update docs if so.
 
   routes = [
     {
