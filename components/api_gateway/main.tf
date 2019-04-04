@@ -41,8 +41,8 @@ SH
 
   # Re-run this check if the inputted variables change:
   triggers {
-    topic_arns_count_computed = "${length(var.routes)}"
-    topic_arns_count_provided = "${var.routes_count}"
+    routes_count_computed = "${length(var.routes)}"
+    routes_count_provided = "${var.routes_count}"
   }
 }
 
@@ -103,8 +103,8 @@ SH
 
   # Re-run this check if the inputted variables change:
   triggers {
-    topic_arns_count_computed = "${length(var.functions)}"
-    topic_arns_count_provided = "${var.functions_count}"
+    functions_count_computed = "${length(var.functions)}"
+    functions_count_provided = "${var.functions_count}"
   }
 }
 
