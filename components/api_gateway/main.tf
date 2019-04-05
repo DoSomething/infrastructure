@@ -90,8 +90,16 @@ resource "aws_api_gateway_deployment" "deployment" {
   stage_name  = "default"
 
   # HACK: We need to re-trigger a deployment if the routes for this API Gateway
-  # change. We can do so by modifying the stage description. <https://git.io/fjLs3>
-  # stage_description = "Hash: ${md5(jsonencode(var.routes))}"
+  # change. We can do so by updating a stage variable. <https://git.io/fjLs3>
+  variables {
+    release = "${md5(jsonencode(var.routes))}"
+  }
+
+  # This avoids "active stage" errors from trying to delete an
+  # active deployment without having a new one to replace it:
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Verify that the count matches the list <https://git.io/fjLYC>
