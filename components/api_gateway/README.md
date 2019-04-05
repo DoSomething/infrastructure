@@ -15,6 +15,7 @@ module "gateway" {
   name                = "hello-serverless"
   
   # The functions this gateway interacts with:
+  functions_count     = 1 # Make sure this matches the number of elements in 'functions', below!
   functions           = ["${module.app.arn}"]
 
   # The root function (required) responds to `/` requests:
@@ -25,6 +26,7 @@ module "gateway" {
 
   # Any other routes can be defined in this list, with each route
   # expressed as a map of { path, function, method, authorization }
+  routes_count = 1   # Make sure this matches the number of elements in 'routes', below!
   routes = [
     {
       path            = "{proxy+}"
@@ -45,7 +47,10 @@ module "gateway" {
 
   name                = "hello-serverless"
   functions           = ["${module.app.arn}"]
+  functions_count     = 1
   root_function       = "${module.app.arn}"
+
+  routes_count = 1
 
   routes = [
     {

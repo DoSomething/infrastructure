@@ -97,19 +97,48 @@ module "app" {
   }
 }
 
+resource "random_string" "webhook_secret" {
+  length = 32
+}
+
+module "contentful_webhook" {
+  source = "../../components/lambda_function"
+
+  name    = "${var.name}-webhook"
+  handler = "webhook.handler"
+  runtime = "nodejs8.10"
+  logger  = "${var.logger}"
+
+  config_vars = {
+    NODE_ENV       = "production"
+    QUERY_ENV      = "${local.env}"
+    CACHE_DRIVER   = "dynamodb"
+    DYNAMODB_TABLE = "${module.cache.name}"
+    WEBHOOK_SECRET = "${random_string.webhook_secret.result}"
+  }
+}
+
 module "gateway" {
   source = "../../components/api_gateway"
 
   name   = "${var.name}"
   domain = "${var.domain}"
 
-  functions     = ["${module.app.arn}"]
-  root_function = "${module.app.invoke_arn}"
+  functions_count = 2
+  functions       = ["${module.app.arn}", "${module.contentful_webhook.arn}"]
+  root_function   = "${module.app.invoke_arn}"
+
+  routes_count = 2
 
   routes = [
     {
       path     = "graphql"
       function = "${module.app.invoke_arn}"
+    },
+    {
+      method   = "POST"
+      path     = "contentful"
+      function = "${module.contentful_webhook.invoke_arn}"
     },
   ]
 }
@@ -117,8 +146,8 @@ module "gateway" {
 module "cache" {
   source = "../../components/dynamodb_cache"
 
-  name = "${var.name}-cache"
-  role = "${module.app.lambda_role}"
+  name  = "${var.name}-cache"
+  roles = ["${module.app.lambda_role}", "${module.contentful_webhook.lambda_role}"]
 }
 
 output "backend" {

@@ -3,6 +3,10 @@ variable "name" {
   description = "The application name."
 }
 
+variable "functions_count" {
+  # Temporary hack to work around Terraform 0.11 limitation. <https://git.io/fjLYC>
+}
+
 variable "functions" {
   description = "The functions that this gateway is allowed to invoke."
   type        = "list"
@@ -33,6 +37,10 @@ variable "routes" {
   description = "A list of routes this gateway can respond to."
 
   default = []
+}
+
+variable "routes_count" {
+  # Temporary hack to work around Terraform 0.11 limitation. <https://git.io/fjLYC>
 }
 
 # Optional custom domain support:

@@ -28,9 +28,27 @@ resource "aws_api_gateway_integration" "lambda_root" {
   uri                     = "${var.root_function}"
 }
 
+# Verify that the count matches the list <https://git.io/fjLYC>
+resource "null_resource" "verify_routes_count" {
+  provisioner "local-exec" {
+    command = <<SH
+if [ ${var.routes_count} -ne ${length(var.routes)} ]; then
+echo "var.routes_count must match the actual length of var.routes";
+exit 1;
+fi
+SH
+  }
+
+  # Re-run this check if the inputted variables change:
+  triggers {
+    routes_count_computed = "${length(var.routes)}"
+    routes_count_provided = "${var.routes_count}"
+  }
+}
+
 # Configure any other routes, specified in the `routes` variable.
 resource "aws_api_gateway_resource" "resource" {
-  count = "${length(var.routes)}"
+  count = "${var.routes_count}"
 
   rest_api_id = "${aws_api_gateway_rest_api.gateway.id}"
   parent_id   = "${aws_api_gateway_rest_api.gateway.root_resource_id}"
@@ -38,7 +56,7 @@ resource "aws_api_gateway_resource" "resource" {
 }
 
 resource "aws_api_gateway_method" "method" {
-  count = "${length(var.routes)}"
+  count = "${var.routes_count}"
 
   rest_api_id   = "${aws_api_gateway_rest_api.gateway.id}"
   resource_id   = "${aws_api_gateway_resource.resource.*.id[count.index]}"
@@ -48,7 +66,7 @@ resource "aws_api_gateway_method" "method" {
 }
 
 resource "aws_api_gateway_integration" "integration" {
-  count = "${length(var.routes)}"
+  count = "${var.routes_count}"
 
   rest_api_id = "${aws_api_gateway_rest_api.gateway.id}"
   resource_id = "${aws_api_gateway_method.method.*.resource_id[count.index]}"
@@ -70,10 +88,40 @@ resource "aws_api_gateway_deployment" "deployment" {
 
   rest_api_id = "${aws_api_gateway_rest_api.gateway.id}"
   stage_name  = "default"
+
+  # HACK: We need to re-trigger a deployment if the routes for this API Gateway
+  # change. We can do so by updating a stage variable. <https://git.io/fjLs3>
+  variables {
+    release = "${md5(jsonencode(var.routes))}"
+  }
+
+  # This avoids "active stage" errors from trying to delete an
+  # active deployment without having a new one to replace it:
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Verify that the count matches the list <https://git.io/fjLYC>
+resource "null_resource" "verify_functions_count" {
+  provisioner "local-exec" {
+    command = <<SH
+if [ ${var.functions_count} -ne ${length(var.functions)} ]; then
+echo "var.functions_count must match the actual length of var.functions";
+exit 1;
+fi
+SH
+  }
+
+  # Re-run this check if the inputted variables change:
+  triggers {
+    functions_count_computed = "${length(var.functions)}"
+    functions_count_provided = "${var.functions_count}"
+  }
 }
 
 resource "aws_lambda_permission" "gateway_permission" {
-  count = "${length(var.functions)}"
+  count = "${var.functions_count}"
 
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
