@@ -10,6 +10,10 @@ variable "name" {
   description = "The application name."
 }
 
+resource "random_string" "importer_api_key" {
+  length = 32
+}
+
 # TODO: Use our 'heroku_app' module to configure more of this!
 resource "heroku_app" "app" {
   name   = "${var.name}"
@@ -20,7 +24,7 @@ resource "heroku_app" "app" {
   }
 
   config_vars = {
-    IMPORTER_API_KEY = "lalalala"
+    IMPORTER_API_KEY = "${random_string.importer_api_key.result}"
   }
 
   buildpacks = [
