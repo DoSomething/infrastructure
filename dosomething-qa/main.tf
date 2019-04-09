@@ -4,6 +4,12 @@ variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
+module "chompy" {
+  source = "../applications/chompy"
+
+  name = "dosomething-chompy-qa"
+}
+
 module "fastly-frontend" {
   source = "fastly-frontend"
 
