@@ -12,6 +12,24 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
+resource "aws_s3_bucket_object" "index" {
+  bucket = "${aws_s3_bucket.bucket.id}"
+  key    = "index.html"
+
+  # We hard-code this module's path (from the root) here to avoid an issue
+  # where ${path.module} marks this as "dirty" on different machines.
+  source = "applications/static/default.index.html"
+}
+
+resource "aws_s3_bucket_object" "error" {
+  bucket = "${aws_s3_bucket.bucket.id}"
+  key    = "error.html"
+
+  # We hard-code this module's path (from the root) here to avoid an issue
+  # where ${path.module} marks this as "dirty" on different machines.
+  source = "applications/static/default.error.html"
+}
+
 data "template_file" "public_bucket_policy" {
   # see: https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteAccessPermissionsReqd.html 
   template = "${file("${path.module}/bucket-policy.json.tpl")}"
