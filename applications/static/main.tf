@@ -13,8 +13,9 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 resource "aws_s3_bucket_object" "index" {
-  bucket = "${aws_s3_bucket.bucket.id}"
-  key    = "index.html"
+  bucket       = "${aws_s3_bucket.bucket.id}"
+  key          = "index.html"
+  content_type = "text/html"
 
   # We hard-code this module's path (from the root) here to avoid an issue
   # where ${path.module} marks this as "dirty" on different machines.
@@ -22,8 +23,9 @@ resource "aws_s3_bucket_object" "index" {
 }
 
 resource "aws_s3_bucket_object" "error" {
-  bucket = "${aws_s3_bucket.bucket.id}"
-  key    = "error.html"
+  bucket       = "${aws_s3_bucket.bucket.id}"
+  key          = "error.html"
+  content_type = "text/html"
 
   # We hard-code this module's path (from the root) here to avoid an issue
   # where ${path.module} marks this as "dirty" on different machines.
