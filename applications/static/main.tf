@@ -22,10 +22,10 @@ data "template_file" "public_bucket_policy" {
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = "${aws_s3_bucket.bucket.arn}"
+  bucket = "${aws_s3_bucket.bucket.id}"
   policy = "${data.template_file.public_bucket_policy.rendered}"
 }
 
 output "backend" {
-  value = "${aws_s3_bucket.bucket.bucket}.s3-website-${aws_s3_bucket.bucket.region}.amazonaws.com"
+  value = "${aws_s3_bucket.bucket.id}.s3-website-${aws_s3_bucket.bucket.region}.amazonaws.com"
 }
