@@ -10,6 +10,14 @@ resource "aws_s3_bucket" "bucket" {
     index_document = "index.html"
     error_document = "error.html"
   }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["https://*.dosomething.org", "http://*.test"]
+
+    # expose_headers  = ["ETag"]
+    # max_age_seconds = 3000
+  }
 }
 
 resource "aws_s3_bucket_object" "index" {
