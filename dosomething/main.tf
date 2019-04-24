@@ -4,6 +4,12 @@ variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
+module "assets" {
+  source = "../applications/static"
+
+  domain = "assets.dosomething.org"
+}
+
 module "chompy" {
   source = "../applications/chompy"
 
@@ -12,6 +18,9 @@ module "chompy" {
 
 module "fastly-frontend" {
   source = "fastly-frontend"
+
+  assets_domain  = "${module.assets.domain}"
+  assets_backend = "${module.assets.backend}"
 
   ashes_backend = "${module.ashes.backend}"
 
