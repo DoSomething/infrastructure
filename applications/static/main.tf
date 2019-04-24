@@ -13,10 +13,9 @@ resource "aws_s3_bucket" "bucket" {
 
   cors_rule {
     allowed_methods = ["GET"]
-    allowed_origins = ["https://*.dosomething.org", "http://*.test"]
 
-    # expose_headers  = ["ETag"]
-    # max_age_seconds = 3000
+    # Allow CORS requests from DS.org properties & local development apps.
+    allowed_origins = ["https://*.dosomething.org", "http://*.test"]
   }
 }
 
