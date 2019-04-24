@@ -1,3 +1,5 @@
+variable "assets_domain" {}
+variable "assets_backend" {}
 variable "ashes_backend" {}
 variable "phoenix_name" {}
 variable "phoenix_backend" {}
@@ -9,6 +11,16 @@ resource "fastly_service_v1" "frontend" {
 
   domain {
     name = "www.dosomething.org"
+  }
+
+  domain {
+    name = "${var.assets_domain}"
+  }
+
+  condition {
+    type      = "REQUEST"
+    name      = "backend-assets"
+    statement = "req.http.host == \"${var.assets_domain}\""
   }
 
   condition {
@@ -29,6 +41,13 @@ resource "fastly_service_v1" "frontend" {
     name              = "timed synthetic takeover"
     request_condition = "timed-synthetic-takeover"
     content           = "${file("${path.root}/shared/takeovers/election.html")}"
+  }
+
+  backend {
+    name              = "s3-assets.dosomething.org"
+    address           = "${var.assets_backend}"
+    request_condition = "backend-assets"
+    port              = 80
   }
 
   backend {

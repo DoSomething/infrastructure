@@ -53,6 +53,10 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   policy = "${data.template_file.public_bucket_policy.rendered}"
 }
 
+output "domain" {
+  value = "${var.domain}"
+}
+
 output "backend" {
   value = "${aws_s3_bucket.bucket.id}.s3-website-${aws_s3_bucket.bucket.region}.amazonaws.com"
 }
