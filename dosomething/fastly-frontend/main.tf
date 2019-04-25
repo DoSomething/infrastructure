@@ -24,8 +24,8 @@ resource "fastly_service_v1" "frontend" {
   }
 
   condition {
-    type      = "RESPONSE"
-    name      = "response-assets"
+    type      = "CACHE"
+    name      = "cache-assets"
     statement = "req.http.host == \"${var.assets_domain}\""
   }
 
@@ -106,8 +106,8 @@ resource "fastly_service_v1" "frontend" {
   # expected 'Vary' if it isn't already set on the response.
   header {
     name               = "S3 Vary"
-    type               = "response"
-    response_condition = "response-assets"
+    type               = "cache"
+    response_condition = "cache-assets"
     action             = "set"
     destination        = "http.Vary"
     source             = "\"Origin, Access-Control-Request-Headers, Access-Control-Request-Method\""
