@@ -24,6 +24,12 @@ resource "fastly_service_v1" "frontend" {
   }
 
   condition {
+    type      = "RESPONSE"
+    name      = "response-assets"
+    statement = "req.http.host == \"${var.assets_domain}\""
+  }
+
+  condition {
     type = "REQUEST"
     name = "backend-ashes"
 
@@ -93,6 +99,19 @@ resource "fastly_service_v1" "frontend" {
       "text/plain",
       "text/xml",
     ]
+  }
+
+  # The S3 backend only returns a 'Vary' header if a request has a CORS header on it, which
+  # means we may accidentally cache a CORS-less response for everyone. This rule adds the
+  # expected 'Vary' if it isn't already set on the response.
+  header {
+    name               = "S3 Vary"
+    type               = "response"
+    response_condition = "response-assets"
+    action             = "set"
+    destination        = "http.Vary"
+    source             = "Origin, Access-Control-Request-Headers, Access-Control-Request-Method"
+    ignore_if_set      = true
   }
 
   header {
