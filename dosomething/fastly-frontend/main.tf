@@ -110,7 +110,7 @@ resource "fastly_service_v1" "frontend" {
     response_condition = "response-assets"
     action             = "set"
     destination        = "http.Vary"
-    source             = "Origin, Access-Control-Request-Headers, Access-Control-Request-Method"
+    source             = "\"Origin, Access-Control-Request-Headers, Access-Control-Request-Method\""
     ignore_if_set      = true
   }
 
