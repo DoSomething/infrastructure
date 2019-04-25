@@ -105,12 +105,12 @@ resource "fastly_service_v1" "frontend" {
   # means we may accidentally cache a CORS-less response for everyone. This rule adds the
   # expected 'Vary' if it isn't already set on the response.
   header {
-    name               = "S3 Vary"
-    type               = "cache"
-    response_condition = "cache-assets"
-    action             = "set"
-    destination        = "http.Vary"
-    source             = "\"Origin, Access-Control-Request-Headers, Access-Control-Request-Method\""
+    name            = "S3 Vary"
+    type            = "cache"
+    cache_condition = "cache-assets"
+    action          = "set"
+    destination     = "http.Vary"
+    source          = "\"Origin, Access-Control-Request-Headers, Access-Control-Request-Method\""
   }
 
   header {
