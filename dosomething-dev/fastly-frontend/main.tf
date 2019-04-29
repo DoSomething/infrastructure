@@ -43,6 +43,18 @@ resource "fastly_service_v1" "frontend-dev" {
     port             = 443
   }
 
+  condition {
+    type      = "REQUEST"
+    name      = "is-authenticated"
+    statement = "req.http.Cookie ~ \"laravel_session=\""
+  }
+
+  request_setting {
+    name              = "pass-authenticated"
+    request_condition = "is-authenticated"
+    action            = "pass"
+  }
+
   gzip {
     name = "gzip"
 
