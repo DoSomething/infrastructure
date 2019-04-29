@@ -44,9 +44,12 @@ resource "fastly_service_v1" "frontend-dev" {
   }
 
   condition {
-    type      = "REQUEST"
-    name      = "is-authenticated"
-    statement = "req.http.Cookie ~ \"laravel_session=\""
+    type = "REQUEST"
+    name = "is-authenticated"
+
+    # We want exclude logged-in users from Fastly caching (since their responses will 
+    # likely include user-specific content) but still cache static assets at the edge.
+    statement = "req.http.Cookie ~ \"laravel_session=\" && req.url !~ \"\\.(css|js|woff|otf|ttf|svg)(\\?.*)?$\""
   }
 
   request_setting {
