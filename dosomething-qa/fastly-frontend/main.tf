@@ -61,6 +61,21 @@ resource "fastly_service_v1" "frontend-qa" {
     port             = 443
   }
 
+  condition {
+    type = "REQUEST"
+    name = "is-authenticated"
+
+    # We want exclude logged-in users from Fastly caching (since their responses will 
+    # likely include user-specific content) but still cache static assets at the edge.
+    statement = "req.http.Cookie ~ \"laravel_session=\" && req.url !~ \"\\.(css|js|woff|otf|ttf|svg)(\\?.*)?$\""
+  }
+
+  request_setting {
+    name              = "pass-authenticated"
+    request_condition = "is-authenticated"
+    action            = "pass"
+  }
+
   gzip {
     name = "gzip"
 
