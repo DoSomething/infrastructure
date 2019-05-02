@@ -519,6 +519,7 @@ resource "aws_db_instance" "quasar-qa" {
   engine                          = "postgres"
   engine_version                  = "11.1"
   instance_class                  = "db.m5.2xlarge"
+  allow_major_version_upgrade     = true
   name                            = "quasar"
   username                        = "${data.aws_ssm_parameter.qa_username.value}"
   password                        = "${data.aws_ssm_parameter.qa_password.value}"
@@ -530,6 +531,7 @@ resource "aws_db_instance" "quasar-qa" {
   monitoring_interval             = "10"
   publicly_accessible             = true
   enabled_cloudwatch_logs_exports = ["postgresql"]
+  apply_immediately               = true
 }
 
 resource "aws_db_instance" "quasar" {
