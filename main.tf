@@ -81,6 +81,12 @@ provider "random" {
   version = "~> 2.0"
 }
 
+# Finally, we use the 'null' provider for some hacks, like
+# running a shell script when a resource changes.
+provider "null" {
+  version = "~> 2.1"
+}
+
 # ----------------------------------------------------
 
 # We separate our infrastructure into modules for
