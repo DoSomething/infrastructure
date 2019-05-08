@@ -20,17 +20,14 @@ variable "papertrail_destination_fastly" {}
 # ----------------------------------------------------
 
 # We store our Terraform state (what the whole system
-# currently looks like) in a private S3 bucket, and use
-# a DynamoDB table to "lock" the system so only one
-# person can make changes at a time.
+# currently looks like) in Terraform Enterprise.
 terraform {
-  backend "s3" {
-    bucket         = "dosomething-infrastructure-state"
-    dynamodb_table = "dosomething-infrastructure-locks"
-    key            = "terraform.tfstate"
-    region         = "us-east-1"
-    profile        = "terraform"
-    encrypt        = true
+  backend "remote" {
+    organization = "dosomething"
+
+    workspaces {
+      name = "infrastructure"
+    }
   }
 }
 
