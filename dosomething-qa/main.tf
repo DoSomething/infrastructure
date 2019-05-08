@@ -13,8 +13,6 @@ module "chompy" {
 module "fastly-frontend" {
   source = "fastly-frontend"
 
-  ashes_backend = "${module.ashes.backend}"
-
   phoenix_name    = "${module.phoenix.name}"
   phoenix_backend = "${module.phoenix.backend}"
 

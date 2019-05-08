@@ -1,4 +1,3 @@
-variable "ashes_backend" {}
 variable "phoenix_name" {}
 variable "phoenix_backend" {}
 variable "papertrail_destination" {}
@@ -9,14 +8,6 @@ resource "fastly_service_v1" "frontend-qa" {
 
   domain {
     name = "qa.dosomething.org"
-  }
-
-  condition {
-    type = "REQUEST"
-    name = "backend-ashes-qa"
-
-    # See 'ashes_recv.vcl' for where this is set.
-    statement = "req.http.X-Fastly-Backend == \"ashes\""
   }
 
   condition {
@@ -41,17 +32,6 @@ resource "fastly_service_v1" "frontend-qa" {
     name              = "timed synthetic takeover"
     request_condition = "timed-synthetic-takeover"
     content           = "${file("${path.root}/shared/takeovers/election.html")}"
-  }
-
-  backend {
-    address           = "${var.ashes_backend}"
-    name              = "ashes-qa"
-    request_condition = "backend-ashes-qa"
-    ssl_cert_hostname = "qa.dosomething.org"
-    ssl_sni_hostname  = "qa.dosomething.org"
-    auto_loadbalance  = false
-    use_ssl           = true
-    port              = 443
   }
 
   backend {
@@ -138,12 +118,6 @@ resource "fastly_service_v1" "frontend-qa" {
   request_setting {
     name      = "Force SSL"
     force_ssl = true
-  }
-
-  snippet {
-    name    = "Frontend - Ashes Routing"
-    type    = "recv"
-    content = "${file("${path.module}/ashes_recv.vcl")}"
   }
 
   snippet {

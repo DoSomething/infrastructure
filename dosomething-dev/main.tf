@@ -10,8 +10,6 @@ module "fastly-frontend" {
   phoenix_name    = "${module.phoenix.name}"
   phoenix_backend = "${module.phoenix.backend}"
 
-  ashes_backend = "${module.ashes.backend}"
-
   papertrail_destination = "${var.papertrail_destination_fastly}"
 }
 
