@@ -10,17 +10,25 @@ Install [Terraform](https://www.terraform.io) 0.11.x, [Landscape](https://github
 brew install awscli terraform terraform_landscape
 ```
 
-Next, configure secrets (see the "Terraform credentials" secure note in Lastpass) & install dependencies:
+Create a [Terraform.io account](https://app.terraform.io/account/new) with your work email & ask for an invite to our organization in [#dev-infrastructure](https://dosomething.slack.com/messages/C03T8SDJJ/). Don't forget to [enable two-factor auth](https://www.terraform.io/docs/enterprise/users-teams-organizations/2fa.html)!  Then, [create a user API token](https://www.terraform.io/docs/enterprise/users-teams-organizations/users.html#api-tokens) and place it in your `~/.terraformrc` file, like so:
+
+```hcl
+credentials "app.terraform.io" {
+  token = "xxxxxx.atlasv1.zzzzzzzzzzzzz"
+}
+```
+
+Next, configure provider secrets (see the "Terraform credentials" secure note in Lastpass) & install dependencies:
 
 ```sh
 # Configure 'terraform' AWS profile:
 aws configure --profile terraform
 
-# Connect to S3 backend & install dependencies:
-make init
-
 # Configure other backends w/ secrets from Lastpass:
 vi terraform.tfvars
+
+# Connect to remote backend & install dependencies:
+make init
 ```
 
 ## Usage
