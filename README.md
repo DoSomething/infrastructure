@@ -4,7 +4,7 @@ This is DoSomething.org's infrastructure as code, built using [Terraform](https:
 
 ## Installation
 
-Install [Terraform](https://www.terraform.io) 0.11.x, [Landscape](https://github.com/coinbase/terraform-landscape), and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
+Install [Terraform](https://www.terraform.io) 0.11.3, [Landscape](https://github.com/coinbase/terraform-landscape), and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
 
 ```sh
 brew install awscli terraform terraform_landscape
