@@ -531,7 +531,6 @@ resource "aws_db_instance" "quasar-qa" {
   monitoring_interval             = "10"
   publicly_accessible             = true
   enabled_cloudwatch_logs_exports = ["postgresql"]
-  apply_immediately               = true
 }
 
 resource "aws_db_instance" "quasar" {
