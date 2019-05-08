@@ -1,4 +1,3 @@
-variable "ashes_backend" {}
 variable "phoenix_name" {}
 variable "phoenix_backend" {}
 variable "papertrail_destination" {}
@@ -12,28 +11,9 @@ resource "fastly_service_v1" "frontend-dev" {
   }
 
   condition {
-    type = "REQUEST"
-    name = "backend-ashes-dev"
-
-    # See 'ashes_recv.vcl' for where this is set.
-    statement = "req.http.X-Fastly-Backend == \"ashes\""
-  }
-
-  condition {
     type      = "REQUEST"
     name      = "path-robots"
     statement = "req.url.basename == \"robots.txt\""
-  }
-
-  backend {
-    address           = "${var.ashes_backend}"
-    name              = "ashes-staging"
-    request_condition = "backend-ashes-dev"
-    ssl_cert_hostname = "dev.dosomething.org"
-    ssl_sni_hostname  = "dev.dosomething.org"
-    auto_loadbalance  = false
-    use_ssl           = true
-    port              = 443
   }
 
   backend {
@@ -126,12 +106,6 @@ resource "fastly_service_v1" "frontend-dev" {
     name              = "robots.txt deny"
     content           = "${file("${path.root}/shared/deny-robots.txt")}"
     request_condition = "path-robots"
-  }
-
-  snippet {
-    name    = "Frontend - Ashes Routing"
-    type    = "recv"
-    content = "${file("${path.module}/ashes_recv.vcl")}"
   }
 
   snippet {
