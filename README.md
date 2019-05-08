@@ -43,7 +43,7 @@ Next, **make a plan** to find out how it will affect the current state of the sy
 make plan
 ```
 
-Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the state in S3, and ensure nobody else makes any changes until you're done:
+Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the remote state, and ensure nobody else makes any changes until you're done:
 
 ```sh
 make apply
