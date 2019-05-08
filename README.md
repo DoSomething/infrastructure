@@ -4,23 +4,31 @@ This is DoSomething.org's infrastructure as code, built using [Terraform](https:
 
 ## Installation
 
-Install [Terraform](https://www.terraform.io) 0.11.x, [Landscape](https://github.com/coinbase/terraform-landscape), and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
+Install [Terraform](https://www.terraform.io) 0.11.3, [Landscape](https://github.com/coinbase/terraform-landscape), and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
 
 ```sh
 brew install awscli terraform terraform_landscape
 ```
 
-Next, configure secrets (see the "Terraform credentials" secure note in Lastpass) & install dependencies:
+Create a [Terraform.io account](https://app.terraform.io/account/new) with your work email & ask for an invite to our organization in [#dev-infrastructure](https://dosomething.slack.com/messages/C03T8SDJJ/). Don't forget to [enable two-factor auth](https://www.terraform.io/docs/enterprise/users-teams-organizations/2fa.html)!  Then, [create a user API token](https://www.terraform.io/docs/enterprise/users-teams-organizations/users.html#api-tokens) and place it in your `~/.terraformrc` file, like so:
+
+```hcl
+credentials "app.terraform.io" {
+  token = "xxxxxx.atlasv1.zzzzzzzzzzzzz"
+}
+```
+
+Next, configure provider secrets (see the "Terraform credentials" secure note in Lastpass) & install dependencies:
 
 ```sh
 # Configure 'terraform' AWS profile:
 aws configure --profile terraform
 
-# Connect to S3 backend & install dependencies:
-make init
-
 # Configure other backends w/ secrets from Lastpass:
 vi terraform.tfvars
+
+# Connect to remote backend & install dependencies:
+make init
 ```
 
 ## Usage
@@ -35,7 +43,7 @@ Next, **make a plan** to find out how it will affect the current state of the sy
 make plan
 ```
 
-Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the state in S3, and ensure nobody else makes any changes until you're done:
+Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the remote state, and ensure nobody else makes any changes until you're done:
 
 ```sh
 make apply
