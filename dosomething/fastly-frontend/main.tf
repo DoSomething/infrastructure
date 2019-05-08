@@ -1,6 +1,5 @@
 variable "assets_domain" {}
 variable "assets_backend" {}
-variable "ashes_backend" {}
 variable "phoenix_name" {}
 variable "phoenix_backend" {}
 variable "papertrail_destination" {}
@@ -30,14 +29,6 @@ resource "fastly_service_v1" "frontend" {
   }
 
   condition {
-    type = "REQUEST"
-    name = "backend-ashes"
-
-    # See 'ashes_recv.vcl' for where this is set.
-    statement = "req.http.X-Fastly-Backend == \"ashes\""
-  }
-
-  condition {
     type      = "REQUEST"
     name      = "timed-synthetic-takeover"
     statement = "req.http.X-Timed-Synthetic-Response == \"true\""
@@ -54,17 +45,6 @@ resource "fastly_service_v1" "frontend" {
     address           = "${var.assets_backend}"
     request_condition = "backend-assets"
     port              = 80
-  }
-
-  backend {
-    address           = "${var.ashes_backend}"
-    name              = "ashes"
-    request_condition = "backend-ashes"
-    ssl_cert_hostname = "www.dosomething.org"
-    ssl_sni_hostname  = "www.dosomething.org"
-    auto_loadbalance  = false
-    use_ssl           = true
-    port              = 443
   }
 
   backend {
@@ -163,12 +143,6 @@ resource "fastly_service_v1" "frontend" {
   request_setting {
     name      = "Force SSL"
     force_ssl = true
-  }
-
-  snippet {
-    name    = "Frontend - Ashes Routing"
-    type    = "recv"
-    content = "${file("${path.module}/ashes_recv.vcl")}"
   }
 
   snippet {
