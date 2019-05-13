@@ -519,10 +519,11 @@ resource "aws_db_instance" "quasar-qa" {
   engine                          = "postgres"
   engine_version                  = "11.1"
   instance_class                  = "db.m5.2xlarge"
+  allow_major_version_upgrade     = true
   name                            = "quasar"
   username                        = "${data.aws_ssm_parameter.qa_username.value}"
   password                        = "${data.aws_ssm_parameter.qa_password.value}"
-  parameter_group_name            = "${aws_db_parameter_group.quasar-qa.id}"
+  parameter_group_name            = "${aws_db_parameter_group.quasar-qa-pg11.id}"
   vpc_security_group_ids          = ["${aws_security_group.rds.id}"]
   deletion_protection             = true
   storage_encrypted               = true
