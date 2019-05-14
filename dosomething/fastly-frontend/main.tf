@@ -225,6 +225,6 @@ resource "fastly_service_v1" "frontend" {
     name    = "www.dosomething.org"
     address = "${element(split(":", var.papertrail_destination), 0)}"
     port    = "${element(split(":", var.papertrail_destination), 1)}"
-    format  = "%t '%r' status=%>s backend=%{X-Origin-Name}o user-agent=\"%{User-Agent}i\" microseconds=%D"
+    format  = "%t '%r' status=%>s backend=%{X-Origin-Name}o ip=\"%a\" user-agent=\"%{User-Agent}i\" microseconds=%D"
   }
 }
