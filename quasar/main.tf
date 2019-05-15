@@ -517,7 +517,7 @@ data "aws_ssm_parameter" "prod_password" {
 resource "aws_db_instance" "quasar-qa" {
   allocated_storage               = 1000
   engine                          = "postgres"
-  engine_version                  = "11.1"
+  engine_version                  = "11.2"
   instance_class                  = "db.m5.2xlarge"
   allow_major_version_upgrade     = true
   name                            = "quasar"
