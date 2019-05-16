@@ -530,7 +530,7 @@ resource "aws_db_instance" "quasar-qa" {
   copy_tags_to_snapshot           = true
   monitoring_interval             = "10"
   publicly_accessible             = true
-  enabled_cloudwatch_logs_exports = ["postgresql"]
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
 
 resource "aws_db_instance" "quasar" {
