@@ -61,8 +61,10 @@ module "app" {
   pipeline    = "${var.pipeline}"
   environment = "${var.environment}"
 
-  web_size  = "${var.environment == "production" ? "Standard-2x" : "Standard-1x"}"
-  web_scale = "${var.environment == "production" ? 2 : 1}"
+  web_size = "${var.environment == "production" ? "Standard-2x" : "Standard-1x"}"
+
+  # We use autoscaling in production, so don't try to manage dynos there.
+  ignore_web = "${var.environment == "production"}"
 
   config_vars = "${merge(
     module.database.config_vars,
