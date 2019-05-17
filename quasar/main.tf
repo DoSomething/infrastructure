@@ -536,17 +536,17 @@ resource "aws_db_instance" "quasar-qa" {
 resource "aws_db_instance" "quasar" {
   allocated_storage               = 4000
   engine                          = "postgres"
-  engine_version                  = "10.6"
+  engine_version                  = "11.2"
   instance_class                  = "db.m5.4xlarge"
   name                            = "quasar_prod_warehouse"
   username                        = "${data.aws_ssm_parameter.prod_username.value}"
   password                        = "${data.aws_ssm_parameter.prod_password.value}"
-  parameter_group_name            = "${aws_db_parameter_group.quasar-prod.id}"
+  parameter_group_name            = "${aws_db_parameter_group.quasar-prod-pg11.id}"
   vpc_security_group_ids          = ["${aws_security_group.rds.id}"]
   deletion_protection             = true
   storage_encrypted               = true
   copy_tags_to_snapshot           = true
   monitoring_interval             = "10"
   publicly_accessible             = true
-  enabled_cloudwatch_logs_exports = ["postgresql"]
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
