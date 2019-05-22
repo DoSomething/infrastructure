@@ -5,10 +5,7 @@ variable "rogue_name" {}
 variable "rogue_domain" {}
 variable "rogue_backend" {}
 variable "papertrail_destination" {}
-
-variable "papertrail_log_format" {
-  default = "%t '%r' status=%>s cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%{User-Agent}i\" service=%{time.elapsed.msec}Vms"
-}
+variable "papertrail_log_format" {}
 
 resource "fastly_service_v1" "backends-qa" {
   name          = "Terraform: Backends (QA)"
