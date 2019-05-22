@@ -10,7 +10,7 @@ variable "rogue_backend" {}
 variable "papertrail_destination" {}
 
 variable "papertrail_log_format" {
-  default = "%t '%r' status=%>s cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o bytes=%b microseconds=%D"
+  default = "%t '%r' status=%>s cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%{User-Agent}i\" service=%{time.elapsed.msec}Vms"
 }
 
 resource "fastly_service_v1" "backends-dev" {
@@ -167,7 +167,7 @@ resource "fastly_service_v1" "backends-dev" {
     name               = "northstar-dev"
     address            = "${element(split(":", var.papertrail_destination), 0)}"
     port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
+    format             = "${var.papertrail_log_format}"
     response_condition = "response-northstar-dev"
   }
 

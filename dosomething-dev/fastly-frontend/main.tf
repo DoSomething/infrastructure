@@ -2,6 +2,10 @@ variable "phoenix_name" {}
 variable "phoenix_backend" {}
 variable "papertrail_destination" {}
 
+variable "papertrail_log_format" {
+  default = "%t '%r' status=%>s cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%{User-Agent}i\" service=%{time.elapsed.msec}Vms"
+}
+
 resource "fastly_service_v1" "frontend-dev" {
   name          = "Terraform: Frontend (Development)"
   force_destroy = true
@@ -174,6 +178,6 @@ resource "fastly_service_v1" "frontend-dev" {
     name    = "staging.dosomething.org"
     address = "${element(split(":", var.papertrail_destination), 0)}"
     port    = "${element(split(":", var.papertrail_destination), 1)}"
-    format  = "%t '%r' status=%>s backend=%{X-Origin-Name}o microseconds=%D"
+    format  = "${var.papertrail_log_format}"
   }
 }
