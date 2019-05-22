@@ -8,6 +8,6 @@ if (! beresp.http.X-Application-Name) {
   set var.application_name = regsub(beresp.backend.name, "^(.*)--", "");
 
   # Format header by our convention (e.g. "F_dosomething_phoenix" to "dosomething-phoenix"):
-  set beresp.http.X-Application-Name = regsub(regsub(var.application_name, "F_", ""), "_", "-");
+  set beresp.http.X-Application-Name = regsuball(regsub(var.application_name, "F_", ""), "_", "-");
 }
 
