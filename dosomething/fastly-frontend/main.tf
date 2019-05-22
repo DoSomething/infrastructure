@@ -3,6 +3,7 @@ variable "assets_backend" {}
 variable "phoenix_name" {}
 variable "phoenix_backend" {}
 variable "papertrail_destination" {}
+variable "papertrail_log_format" {}
 
 resource "fastly_service_v1" "frontend" {
   name          = "Terraform: Frontend"
@@ -222,9 +223,9 @@ resource "fastly_service_v1" "frontend" {
   }
 
   papertrail {
-    name    = "www.dosomething.org"
+    name    = "frontend"
     address = "${element(split(":", var.papertrail_destination), 0)}"
     port    = "${element(split(":", var.papertrail_destination), 1)}"
-    format  = "%t '%r' status=%>s backend=%{X-Origin-Name}o ip=\"%a\" user-agent=\"%{User-Agent}i\" microseconds=%D"
+    format  = "${var.papertrail_log_format}"
   }
 }

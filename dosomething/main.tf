@@ -4,6 +4,10 @@ variable "rogue_pipeline" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
+locals {
+  papertrail_log_format = "%t '%r' status=%>s app=%{X-Origin-Name}o cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%{User-Agent}i\" service=%{time.elapsed.msec}Vms"
+}
+
 module "assets" {
   source = "../applications/static"
 
@@ -26,6 +30,7 @@ module "fastly-frontend" {
   phoenix_backend = "${module.phoenix.backend}"
 
   papertrail_destination = "${var.papertrail_destination_fastly}"
+  papertrail_log_format  = "${local.papertrail_log_format}"
 }
 
 module "fastly-backend" {
@@ -44,6 +49,7 @@ module "fastly-backend" {
   rogue_backend = "${module.rogue.backend}"
 
   papertrail_destination = "${var.papertrail_destination_fastly}"
+  papertrail_log_format  = "${local.papertrail_log_format}"
 }
 
 module "graphql" {

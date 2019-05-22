@@ -5,10 +5,7 @@ variable "rogue_name" {}
 variable "rogue_domain" {}
 variable "rogue_backend" {}
 variable "papertrail_destination" {}
-
-variable "papertrail_log_format" {
-  default = "%t '%r' status=%>s cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o bytes=%b microseconds=%D"
-}
+variable "papertrail_log_format" {}
 
 resource "fastly_service_v1" "backends-qa" {
   name          = "Terraform: Backends (QA)"
@@ -161,18 +158,9 @@ resource "fastly_service_v1" "backends-qa" {
   }
 
   papertrail {
-    name               = "northstar-qa"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-northstar-qa"
-  }
-
-  papertrail {
-    name               = "rogue-qa"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-rogue-qa"
+    name    = "backend"
+    address = "${element(split(":", var.papertrail_destination), 0)}"
+    port    = "${element(split(":", var.papertrail_destination), 1)}"
+    format  = "${var.papertrail_log_format}"
   }
 }
