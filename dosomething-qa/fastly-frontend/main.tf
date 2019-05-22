@@ -198,7 +198,7 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   papertrail {
-    name    = "qa.dosomething.org"
+    name    = "frontend"
     address = "${element(split(":", var.papertrail_destination), 0)}"
     port    = "${element(split(":", var.papertrail_destination), 1)}"
     format  = "${var.papertrail_log_format}"
