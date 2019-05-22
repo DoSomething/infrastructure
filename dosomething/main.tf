@@ -5,7 +5,7 @@ variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
 locals {
-  papertrail_log_format = "%t '%r' status=%>s app=%{X-Origin-Name}o cache=%{X-Cache}o country=%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%{User-Agent}i\" service=%{time.elapsed.msec}Vms"
+  papertrail_log_format = "%t '%r' status=%>s app=%{X-Application-Name}o cache=\"%{X-Cache}o\" country=%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%{User-Agent}i\" service=%{time.elapsed.msec}Vms"
 }
 
 module "assets" {

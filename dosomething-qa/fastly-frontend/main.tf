@@ -180,7 +180,7 @@ resource "fastly_service_v1" "frontend-qa" {
   snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
-    content = "${file("${path.root}/shared/origin_name.vcl")}"
+    content = "${file("${path.root}/shared/app_name.vcl")}"
   }
 
   snippet {
