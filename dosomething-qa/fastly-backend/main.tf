@@ -158,18 +158,9 @@ resource "fastly_service_v1" "backends-qa" {
   }
 
   papertrail {
-    name               = "northstar-qa"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-northstar-qa"
-  }
-
-  papertrail {
-    name               = "rogue-qa"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-rogue-qa"
+    name    = "backend"
+    address = "${element(split(":", var.papertrail_destination), 0)}"
+    port    = "${element(split(":", var.papertrail_destination), 1)}"
+    format  = "${var.papertrail_log_format}"
   }
 }

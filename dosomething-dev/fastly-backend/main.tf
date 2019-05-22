@@ -161,18 +161,9 @@ resource "fastly_service_v1" "backends-dev" {
   }
 
   papertrail {
-    name               = "northstar-dev"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-northstar-dev"
-  }
-
-  papertrail {
-    name               = "rogue-dev"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
-    format             = "${var.papertrail_log_format}"
-    response_condition = "response-rogue-dev"
+    name    = "backend"
+    address = "${element(split(":", var.papertrail_destination), 0)}"
+    port    = "${element(split(":", var.papertrail_destination), 1)}"
+    format  = "${var.papertrail_log_format}"
   }
 }
