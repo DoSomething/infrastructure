@@ -10,7 +10,11 @@ variable "name" {
   description = "The application name."
 }
 
-resource "random_string" "importer_api_key" {
+resource "random_string" "callpower_api_key" {
+  length = 32
+}
+
+resource "random_string" "softedge_api_key" {
   length = 32
 }
 
@@ -24,8 +28,8 @@ resource "heroku_app" "app" {
   }
 
   config_vars = {
-    CALLPOWER_API_KEY = "${random_string.importer_api_key.result}"
-    SOFTEDGE_API_KEY = "${random_string.importer_api_key.result}"
+    CALLPOWER_API_KEY = "${random_string.callpower_api_key.result}"
+    SOFTEDGE_API_KEY = "${random_string.softedge_api_key.result}"
   }
 
   buildpacks = [
