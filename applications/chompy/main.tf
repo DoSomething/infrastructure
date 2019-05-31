@@ -29,7 +29,10 @@ resource "heroku_app" "app" {
 
   config_vars = {
     CALLPOWER_API_KEY = "${random_string.callpower_api_key.result}"
-    SOFTEDGE_API_KEY = "${random_string.softedge_api_key.result}"
+    SOFTEDGE_API_KEY  = "${random_string.softedge_api_key.result}"
+
+    # TODO: Remove this once DoSomething/chompy#93 is deployed. <https://git.io/fjEeg>
+    IMPORTER_API_KEY = "${random_string.callpower_api_key.result}"
   }
 
   buildpacks = [
