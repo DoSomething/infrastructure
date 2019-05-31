@@ -24,7 +24,8 @@ resource "heroku_app" "app" {
   }
 
   config_vars = {
-    IMPORTER_API_KEY = "${random_string.importer_api_key.result}"
+    CALLPOWER_API_KEY = "${random_string.importer_api_key.result}"
+    SOFTEDGE_API_KEY = "${random_string.importer_api_key.result}"
   }
 
   buildpacks = [
