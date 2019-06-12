@@ -496,6 +496,12 @@ resource "aws_db_parameter_group" "quasar-prod-pg11" {
     name  = "log_duration"
     value = "0"
   }
+
+  # Increase statement timeout for Fivetran Snowplow sync.
+  parameter {
+    name  = "statement_timeout"
+    value = ""
+  }
 }
 
 data "aws_ssm_parameter" "qa_username" {
