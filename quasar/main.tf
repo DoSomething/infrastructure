@@ -497,7 +497,7 @@ resource "aws_db_parameter_group" "quasar-prod-pg11" {
     value = "0"
   }
 
-  # Increase statement timeout for Fivetran Snowplow sync.
+  # Set to default value globally per https://git.io/fjghW.
   parameter {
     name  = "statement_timeout"
     value = "0"
