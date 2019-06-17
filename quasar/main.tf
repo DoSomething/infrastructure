@@ -496,6 +496,12 @@ resource "aws_db_parameter_group" "quasar-prod-pg11" {
     name  = "log_duration"
     value = "0"
   }
+
+  # Set to default value globally per https://git.io/fjghW.
+  parameter {
+    name  = "statement_timeout"
+    value = "0"
+  }
 }
 
 data "aws_ssm_parameter" "qa_username" {
