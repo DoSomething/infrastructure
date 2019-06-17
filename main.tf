@@ -37,7 +37,7 @@ terraform {
 # in front of (most of) our services & handles caching,
 # backend-routing, geolocation, redirects, etc.
 provider "fastly" {
-  version = "~> 0.4"
+  version = "~> 0.6"
   api_key = "${var.fastly_api_key}"
 }
 
@@ -47,7 +47,7 @@ provider "fastly" {
 # visibility & to make cross-cloud dependencies (like AWS
 # resources or Fastly backends) easier to hook up.
 provider "heroku" {
-  version = "~> 1.5"
+  version = "~> 2.0"
   email   = "${var.heroku_email}"
   api_key = "${var.heroku_api_key}"
 }
@@ -57,7 +57,7 @@ provider "heroku" {
 # some legacy servers on EC2. AWS credentials are stored
 # using the `aws` CLI (see installation instructions).
 provider "aws" {
-  version = "~> 1.56"
+  version = "~> 2.15"
   region  = "us-east-1"
   profile = "terraform"
 }
@@ -73,7 +73,7 @@ provider "aws" {
 # The template provider is used to generate files with
 # interpolated variables (like JSON or VCL).
 provider "template" {
-  version = "~> 1.0"
+  version = "~> 2.1"
 }
 
 # The random provider is used for secret generation.
