@@ -57,7 +57,7 @@ provider "heroku" {
 # some legacy servers on EC2. AWS credentials are stored
 # using the `aws` CLI (see installation instructions).
 provider "aws" {
-  version = "~> 1.56"
+  version = "~> 2.15"
   region  = "us-east-1"
   profile = "terraform"
 }
