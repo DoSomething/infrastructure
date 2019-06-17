@@ -73,7 +73,7 @@ provider "aws" {
 # The template provider is used to generate files with
 # interpolated variables (like JSON or VCL).
 provider "template" {
-  version = "~> 1.0"
+  version = "~> 2.1"
 }
 
 # The random provider is used for secret generation.
