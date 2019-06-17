@@ -147,7 +147,7 @@ resource "heroku_app" "app" {
     name = "dosomething"
   }
 
-  config_vars = ["${merge(local.config_vars[var.framework], var.config_vars)}"]
+  config_vars = "${merge(local.config_vars[var.framework], var.config_vars)}"
 
   buildpacks = "${local.buildpacks[var.framework]}"
 
