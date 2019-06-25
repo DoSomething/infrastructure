@@ -137,7 +137,7 @@ resource "aws_db_instance" "database" {
 
 # Configure a MySQL provider for this instance.
 provider "mysql" {
-  version  = "~> 1.5"
+  version  = "~> 1.6"
   endpoint = "${aws_db_instance.database.endpoint}"
   username = "${aws_db_instance.database.username}"
   password = "${aws_db_instance.database.password}"
