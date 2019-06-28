@@ -60,6 +60,7 @@ resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
   name            = "papertrail_forwarder"
   log_group_name  = "${aws_cloudwatch_log_group.log_group.name}"
   destination_arn = "${var.logger}"
+  distribution    = "ByLogStream"
 
   # Forward all log messages:
   filter_pattern = ""
