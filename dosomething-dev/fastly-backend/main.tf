@@ -137,24 +137,6 @@ resource "fastly_service_v1" "backends-dev" {
   }
 
   snippet {
-    name    = "GDPR - Redirects Table"
-    type    = "init"
-    content = "${file("${path.root}/shared/gdpr_init.vcl")}"
-  }
-
-  snippet {
-    name    = "GDPR - Trigger Redirect"
-    type    = "recv"
-    content = "${file("${path.root}/shared/gdpr_recv.vcl")}"
-  }
-
-  snippet {
-    name    = "GDPR - Handle Redirect"
-    type    = "error"
-    content = "${file("${path.root}/shared/gdpr_error.vcl")}"
-  }
-
-  snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = "${file("${path.root}/shared/app_name.vcl")}"
