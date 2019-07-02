@@ -59,7 +59,7 @@ resource "fastly_service_v1" "frontend" {
     type = "REQUEST"
     name = "is-authenticated"
 
-    # We want exclude logged-in users from Fastly caching (since their responses will 
+    # We want exclude logged-in users from Fastly caching (since their responses will
     # likely include user-specific content) but still cache static assets at the edge.
     statement = "req.http.Cookie ~ \"laravel_session=\" && req.url !~ \"\\.(css|js|woff|otf|ttf|svg)(\\?.*)?$\""
   }
@@ -182,24 +182,6 @@ resource "fastly_service_v1" "frontend" {
     name    = "ProjectPages - Handle Redirect"
     type    = "error"
     content = "${file("${path.module}/legacy_redirects_error.vcl")}"
-  }
-
-  snippet {
-    name    = "GDPR - Redirects Table"
-    type    = "init"
-    content = "${file("${path.root}/shared/gdpr_init.vcl")}"
-  }
-
-  snippet {
-    name    = "GDPR - Trigger Redirect"
-    type    = "recv"
-    content = "${file("${path.root}/shared/gdpr_recv.vcl")}"
-  }
-
-  snippet {
-    name    = "GDPR - Handle Redirect"
-    type    = "error"
-    content = "${file("${path.root}/shared/gdpr_error.vcl")}"
   }
 
   snippet {
