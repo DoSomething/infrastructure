@@ -37,7 +37,7 @@ terraform {
 # in front of (most of) our services & handles caching,
 # backend-routing, geolocation, redirects, etc.
 provider "fastly" {
-  version = "~> 0.6"
+  version = "~> 0.8"
   api_key = "${var.fastly_api_key}"
 }
 
