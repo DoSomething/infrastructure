@@ -29,99 +29,99 @@ variable "force_public" {
 }
 
 locals {
-  bucket_id     = "${var.replication ? join("", aws_s3_bucket.replicated_bucket.*.id) : join("", aws_s3_bucket.bucket.*.id)}"
-  bucket_region = "${var.replication ? join("", aws_s3_bucket.replicated_bucket.*.region) : join("", aws_s3_bucket.bucket.*.region)}"
-  bucket_arn    = "${var.replication ? join("", aws_s3_bucket.replicated_bucket.*.arn) : join("", aws_s3_bucket.bucket.*.arn)}"
+  bucket_id     = var.replication ? join("", aws_s3_bucket.replicated_bucket.*.id) : join("", aws_s3_bucket.bucket.*.id)
+  bucket_region = var.replication ? join("", aws_s3_bucket.replicated_bucket.*.region) : join("", aws_s3_bucket.bucket.*.region)
+  bucket_arn    = var.replication ? join("", aws_s3_bucket.replicated_bucket.*.arn) : join("", aws_s3_bucket.bucket.*.arn)
 }
 
 # Without 'replication' enabled:
 resource "aws_s3_bucket" "bucket" {
-  count  = "${var.replication ? 0 : 1}"
-  bucket = "${var.name}"
-  acl    = "${var.acl}"
+  count  = var.replication ? 0 : 1
+  bucket = var.name
+  acl    = var.acl
 
   versioning {
-    enabled = "${var.versioning}"
+    enabled = var.versioning
   }
 
-  tags {
-    Application = "${var.name}"
+  tags = {
+    Application = var.name
   }
 }
 
 # With 'replication' enabled:
 resource "random_id" "replication_rules" {
-  count       = "${var.replication ? 1 : 0}"
+  count       = var.replication ? 1 : 0
   byte_length = 32
 }
 
 # TODO: In Terraform 0.12, these two s3_bucket resources can
 # be combined with dynamic blocks! https://git.io/fhlmD
 resource "aws_s3_bucket" "replicated_bucket" {
-  count  = "${var.replication ? 1 : 0}"
-  bucket = "${var.name}"
-  acl    = "${var.acl}"
+  count  = var.replication ? 1 : 0
+  bucket = var.name
+  acl    = var.acl
 
   versioning {
     enabled = true # Versioning must be enabled for replication to work.
   }
 
   replication_configuration {
-    role = "${aws_iam_role.replication.arn}"
+    role = aws_iam_role.replication[0].arn
 
     rules {
-      id     = "${random_id.replication_rules.b64_std}"
+      id     = random_id.replication_rules[0].b64_std
       status = "Enabled"
 
       destination {
-        bucket        = "${aws_s3_bucket.backup.arn}"
+        bucket        = aws_s3_bucket.backup[0].arn
         storage_class = "STANDARD_IA"
       }
     }
   }
 
-  tags {
-    Application = "${var.name}"
+  tags = {
+    Application = var.name
   }
 }
 
 data "template_file" "s3_policy" {
-  template = "${file("${path.module}/iam-policy.json.tpl")}"
+  template = file("${path.module}/iam-policy.json.tpl")
 
-  vars {
-    bucket_arn = "${local.bucket_arn}"
+  vars = {
+    bucket_arn = local.bucket_arn
   }
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  count = "${var.force_public ? 1 : 0}"
+  count = var.force_public ? 1 : 0
 
-  bucket = "${local.bucket_id}"
-  policy = "${data.template_file.public_bucket_policy.rendered}"
+  bucket = local.bucket_id
+  policy = data.template_file.public_bucket_policy.rendered
 }
 
 data "template_file" "public_bucket_policy" {
-  template = "${file("${path.module}/public-bucket-policy.json.tpl")}"
+  template = file("${path.module}/public-bucket-policy.json.tpl")
 
-  vars {
-    bucket_arn = "${local.bucket_arn}"
+  vars = {
+    bucket_arn = local.bucket_arn
   }
 }
 
 resource "aws_iam_user_policy" "s3_policy" {
   name   = "${var.name}-s3"
-  user   = "${var.user}"
-  policy = "${data.template_file.s3_policy.rendered}"
+  user   = var.user
+  policy = data.template_file.s3_policy.rendered
 }
 
 resource "random_id" "lifecycle_rules" {
-  count       = "${var.replication ? 1 : 0}"
+  count       = var.replication ? 1 : 0
   byte_length = 32
 }
 
 resource "aws_s3_bucket" "backup" {
-  provider = "aws.west"
-  count    = "${var.replication ? 1 : 0}"
+  provider = aws.west
+  count    = var.replication ? 1 : 0
 
   bucket = "${var.name}-backup"
   region = "us-west-1"
@@ -131,7 +131,7 @@ resource "aws_s3_bucket" "backup" {
   }
 
   lifecycle_rule {
-    id      = "${random_id.lifecycle_rules.b64_std}"
+    id      = random_id.lifecycle_rules[0].b64_std
     enabled = true
 
     # Since we can't replicate directly into Glacier, set a lifecycle
@@ -144,46 +144,47 @@ resource "aws_s3_bucket" "backup" {
 }
 
 resource "aws_iam_role" "replication" {
-  count              = "${var.replication ? 1 : 0}"
+  count              = var.replication ? 1 : 0
   name               = "${var.name}-s3-replication"
-  assume_role_policy = "${file("${path.module}/replication-role.json")}"
+  assume_role_policy = file("${path.module}/replication-role.json")
 }
 
 data "template_file" "replication_policy" {
-  count    = "${var.replication ? 1 : 0}"
-  template = "${file("${path.module}/replication-policy.json.tpl")}"
+  count    = var.replication ? 1 : 0
+  template = file("${path.module}/replication-policy.json.tpl")
 
-  vars {
-    source_bucket_arn      = "${aws_s3_bucket.replicated_bucket.arn}"
-    destination_bucket_arn = "${aws_s3_bucket.backup.arn}"
+  vars = {
+    source_bucket_arn      = aws_s3_bucket.replicated_bucket[0].arn
+    destination_bucket_arn = aws_s3_bucket.backup[0].arn
   }
 }
 
 resource "aws_iam_policy" "replication" {
-  count  = "${var.replication ? 1 : 0}"
+  count  = var.replication ? 1 : 0
   name   = "${var.name}-replication-policy"
-  policy = "${data.template_file.replication_policy.rendered}"
+  policy = data.template_file.replication_policy[0].rendered
 }
 
 resource "aws_iam_policy_attachment" "replication" {
-  count      = "${var.replication ? 1 : 0}"
+  count      = var.replication ? 1 : 0
   name       = "${var.name}-replication-role-attachment"
-  roles      = ["${aws_iam_role.replication.name}"]
-  policy_arn = "${aws_iam_policy.replication.arn}"
+  roles      = [aws_iam_role.replication[0].name]
+  policy_arn = aws_iam_policy.replication[0].arn
 }
 
 output "id" {
-  value = "${local.bucket_id}"
+  value = local.bucket_id
 }
 
 output "region" {
-  value = "${local.bucket_region}"
+  value = local.bucket_region
 }
 
 output "config_vars" {
   value = {
     STORAGE_DRIVER = "s3"
-    S3_BUCKET      = "${local.bucket_id}"
-    S3_REGION      = "${local.bucket_region}"
+    S3_BUCKET      = local.bucket_id
+    S3_REGION      = local.bucket_region
   }
 }
+

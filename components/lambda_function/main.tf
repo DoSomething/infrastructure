@@ -1,18 +1,18 @@
 # Experimental: This module builds a serverless Lambda function.
 
 locals {
-  safe_name = "${replace(var.name, "-", "_")}"
+  safe_name = replace(var.name, "-", "_")
 }
 
 # The lambda function and API gateway:
 resource "aws_lambda_function" "function" {
-  function_name = "${var.name}"
-  handler       = "${var.handler}"
+  function_name = var.name
+  handler       = var.handler
 
-  s3_bucket = "${aws_s3_bucket.deploy.id}"
-  s3_key    = "${aws_s3_bucket_object.release.key}"
+  s3_bucket = aws_s3_bucket.deploy.id
+  s3_key    = aws_s3_bucket_object.release.key
 
-  runtime = "${var.runtime}"
+  runtime = var.runtime
 
   # We increase our function's memory allocation in order to
   # decrease worst-case cold start times. <https://git.io/fh1qE>
@@ -23,10 +23,10 @@ resource "aws_lambda_function" "function" {
   timeout = 15
 
   environment {
-    variables = "${var.config_vars}"
+    variables = var.config_vars
   }
 
-  role = "${aws_iam_role.lambda_exec.arn}"
+  role = aws_iam_role.lambda_exec.arn
 }
 
 # Deploy artifacts:
@@ -40,7 +40,7 @@ resource "aws_s3_bucket" "deploy" {
 }
 
 resource "aws_s3_bucket_object" "release" {
-  bucket = "${aws_s3_bucket.deploy.id}"
+  bucket = aws_s3_bucket.deploy.id
   key    = "release.zip"
 
   # We hard-code this module's path (from the root) here to avoid an issue
@@ -55,11 +55,11 @@ resource "aws_cloudwatch_log_group" "log_group" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
-  count = "${var.logger == "" ? 0 : 1}"
+  count = var.logger == "" ? 0 : 1
 
   name            = "papertrail_forwarder"
-  log_group_name  = "${aws_cloudwatch_log_group.log_group.name}"
-  destination_arn = "${var.logger}"
+  log_group_name  = aws_cloudwatch_log_group.log_group.name
+  destination_arn = var.logger
   distribution    = "ByLogStream"
 
   # Forward all log messages:
@@ -67,43 +67,43 @@ resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch" {
-  count = "${var.logger == "" ? 0 : 1}"
+  count = var.logger == "" ? 0 : 1
 
   action        = "lambda:InvokeFunction"
-  function_name = "${var.logger}"
+  function_name = var.logger
   principal     = "logs.us-east-1.amazonaws.com"
-  source_arn    = "${aws_cloudwatch_log_group.log_group.arn}"
+  source_arn    = aws_cloudwatch_log_group.log_group.arn
 }
 
 # This is the "execution" role that is used to run this function:
 resource "aws_iam_role" "lambda_exec" {
-  name = "${var.name}"
+  name = var.name
 
-  assume_role_policy = "${file("${path.module}/exec-policy.json")}"
+  assume_role_policy = file("${path.module}/exec-policy.json")
 }
 
 resource "aws_iam_policy" "lambda_logging" {
   name = "${var.name}-logging"
   path = "/"
 
-  policy = "${file("${path.module}/logging-policy.json")}"
+  policy = file("${path.module}/logging-policy.json")
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = "${aws_iam_role.lambda_exec.name}"
-  policy_arn = "${aws_iam_policy.lambda_logging.arn}"
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.lambda_logging.arn
 }
 
 resource "aws_iam_policy" "lambda_xray" {
   name = "${var.name}-xray"
   path = "/"
 
-  policy = "${file("${path.module}/xray-policy.json")}"
+  policy = file("${path.module}/xray-policy.json")
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_xray" {
-  role       = "${aws_iam_role.lambda_exec.name}"
-  policy_arn = "${aws_iam_policy.lambda_xray.arn}"
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.lambda_xray.arn
 }
 
 # This is the "deploy" role that is used to deploy new code:
@@ -112,31 +112,32 @@ resource "aws_iam_user" "lambda_deploy" {
 }
 
 resource "aws_iam_user_policy" "deploy_policy" {
-  user   = "${aws_iam_user.lambda_deploy.name}"
-  policy = "${data.template_file.deploy_policy.rendered}"
+  user   = aws_iam_user.lambda_deploy.name
+  policy = data.template_file.deploy_policy.rendered
 }
 
 data "template_file" "deploy_policy" {
-  template = "${file("${path.module}/deploy-policy.json.tpl")}"
+  template = file("${path.module}/deploy-policy.json.tpl")
 
-  vars {
-    deploy_bucket_arn   = "${aws_s3_bucket.deploy.arn}"
-    lambda_function_arn = "${aws_lambda_function.function.arn}"
+  vars = {
+    deploy_bucket_arn   = aws_s3_bucket.deploy.arn
+    lambda_function_arn = aws_lambda_function.function.arn
   }
 }
 
 resource "aws_iam_access_key" "deploy_key" {
-  user = "${aws_iam_user.lambda_deploy.name}"
+  user = aws_iam_user.lambda_deploy.name
 }
 
 resource "aws_ssm_parameter" "ssm_access_key" {
   name  = "/circleci/${var.name}/AWS_ACCESS_KEY_ID"
   type  = "SecureString"
-  value = "${aws_iam_access_key.deploy_key.id}"
+  value = aws_iam_access_key.deploy_key.id
 }
 
 resource "aws_ssm_parameter" "ssm_secret_key" {
   name  = "/circleci/${var.name}/AWS_SECRET_ACCESS_KEY"
   type  = "SecureString"
-  value = "${aws_iam_access_key.deploy_key.secret}"
+  value = aws_iam_access_key.deploy_key.secret
 }
+

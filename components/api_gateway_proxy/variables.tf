@@ -19,3 +19,4 @@ variable "domain" {
   # you can access a Lambda function at a URL returned in the `base_url` output.
   default = ""
 }
+

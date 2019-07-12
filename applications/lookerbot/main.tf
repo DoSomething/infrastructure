@@ -21,16 +21,17 @@ variable "name" {
 
 module "iam_user" {
   source = "../../components/iam_app_user"
-  name   = "${var.name}"
+  name   = var.name
 }
 
 module "storage" {
   source = "../../components/s3_bucket"
 
-  name = "${var.name}"
-  user = "${module.iam_user.name}"
+  name = var.name
+  user = module.iam_user.name
 }
 
 output "name" {
-  value = "${var.name}"
+  value = var.name
 }
+

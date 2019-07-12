@@ -65,18 +65,18 @@ locals {
   # Should backups be enabled, and if so for how long? We keep backups for
   # the maximum window (30 days) on production, and otherwise the minimum
   # amount in order to satisfy functionality.
-  base_backup_retention = "${var.is_dms_source ? 1 : 0}"
+  base_backup_retention = var.is_dms_source ? 1 : 0
 
-  backup_retention = "${var.environment == "production" ? 30 : local.base_backup_retention}"
+  backup_retention = var.environment == "production" ? 30 : local.base_backup_retention
 
   # The name of the database instance, in snake_case.
-  safe_name = "${replace(coalesce(var.database_name, var.name), "-", "_")}"
+  safe_name = replace(coalesce(var.database_name, var.name), "-", "_")
 }
 
 resource "aws_db_parameter_group" "replication_settings" {
-  count = "${var.is_dms_source ? 1 : 0}"
+  count = var.is_dms_source ? 1 : 0
 
-  name   = "${var.name}"
+  name   = var.name
   family = "mariadb10.3"
 
   # These two parameters are required for Amazon
@@ -100,47 +100,50 @@ resource "random_string" "master_password" {
 }
 
 resource "aws_db_instance" "database" {
-  identifier = "${var.name}"
-  name       = "${local.safe_name}"
+  identifier = var.name
+  name       = local.safe_name
 
   engine            = "mariadb"
-  engine_version    = "${var.engine_version}"
-  instance_class    = "${var.instance_class}"
-  allocated_storage = "${var.allocated_storage}"
-  multi_az          = "${var.multi_az}"
+  engine_version    = var.engine_version
+  instance_class    = var.instance_class
+  allocated_storage = var.allocated_storage
+  multi_az          = var.multi_az
 
-  parameter_group_name = "${coalesce(join("", aws_db_parameter_group.replication_settings.*.id), "default.mariadb10.3")}"
+  parameter_group_name = coalesce(
+    join("", aws_db_parameter_group.replication_settings.*.id),
+    "default.mariadb10.3",
+  )
 
   allow_major_version_upgrade = true
 
-  backup_retention_period = "${local.backup_retention}" # See above!
-  backup_window           = "06:00-07:00"               # 1-2am ET.
+  backup_retention_period = local.backup_retention # See above!
+  backup_window           = "06:00-07:00"          # 1-2am ET.
 
   enabled_cloudwatch_logs_exports = ["error", "slowquery"]
 
-  username = "${data.aws_ssm_parameter.database_username.value}"
-  password = "${random_string.master_password.result}"
+  username = data.aws_ssm_parameter.database_username.value
+  password = random_string.master_password.result
 
   # TODO: We should migrate our account out of EC2-Classic, create
   # a default VPC, and let resources be created in there by default!
-  db_subnet_group_name = "${var.subnet_group}"
+  db_subnet_group_name = var.subnet_group
 
-  vpc_security_group_ids = "${var.security_groups}"
+  vpc_security_group_ids = var.security_groups
   publicly_accessible    = true
 
-  deletion_protection = "${! var.deprecated}"
+  deletion_protection = false == var.deprecated
 
   tags = {
-    Application = "${var.name}"
+    Application = var.name
   }
 }
 
 # Configure a MySQL provider for this instance.
 provider "mysql" {
   version  = "~> 1.6"
-  endpoint = "${aws_db_instance.database.endpoint}"
-  username = "${aws_db_instance.database.username}"
-  password = "${aws_db_instance.database.password}"
+  endpoint = aws_db_instance.database.endpoint
+  username = aws_db_instance.database.username
+  password = aws_db_instance.database.password
 }
 
 resource "random_string" "app_password" {
@@ -151,17 +154,17 @@ resource "random_string" "app_password" {
 }
 
 resource "mysql_user" "app" {
-  count              = "${var.deprecated ? 0 : 1}"
-  user               = "${local.safe_name}"
+  count              = var.deprecated ? 0 : 1
+  user               = local.safe_name
   host               = "%"
-  plaintext_password = "${random_string.app_password.result}"
+  plaintext_password = random_string.app_password.result
 }
 
 resource "mysql_grant" "app" {
-  count    = "${var.deprecated ? 0 : 1}"
-  user     = "${mysql_user.app.user}"
-  host     = "${mysql_user.app.host}"
-  database = "${aws_db_instance.database.name}"
+  count    = var.deprecated ? 0 : 1
+  user     = mysql_user.app[0].user
+  host     = mysql_user.app[0].host
+  database = aws_db_instance.database.name
 
   # Grant minimum privileges necessary for table usage & running migrations.
   privileges = ["ALTER", "CREATE", "DELETE", "DROP", "INDEX", "INSERT", "SELECT", "UPDATE"]
@@ -175,17 +178,17 @@ resource "random_string" "readonly_password" {
 }
 
 resource "mysql_user" "readonly" {
-  count              = "${var.deprecated ? 0 : 1}"
+  count              = var.deprecated ? 0 : 1
   user               = "readonly"
   host               = "%"
-  plaintext_password = "${random_string.readonly_password.result}"
+  plaintext_password = random_string.readonly_password.result
 }
 
 resource "mysql_grant" "readonly" {
-  count      = "${var.deprecated ? 0 : 1}"
-  user       = "${mysql_user.readonly.user}"
-  host       = "${mysql_user.readonly.host}"
-  database   = "${aws_db_instance.database.name}"
+  count      = var.deprecated ? 0 : 1
+  user       = mysql_user.readonly[0].user
+  host       = mysql_user.readonly[0].host
+  database   = aws_db_instance.database.name
   privileges = ["SELECT"]
 }
 
@@ -197,54 +200,55 @@ resource "random_string" "fivetran_password" {
 }
 
 resource "mysql_user" "fivetran" {
-  count              = "${var.deprecated ? 0 : 1}"
+  count              = var.deprecated ? 0 : 1
   user               = "fivetran"
   host               = "%"
-  plaintext_password = "${random_string.fivetran_password.result}"
+  plaintext_password = random_string.fivetran_password.result
 }
 
 resource "mysql_grant" "fivetran_select" {
-  count      = "${var.deprecated ? 0 : 1}"
-  user       = "${mysql_user.fivetran.user}"
-  host       = "${mysql_user.fivetran.host}"
-  database   = "${aws_db_instance.database.name}"
+  count      = var.deprecated ? 0 : 1
+  user       = mysql_user.fivetran[0].user
+  host       = mysql_user.fivetran[0].host
+  database   = aws_db_instance.database.name
   privileges = ["SELECT"]
 }
 
 resource "mysql_grant" "fivetran_replication" {
-  count      = "${var.deprecated ? 0 : 1}"
-  user       = "${mysql_user.fivetran.user}"
-  host       = "${mysql_user.fivetran.host}"
+  count      = var.deprecated ? 0 : 1
+  user       = mysql_user.fivetran[0].user
+  host       = mysql_user.fivetran[0].host
   database   = "*"
   privileges = ["REPLICATION CLIENT", "REPLICATION SLAVE"]
 }
 
 output "address" {
-  value = "${aws_db_instance.database.address}"
+  value = aws_db_instance.database.address
 }
 
 output "port" {
-  value = "${aws_db_instance.database.port}"
+  value = aws_db_instance.database.port
 }
 
 output "name" {
-  value = "${aws_db_instance.database.name}"
+  value = aws_db_instance.database.name
 }
 
 output "username" {
-  value = "${join("", mysql_user.app.*.user)}"
+  value = join("", mysql_user.app.*.user)
 }
 
 output "password" {
-  value = "${random_string.app_password.result}"
+  value = random_string.app_password.result
 }
 
 output "config_vars" {
   value = {
-    DB_HOST     = "${aws_db_instance.database.address}"
-    DB_PORT     = "${aws_db_instance.database.port}"
-    DB_DATABASE = "${aws_db_instance.database.name}"
-    DB_USERNAME = "${join("", mysql_user.app.*.user)}"
-    DB_PASSWORD = "${random_string.app_password.result}"
+    DB_HOST     = aws_db_instance.database.address
+    DB_PORT     = aws_db_instance.database.port
+    DB_DATABASE = aws_db_instance.database.name
+    DB_USERNAME = join("", mysql_user.app.*.user)
+    DB_PASSWORD = random_string.app_password.result
   }
 }
+

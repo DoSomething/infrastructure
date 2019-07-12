@@ -10,5 +10,6 @@ resource "aws_instance" "haproxy_qa" {
 }
 
 output "backend" {
-  value = "${aws_instance.haproxy_qa.public_ip}"
+  value = aws_instance.haproxy_qa.public_ip
 }
+

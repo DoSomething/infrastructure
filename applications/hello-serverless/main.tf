@@ -7,14 +7,15 @@ module "app" {
 
   name    = "hello-serverless"
   runtime = "nodejs8.10"
-  logger  = "${var.logger}"
+  logger  = var.logger
 }
 
 module "gateway" {
   source = "../../components/api_gateway_proxy"
 
   name                = "hello-serverless"
-  function_arn        = "${module.app.arn}"
-  function_invoke_arn = "${module.app.invoke_arn}"
+  function_arn        = module.app.arn
+  function_invoke_arn = module.app.invoke_arn
   domain              = "hello-serverless.dosomething.org"
 }
+
