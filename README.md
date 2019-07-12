@@ -4,10 +4,10 @@ This is DoSomething.org's infrastructure as code, built using [Terraform](https:
 
 ## Installation
 
-Install [Terraform](https://www.terraform.io) 0.11.3, [Landscape](https://github.com/coinbase/terraform-landscape), and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
+Install [Terraform](https://www.terraform.io) 0.12 and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
 
 ```sh
-brew install awscli terraform terraform_landscape
+brew install awscli terraform
 ```
 
 Create a [Terraform.io account](https://app.terraform.io/account/new) with your work email & ask for an invite to our organization in [#dev-infrastructure](https://dosomething.slack.com/messages/C03T8SDJJ/). Don't forget to [enable two-factor auth](https://www.terraform.io/docs/enterprise/users-teams-organizations/2fa.html)!  Then, [create a user API token](https://www.terraform.io/docs/enterprise/users-teams-organizations/users.html#api-tokens) and place it in your `~/.terraformrc` file, like so:
