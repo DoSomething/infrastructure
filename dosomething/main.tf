@@ -1,3 +1,6 @@
+provider "aws" {}
+provider "aws" { alias = "west" }
+
 variable "northstar_pipeline" {}
 variable "phoenix_pipeline" {}
 variable "rogue_pipeline" {}
@@ -94,6 +97,17 @@ module "phoenix_preview" {
   use_contentful_preview_api = true
 }
 
+module "rogue_backup" {
+  source = "../components/s3_bucket"
+  providers = {
+    aws = "aws.west"
+  }
+
+  name       = "dosomething-rogue-backup"
+  versioning = true
+  archived   = true
+}
+
 module "rogue" {
   source = "../applications/rogue"
 
@@ -102,7 +116,9 @@ module "rogue" {
   domain                 = "activity.dosomething.org"
   pipeline               = var.rogue_pipeline
   papertrail_destination = var.papertrail_destination
+  backup_storage_bucket  = module.rogue_backup.bucket
 }
+
 
 module "papertrail" {
   source = "../applications/papertrail"

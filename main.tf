@@ -106,6 +106,11 @@ module "shared" {
 module "dosomething" {
   source = "./dosomething"
 
+  providers = {
+    aws      = aws
+    aws.west = aws.west
+  }
+
   northstar_pipeline            = module.shared.northstar_pipeline
   phoenix_pipeline              = module.shared.phoenix_pipeline
   rogue_pipeline                = module.shared.rogue_pipeline

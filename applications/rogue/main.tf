@@ -36,6 +36,11 @@ variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
 
+variable "backup_storage_bucket" {
+  description = "Optionally, the bucket to replicate storage backups to."
+  default     = null
+}
+
 variable "with_newrelic" {
   # See usage below for default fallback. <https://stackoverflow.com/a/51758050/811624>
   description = "Should New Relic be enabled for this app? Enabled by default on prod."
@@ -108,7 +113,8 @@ module "storage" {
   source      = "../../components/s3_bucket"
   name        = var.name
   user        = module.iam_user.name
-  replication = var.environment == "production"
+
+  replication_target = var.backup_storage_bucket
 
   # TODO: We should remove anywhere we depend on this behavior,
   # such as Rogue's admin inbox, and then disable this.
