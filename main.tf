@@ -47,7 +47,7 @@ provider "fastly" {
 # visibility & to make cross-cloud dependencies (like AWS
 # resources or Fastly backends) easier to hook up.
 provider "heroku" {
-  version = "~> 2.0"
+  version = "2.0.1"
   email   = var.heroku_email
   api_key = var.heroku_api_key
 }
