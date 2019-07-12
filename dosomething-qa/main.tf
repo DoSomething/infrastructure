@@ -15,7 +15,7 @@ module "chompy" {
 }
 
 module "fastly-frontend" {
-  source = "fastly-frontend"
+  source = "./fastly-frontend"
 
   phoenix_name    = "${module.phoenix.name}"
   phoenix_backend = "${module.phoenix.backend}"
@@ -25,7 +25,7 @@ module "fastly-frontend" {
 }
 
 module "fastly-backend" {
-  source = "fastly-backend"
+  source = "./fastly-backend"
 
   northstar_name    = "${module.northstar.name}"
   northstar_domain  = "${module.northstar.domain}"
@@ -87,5 +87,5 @@ module "papertrail" {
 }
 
 module "ashes" {
-  source = "ashes"
+  source = "./ashes"
 }

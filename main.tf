@@ -96,7 +96,7 @@ provider "null" {
 # Some top-level resources (like Heroku pipelines)
 # are shared among all environments:
 module "shared" {
-  source = "shared"
+  source = "./shared"
 }
 
 # Our core production applications live in the 
@@ -104,7 +104,7 @@ module "shared" {
 # traffic & data lives, so changes should be tested
 # in 'dosomething-qa' below first.
 module "dosomething" {
-  source = "dosomething"
+  source = "./dosomething"
 
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
   phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
@@ -117,7 +117,7 @@ module "dosomething" {
 # This is a (scaled down) copy of our production environment
 # where we test new changes before they affect real traffic.
 module "dosomething-qa" {
-  source = "dosomething-qa"
+  source = "./dosomething-qa"
 
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
   phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
@@ -130,7 +130,7 @@ module "dosomething-qa" {
 # stack. This is a (scaled down) copy of our production
 # environment with test & sandbox data.
 module "dosomething-dev" {
-  source = "dosomething-dev"
+  source = "./dosomething-dev"
 
   northstar_pipeline            = "${module.shared.northstar_pipeline}"
   phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
@@ -142,7 +142,7 @@ module "dosomething-dev" {
 # Longshot is DoSomething Strategic's white-labeled scholarship
 # application, used by clients like Footlocker and H&R Block.
 module "longshot" {
-  source = "longshot"
+  source = "./longshot"
 
   papertrail_prod_destination = "${var.papertrail_prod_destination}"
   papertrail_qa_destination   = "${var.papertrail_qa_destination}"
@@ -151,19 +151,19 @@ module "longshot" {
 # Quasar is DoSomething's Data Platform. This environment is
 # primarily used by Team Storm.
 module "quasar" {
-  source = "quasar"
+  source = "./quasar"
 }
 
 # The redirects property handles redirects for old domains, like
 # 'northstar-thor.dosomething.org' to 'identity-qa.dosomething.org'.
 module "redirects" {
-  source = "redirects"
+  source = "./redirects"
 }
 
 # The voter registration landing page <vote.dosomething.org>
 # is hosted on Instapage, with optional fallback to S3.
 module "vote" {
-  source = "vote"
+  source = "./vote"
 
   papertrail_destination = "${var.papertrail_destination_fastly}"
 }
@@ -171,5 +171,5 @@ module "vote" {
 # The voting application (https://git.io/fAsod) once hosted
 # voting campaigns like Celebs Gone Good & Athletes Gone Good.
 module "voting-app" {
-  source = "voting-app"
+  source = "./voting-app"
 }

@@ -21,7 +21,7 @@ module "chompy" {
 }
 
 module "fastly-frontend" {
-  source = "fastly-frontend"
+  source = "./fastly-frontend"
 
   assets_domain  = "${module.assets.domain}"
   assets_backend = "${module.assets.backend}"
@@ -34,7 +34,7 @@ module "fastly-frontend" {
 }
 
 module "fastly-backend" {
-  source = "fastly-backend"
+  source = "./fastly-backend"
 
   phoenix_preview_name    = "${module.phoenix_preview.name}"
   phoenix_preview_domain  = "${module.phoenix_preview.domain}"
@@ -113,5 +113,5 @@ module "papertrail" {
 }
 
 module "ashes" {
-  source = "ashes"
+  source = "./ashes"
 }
