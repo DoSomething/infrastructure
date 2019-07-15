@@ -104,6 +104,7 @@ module "rogue_backup" {
   }
 
   name       = "dosomething-rogue-backup"
+  acl        = "private"
   versioning = true
   archived   = true
 }
