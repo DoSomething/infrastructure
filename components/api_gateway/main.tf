@@ -112,14 +112,13 @@ echo "var.functions_count must match the actual length of var.functions";
 exit 1;
 fi
 SH
+  }
 
-}
-
-# Re-run this check if the inputted variables change:
-triggers = {
-functions_count_computed = length(var.functions)
-functions_count_provided = var.functions_count
-}
+  # Re-run this check if the inputted variables change:
+  triggers = {
+    functions_count_computed = length(var.functions)
+    functions_count_provided = var.functions_count
+  }
 }
 
 resource "aws_lambda_permission" "gateway_permission" {
