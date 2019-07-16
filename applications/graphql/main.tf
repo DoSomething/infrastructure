@@ -76,18 +76,23 @@ module "app" {
     QUERY_ENV      = local.env
     CACHE_DRIVER   = "dynamodb"
     DYNAMODB_TABLE = module.cache.name
+
     # TODO: Remove custom environment mapping once we have a 'dev' instance of Gambit.
     "${upper(local.gambit_env)}_GAMBIT_BASIC_AUTH_USER" = data.aws_ssm_parameter.gambit_username.value
     "${upper(local.gambit_env)}_GAMBIT_BASIC_AUTH_PASS" = data.aws_ssm_parameter.gambit_password.value
+
     # TODO: Remove Gambit Conversations vars once https://github.com/DoSomething/graphql/pull/57 is deployed everywhere.
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = data.aws_ssm_parameter.gambit_username.value
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = data.aws_ssm_parameter.gambit_password.value
-    PHOENIX_CONTENTFUL_SPACE_ID                            = data.aws_ssm_parameter.contentful_phoenix_space_id.value
-    PHOENIX_CONTENTFUL_ACCESS_TOKEN                        = data.aws_ssm_parameter.contentful_phoenix_content_api_key.value
-    PHOENIX_CONTENTFUL_PREVIEW_TOKEN                       = data.aws_ssm_parameter.contentful_phoenix_preview_api_key.value
-    GAMBIT_CONTENTFUL_SPACE_ID                             = data.aws_ssm_parameter.contentful_gambit_space_id.value
-    GAMBIT_CONTENTFUL_ACCESS_TOKEN                         = data.aws_ssm_parameter.contentful_gambit_content_api_key.value
-    ENGINE_API_KEY                                         = data.aws_ssm_parameter.apollo_engine_api_key.value
+
+    PHOENIX_CONTENTFUL_SPACE_ID      = data.aws_ssm_parameter.contentful_phoenix_space_id.value
+    PHOENIX_CONTENTFUL_ACCESS_TOKEN  = data.aws_ssm_parameter.contentful_phoenix_content_api_key.value
+    PHOENIX_CONTENTFUL_PREVIEW_TOKEN = data.aws_ssm_parameter.contentful_phoenix_preview_api_key.value
+
+    GAMBIT_CONTENTFUL_SPACE_ID     = data.aws_ssm_parameter.contentful_gambit_space_id.value
+    GAMBIT_CONTENTFUL_ACCESS_TOKEN = data.aws_ssm_parameter.contentful_gambit_content_api_key.value
+
+    ENGINE_API_KEY = data.aws_ssm_parameter.apollo_engine_api_key.value
   }
 }
 
