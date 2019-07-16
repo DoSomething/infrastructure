@@ -89,13 +89,13 @@ resource "aws_s3_bucket" "bucket" {
 
 # Glacier:
 resource "random_id" "lifecycle_rule_id" {
-  count = var.archived == true ? 1 : 0
+  count       = var.archived == true ? 1 : 0
   byte_length = 32
 }
 
 # IAM policy:
 data "template_file" "s3_policy" {
-  count = var.user != null ? 1 : 0
+  count    = var.user != null ? 1 : 0
   template = file("${path.module}/iam-policy.json.tpl")
 
   vars = {
@@ -134,14 +134,14 @@ resource "random_id" "replication_rules" {
 }
 
 resource "aws_iam_role" "replication" {
-  count       = var.replication_target != null ? 1 : 0
+  count = var.replication_target != null ? 1 : 0
 
   name               = "${var.name}-s3-replication"
   assume_role_policy = file("${path.module}/replication-role.json")
 }
 
 data "template_file" "replication_policy" {
-  count       = var.replication_target != null ? 1 : 0
+  count = var.replication_target != null ? 1 : 0
 
   template = file("${path.module}/replication-policy.json.tpl")
 
@@ -152,14 +152,14 @@ data "template_file" "replication_policy" {
 }
 
 resource "aws_iam_policy" "replication" {
-  count       = var.replication_target != null ? 1 : 0
+  count = var.replication_target != null ? 1 : 0
 
   name   = "${var.name}-replication-policy"
   policy = data.template_file.replication_policy[0].rendered
 }
 
 resource "aws_iam_policy_attachment" "replication" {
-  count       = var.replication_target != null ? 1 : 0
+  count = var.replication_target != null ? 1 : 0
 
   name       = "${var.name}-replication-role-attachment"
   roles      = [aws_iam_role.replication[0].name]

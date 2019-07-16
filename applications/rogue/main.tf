@@ -110,9 +110,9 @@ module "queue" {
 }
 
 module "storage" {
-  source      = "../../components/s3_bucket"
-  name        = var.name
-  user        = module.iam_user.name
+  source = "../../components/s3_bucket"
+  name   = var.name
+  user   = module.iam_user.name
 
   replication_target = var.backup_storage_bucket
 

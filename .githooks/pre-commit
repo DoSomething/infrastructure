@@ -1,0 +1,15 @@
+#! /bin/sh
+
+BOLD=$(tput bold)
+RED=$(tput setaf 1)
+RESET=$(tput sgr0)
+
+# Check if we need to run 'make format' before committing.
+echo "${BOLD}Checking Terraform code style...${RESET}"; \
+terraform fmt -recursive -check
+
+if [ $? -ne 0 ]; then
+	echo "\n${BOLD}${RED}✘ ERROR: The files listed above need formatting.${RESET}"; \
+	echo "${BOLD}  Run 'make format' before committing.${RESET}"; \
+  exit 1
+fi
