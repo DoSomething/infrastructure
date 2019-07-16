@@ -5,7 +5,7 @@ variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
 locals {
-  papertrail_log_format = "%t '%r' status=%>s app=%{X-Application-Name}o cache=\"%{X-Cache}o\" country=%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%{User-Agent}i\" service=%{time.elapsed.msec}Vms"
+  papertrail_log_format = "%t '%r' status=%>s app=%%{X-Application-Name}o cache=\"%%{X-Cache}o\" country=%%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%%{User-Agent}i\" service=%%{time.elapsed.msec}Vms"
 }
 
 module "chompy" {
@@ -15,28 +15,28 @@ module "chompy" {
 }
 
 module "fastly-frontend" {
-  source = "fastly-frontend"
+  source = "./fastly-frontend"
 
-  phoenix_name    = "${module.phoenix.name}"
-  phoenix_backend = "${module.phoenix.backend}"
+  phoenix_name    = module.phoenix.name
+  phoenix_backend = module.phoenix.backend
 
-  papertrail_destination = "${var.papertrail_destination_fastly}"
-  papertrail_log_format  = "${local.papertrail_log_format}"
+  papertrail_destination = var.papertrail_destination_fastly
+  papertrail_log_format  = local.papertrail_log_format
 }
 
 module "fastly-backend" {
-  source = "fastly-backend"
+  source = "./fastly-backend"
 
-  northstar_name    = "${module.northstar.name}"
-  northstar_domain  = "${module.northstar.domain}"
-  northstar_backend = "${module.northstar.backend}"
+  northstar_name    = module.northstar.name
+  northstar_domain  = module.northstar.domain
+  northstar_backend = module.northstar.backend
 
-  rogue_name    = "${module.rogue.name}"
-  rogue_domain  = "${module.rogue.domain}"
-  rogue_backend = "${module.rogue.backend}"
+  rogue_name    = module.rogue.name
+  rogue_domain  = module.rogue.domain
+  rogue_backend = module.rogue.backend
 
-  papertrail_destination = "${var.papertrail_destination_fastly}"
-  papertrail_log_format  = "${local.papertrail_log_format}"
+  papertrail_destination = var.papertrail_destination_fastly
+  papertrail_log_format  = local.papertrail_log_format
 }
 
 module "graphql" {
@@ -45,7 +45,7 @@ module "graphql" {
   environment = "qa"
   name        = "dosomething-graphql-qa"
   domain      = "graphql-qa.dosomething.org"
-  logger      = "${module.papertrail.arn}"
+  logger      = module.papertrail.arn
 }
 
 module "northstar" {
@@ -54,8 +54,8 @@ module "northstar" {
   environment            = "qa"
   name                   = "dosomething-northstar-qa"
   domain                 = "identity-qa.dosomething.org"
-  pipeline               = "${var.northstar_pipeline}"
-  papertrail_destination = "${var.papertrail_destination}"
+  pipeline               = var.northstar_pipeline
+  papertrail_destination = var.papertrail_destination
 }
 
 module "phoenix" {
@@ -64,8 +64,8 @@ module "phoenix" {
   environment            = "qa"
   name                   = "dosomething-phoenix-qa"
   domain                 = "qa.dosomething.org"
-  pipeline               = "${var.phoenix_pipeline}"
-  papertrail_destination = "${var.papertrail_destination}"
+  pipeline               = var.phoenix_pipeline
+  papertrail_destination = var.papertrail_destination
 }
 
 module "rogue" {
@@ -74,8 +74,8 @@ module "rogue" {
   environment            = "qa"
   name                   = "dosomething-rogue-qa"
   domain                 = "activity-qa.dosomething.org"
-  pipeline               = "${var.rogue_pipeline}"
-  papertrail_destination = "${var.papertrail_destination}"
+  pipeline               = var.rogue_pipeline
+  papertrail_destination = var.papertrail_destination
 }
 
 module "papertrail" {
@@ -83,9 +83,10 @@ module "papertrail" {
 
   environment            = "qa"
   name                   = "papertrail-qa"
-  papertrail_destination = "${var.papertrail_destination}"
+  papertrail_destination = var.papertrail_destination
 }
 
 module "ashes" {
-  source = "ashes"
+  source = "./ashes"
 }
+

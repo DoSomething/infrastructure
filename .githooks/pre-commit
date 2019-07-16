@@ -6,7 +6,7 @@ RESET=$(tput sgr0)
 
 # Check if we need to run 'make format' before committing.
 echo "${BOLD}Checking Terraform code style...${RESET}"; \
-terraform fmt --check
+terraform fmt -recursive -check
 
 if [ $? -ne 0 ]; then
 	echo "\n${BOLD}${RED}✘ ERROR: The files listed above need formatting.${RESET}"; \

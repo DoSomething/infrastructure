@@ -18,7 +18,7 @@ resource "aws_iam_user_policy" "circleci_policy" {
 data "template_file" "circleci_policy" {
   template = "${file("${path.module}/circleci-policy.json.tpl")}"
 
-  vars {
+  vars = {
     kms_arn    = "${data.aws_kms_alias.default.arn}"
     account_id = "${data.aws_caller_identity.current.account_id}"
   }

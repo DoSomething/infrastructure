@@ -13,16 +13,17 @@ variable "papertrail_destination" {
 module "forwarder" {
   source = "../../components/lambda_function"
 
-  name    = "${var.name}"
+  name    = var.name
   runtime = "nodejs8.10"
   handler = "handler.log"
 
   config_vars = {
-    PAPERTRAIL_HOST = "${element(split(":", var.papertrail_destination), 0)}"
-    PAPERTRAIL_PORT = "${element(split(":", var.papertrail_destination), 1)}"
+    PAPERTRAIL_HOST = element(split(":", var.papertrail_destination), 0)
+    PAPERTRAIL_PORT = element(split(":", var.papertrail_destination), 1)
   }
 }
 
 output "arn" {
-  value = "${module.forwarder.arn}"
+  value = module.forwarder.arn
 }
+

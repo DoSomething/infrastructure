@@ -73,11 +73,11 @@ locals {
   }
 
   contentful_config_vars = {
-    CONTENTFUL_ENVIRONMENT_ID  = "${local.contentful_environments[var.environment]}"
-    CONTENTFUL_SPACE_ID        = "${data.aws_ssm_parameter.contentful_space_id.value}"
-    CONTENTFUL_CONTENT_API_KEY = "${data.aws_ssm_parameter.contentful_api_key.value}"
-    CONTENTFUL_USE_PREVIEW_API = "${var.use_contentful_preview_api}"
-    CONTENTFUL_CACHE           = "${!var.use_contentful_preview_api}"
+    CONTENTFUL_ENVIRONMENT_ID  = local.contentful_environments[var.environment]
+    CONTENTFUL_SPACE_ID        = data.aws_ssm_parameter.contentful_space_id.value
+    CONTENTFUL_CONTENT_API_KEY = data.aws_ssm_parameter.contentful_api_key.value
+    CONTENTFUL_USE_PREVIEW_API = var.use_contentful_preview_api
+    CONTENTFUL_CACHE           = false == var.use_contentful_preview_api
   }
 }
 
@@ -85,43 +85,44 @@ module "app" {
   source = "../../components/heroku_app"
 
   framework   = "laravel"
-  name        = "${var.name}"
-  domain      = "${var.domain}"
-  pipeline    = "${var.pipeline}"
-  environment = "${var.environment}"
+  name        = var.name
+  domain      = var.domain
+  pipeline    = var.pipeline
+  environment = var.environment
 
-  config_vars = "${merge(
-    module.database.config_vars,
-    local.contentful_config_vars
-  )}"
+  config_vars = merge(module.database.config_vars, local.contentful_config_vars)
 
-  web_size = "${coalesce(var.web_size, var.environment == "production" ? "Performance-M" : "Hobby")}"
+  web_size = coalesce(
+    var.web_size,
+    var.environment == "production" ? "Performance-M" : "Hobby",
+  )
 
   queue_scale = 0
 
   with_redis = true
-  redis_type = "${var.environment == "production" ? "premium-1" : "hobby-dev"}"
+  redis_type = var.environment == "production" ? "premium-1" : "hobby-dev"
 
-  papertrail_destination = "${var.papertrail_destination}"
-  with_newrelic          = "${coalesce(var.with_newrelic, var.environment == "production")}"
+  papertrail_destination = var.papertrail_destination
+  with_newrelic          = coalesce(var.with_newrelic, var.environment == "production")
 }
 
 module "database" {
   source = "../../components/mariadb_instance"
 
-  name           = "${var.name}"
-  environment    = "${var.environment}"
-  instance_class = "${var.environment == "production" ? "db.t2.medium" : "db.t2.micro"}"
+  name           = var.name
+  environment    = var.environment
+  instance_class = var.environment == "production" ? "db.t2.medium" : "db.t2.micro"
 }
 
 output "name" {
-  value = "${var.name}"
+  value = var.name
 }
 
 output "domain" {
-  value = "${var.domain}"
+  value = var.domain
 }
 
 output "backend" {
-  value = "${module.app.backend}"
+  value = module.app.backend
 }
+

@@ -21,7 +21,7 @@ plan: ## See how your changes would affect our infrastructure if applied.
 	@# First, quickly re-initialize for new modules or plugins.
 	@terraform init --backend=false
 	@# We use Landscape to make the diff easier to read.
-	@terraform plan | landscape
+	@terraform plan
 
 
 apply: ## Update infrastructure to match your Terraform config.

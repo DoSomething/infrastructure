@@ -36,6 +36,11 @@ variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
 
+variable "backup_storage_bucket" {
+  description = "Optionally, the bucket to replicate storage backups to."
+  default     = null
+}
+
 variable "with_newrelic" {
   # See usage below for default fallback. <https://stackoverflow.com/a/51758050/811624>
   description = "Should New Relic be enabled for this app? Enabled by default on prod."
@@ -45,10 +50,10 @@ variable "with_newrelic" {
 locals {
   # TODO: Remove these once application is updated to use new vars.
   legacy_config_vars = {
-    S3_KEY                = "${module.iam_user.config_vars["AWS_ACCESS_KEY"]}"
-    S3_SECRET             = "${module.iam_user.config_vars["AWS_SECRET_KEY"]}"
-    SQS_ACCESS_KEY_ID     = "${module.iam_user.config_vars["AWS_ACCESS_KEY"]}"
-    SQS_SECRET_ACCESS_KEY = "${module.iam_user.config_vars["AWS_SECRET_KEY"]}"
+    S3_KEY                = module.iam_user.config_vars["AWS_ACCESS_KEY"]
+    S3_SECRET             = module.iam_user.config_vars["AWS_SECRET_KEY"]
+    SQS_ACCESS_KEY_ID     = module.iam_user.config_vars["AWS_ACCESS_KEY"]
+    SQS_SECRET_ACCESS_KEY = module.iam_user.config_vars["AWS_SECRET_KEY"]
   }
 }
 
@@ -56,59 +61,60 @@ module "app" {
   source = "../../components/heroku_app"
 
   framework   = "laravel"
-  name        = "${var.name}"
-  domain      = "${var.domain}"
-  pipeline    = "${var.pipeline}"
-  environment = "${var.environment}"
+  name        = var.name
+  domain      = var.domain
+  pipeline    = var.pipeline
+  environment = var.environment
 
-  web_size = "${var.environment == "production" ? "Standard-2x" : "Standard-1x"}"
+  web_size = var.environment == "production" ? "Standard-2x" : "Standard-1x"
 
   # We use autoscaling in production, so don't try to manage dynos there.
-  ignore_web = "${var.environment == "production"}"
+  ignore_web = var.environment == "production"
 
-  config_vars = "${merge(
+  config_vars = merge(
     module.database.config_vars,
     module.queue.config_vars,
     module.iam_user.config_vars,
     module.storage.config_vars,
     local.legacy_config_vars,
-  )}"
+  )
 
   # We don't run a queue process on development right now. @TODO: Should we?
-  queue_scale = "${var.environment == "development" ? 0 : 1}"
+  queue_scale = var.environment == "development" ? 0 : 1
 
   with_redis = true
 
-  papertrail_destination = "${var.papertrail_destination}"
-  with_newrelic          = "${coalesce(var.with_newrelic, var.environment == "production")}"
+  papertrail_destination = var.papertrail_destination
+  with_newrelic          = coalesce(var.with_newrelic, var.environment == "production")
 }
 
 module "database" {
   source = "../../components/mariadb_instance"
 
-  name           = "${var.name}"
-  environment    = "${var.environment}"
-  instance_class = "${var.environment == "production" ? "db.m4.large" : "db.t2.medium"}"
-  multi_az       = "${var.environment == "production"}"
+  name           = var.name
+  environment    = var.environment
+  instance_class = var.environment == "production" ? "db.m4.large" : "db.t2.medium"
+  multi_az       = var.environment == "production"
   is_dms_source  = true
 }
 
 module "iam_user" {
   source = "../../components/iam_app_user"
-  name   = "${var.name}"
+  name   = var.name
 }
 
 module "queue" {
   source = "../../components/sqs_queue"
-  name   = "${var.name}"
-  user   = "${module.iam_user.name}"
+  name   = var.name
+  user   = module.iam_user.name
 }
 
 module "storage" {
-  source      = "../../components/s3_bucket"
-  name        = "${var.name}"
-  user        = "${module.iam_user.name}"
-  replication = "${var.environment == "production"}"
+  source = "../../components/s3_bucket"
+  name   = var.name
+  user   = module.iam_user.name
+
+  replication_target = var.backup_storage_bucket
 
   # TODO: We should remove anywhere we depend on this behavior,
   # such as Rogue's admin inbox, and then disable this.
@@ -116,13 +122,14 @@ module "storage" {
 }
 
 output "name" {
-  value = "${var.name}"
+  value = var.name
 }
 
 output "domain" {
-  value = "${var.domain}"
+  value = var.domain
 }
 
 output "backend" {
-  value = "${module.app.backend}"
+  value = module.app.backend
 }
+

@@ -27,3 +27,4 @@ variable "logger" {
   description = "The Lambda function ARN to subscribe to this function's log group."
   default     = ""
 }
+

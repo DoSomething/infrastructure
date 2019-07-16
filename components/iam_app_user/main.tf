@@ -3,28 +3,29 @@ variable "name" {
 }
 
 resource "aws_iam_user" "aws_user" {
-  name = "${var.name}"
+  name = var.name
 }
 
 resource "aws_iam_access_key" "aws_key" {
-  user = "${aws_iam_user.aws_user.name}"
+  user = aws_iam_user.aws_user.name
 }
 
 output "name" {
-  value = "${aws_iam_user.aws_user.name}"
+  value = aws_iam_user.aws_user.name
 }
 
 output "id" {
-  value = "${aws_iam_access_key.aws_key.id}"
+  value = aws_iam_access_key.aws_key.id
 }
 
 output "secret" {
-  value = "${aws_iam_access_key.aws_key.secret}"
+  value = aws_iam_access_key.aws_key.secret
 }
 
 output "config_vars" {
   value = {
-    AWS_ACCESS_KEY = "${aws_iam_access_key.aws_key.id}"
-    AWS_SECRET_KEY = "${aws_iam_access_key.aws_key.secret}"
+    AWS_ACCESS_KEY = aws_iam_access_key.aws_key.id
+    AWS_SECRET_KEY = aws_iam_access_key.aws_key.secret
   }
 }
+

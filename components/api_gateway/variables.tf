@@ -9,7 +9,7 @@ variable "functions_count" {
 
 variable "functions" {
   description = "The functions that this gateway is allowed to invoke."
-  type        = "list"
+  type        = list(string)
 }
 
 # The root route:
@@ -51,3 +51,4 @@ variable "domain" {
   # you can access a Lambda function at a URL returned in the `base_url` output.
   default = ""
 }
+

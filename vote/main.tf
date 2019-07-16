@@ -84,19 +84,19 @@ resource "fastly_service_v1" "vote" {
   snippet {
     name    = "Redirects Table"
     type    = "init"
-    content = "${file("${path.module}/redirects_table.vcl")}"
+    content = file("${path.module}/redirects_table.vcl")
   }
 
   snippet {
     name    = "Trigger Redirect"
     type    = "recv"
-    content = "${file("${path.module}/trigger_redirect.vcl")}"
+    content = file("${path.module}/trigger_redirect.vcl")
   }
 
   snippet {
     name    = "Handle Redirect"
     type    = "error"
-    content = "${file("${path.module}/handle_redirect.vcl")}"
+    content = file("${path.module}/handle_redirect.vcl")
   }
 
   condition {
@@ -107,8 +107,8 @@ resource "fastly_service_v1" "vote" {
 
   papertrail {
     name               = "vote.dosomething.org"
-    address            = "${element(split(":", var.papertrail_destination), 0)}"
-    port               = "${element(split(":", var.papertrail_destination), 1)}"
+    address            = element(split(":", var.papertrail_destination), 0)
+    port               = element(split(":", var.papertrail_destination), 1)
     format             = "%t '%r' status=%>s bytes=%b microseconds=%D"
     response_condition = "errors"
   }
@@ -119,10 +119,11 @@ resource "aws_s3_bucket" "vote" {
   acl    = "public-read"
 
   # see: https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteAccessPermissionsReqd.html 
-  policy = "${file("${path.module}/policy-vote.json")}"
+  policy = file("${path.module}/policy-vote.json")
 
   website {
     index_document = "index.html"
     error_document = "error.html"
   }
 }
+

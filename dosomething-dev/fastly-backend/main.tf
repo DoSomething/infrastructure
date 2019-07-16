@@ -15,11 +15,11 @@ resource "fastly_service_v1" "backends-dev" {
   force_destroy = true
 
   domain {
-    name = "${var.northstar_domain}"
+    name = var.northstar_domain
   }
 
   domain {
-    name = "${var.rogue_domain}"
+    name = var.rogue_domain
   }
 
   condition {
@@ -65,8 +65,8 @@ resource "fastly_service_v1" "backends-dev" {
   }
 
   backend {
-    address           = "${var.northstar_backend}"
-    name              = "${var.northstar_name}"
+    address           = var.northstar_backend
+    name              = var.northstar_name
     request_condition = "backend-northstar-dev"
     shield            = "iad-va-us"
     auto_loadbalance  = false
@@ -74,8 +74,8 @@ resource "fastly_service_v1" "backends-dev" {
   }
 
   backend {
-    address           = "${var.rogue_backend}"
-    name              = "${var.rogue_name}"
+    address           = var.rogue_backend
+    name              = var.rogue_name
     request_condition = "backend-rogue-dev"
     shield            = "iad-va-us"
     auto_loadbalance  = false
@@ -132,20 +132,21 @@ resource "fastly_service_v1" "backends-dev" {
 
   response_object {
     name              = "robots.txt deny"
-    content           = "${file("${path.root}/shared/deny-robots.txt")}"
+    content           = file("${path.root}/shared/deny-robots.txt")
     request_condition = "path-robots"
   }
 
   snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
-    content = "${file("${path.root}/shared/app_name.vcl")}"
+    content = file("${path.root}/shared/app_name.vcl")
   }
 
   papertrail {
     name    = "backend"
-    address = "${element(split(":", var.papertrail_destination), 0)}"
-    port    = "${element(split(":", var.papertrail_destination), 1)}"
-    format  = "${var.papertrail_log_format}"
+    address = element(split(":", var.papertrail_destination), 0)
+    port    = element(split(":", var.papertrail_destination), 1)
+    format  = var.papertrail_log_format
   }
 }
+

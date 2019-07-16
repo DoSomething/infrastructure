@@ -38,7 +38,7 @@ terraform {
 # backend-routing, geolocation, redirects, etc.
 provider "fastly" {
   version = "~> 0.8"
-  api_key = "${var.fastly_api_key}"
+  api_key = var.fastly_api_key
 }
 
 # We host many apps in Heroku, a platform-as-a-service
@@ -48,8 +48,8 @@ provider "fastly" {
 # resources or Fastly backends) easier to hook up.
 provider "heroku" {
   version = "~> 2.0"
-  email   = "${var.heroku_email}"
-  api_key = "${var.heroku_api_key}"
+  email   = var.heroku_email
+  api_key = var.heroku_api_key
 }
 
 # We use Amazon Web Services (AWS) for databases (RDS),
@@ -96,7 +96,7 @@ provider "null" {
 # Some top-level resources (like Heroku pipelines)
 # are shared among all environments:
 module "shared" {
-  source = "shared"
+  source = "./shared"
 }
 
 # Our core production applications live in the 
@@ -104,72 +104,78 @@ module "shared" {
 # traffic & data lives, so changes should be tested
 # in 'dosomething-qa' below first.
 module "dosomething" {
-  source = "dosomething"
+  source = "./dosomething"
 
-  northstar_pipeline            = "${module.shared.northstar_pipeline}"
-  phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
-  rogue_pipeline                = "${module.shared.rogue_pipeline}"
-  papertrail_destination        = "${var.papertrail_prod_destination}"
-  papertrail_destination_fastly = "${var.papertrail_destination_fastly}"
+  providers = {
+    aws      = aws
+    aws.west = aws.west
+  }
+
+  northstar_pipeline            = module.shared.northstar_pipeline
+  phoenix_pipeline              = module.shared.phoenix_pipeline
+  rogue_pipeline                = module.shared.rogue_pipeline
+  papertrail_destination        = var.papertrail_prod_destination
+  papertrail_destination_fastly = var.papertrail_destination_fastly
 }
 
 # Our QA applications live in the 'dosomething-qa' stack.
 # This is a (scaled down) copy of our production environment
 # where we test new changes before they affect real traffic.
 module "dosomething-qa" {
-  source = "dosomething-qa"
+  source = "./dosomething-qa"
 
-  northstar_pipeline            = "${module.shared.northstar_pipeline}"
-  phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
-  rogue_pipeline                = "${module.shared.rogue_pipeline}"
-  papertrail_destination        = "${var.papertrail_qa_destination}"
-  papertrail_destination_fastly = "${var.papertrail_destination_fastly_qa}"
+  northstar_pipeline            = module.shared.northstar_pipeline
+  phoenix_pipeline              = module.shared.phoenix_pipeline
+  rogue_pipeline                = module.shared.rogue_pipeline
+  papertrail_destination        = var.papertrail_qa_destination
+  papertrail_destination_fastly = var.papertrail_destination_fastly_qa
 }
 
 # Our development applications live in the 'dosomething-dev'
 # stack. This is a (scaled down) copy of our production
 # environment with test & sandbox data.
 module "dosomething-dev" {
-  source = "dosomething-dev"
+  source = "./dosomething-dev"
 
-  northstar_pipeline            = "${module.shared.northstar_pipeline}"
-  phoenix_pipeline              = "${module.shared.phoenix_pipeline}"
-  rogue_pipeline                = "${module.shared.rogue_pipeline}"
-  papertrail_destination        = "${var.papertrail_qa_destination}"
-  papertrail_destination_fastly = "${var.papertrail_destination_fastly_dev}"
+  northstar_pipeline            = module.shared.northstar_pipeline
+  phoenix_pipeline              = module.shared.phoenix_pipeline
+  rogue_pipeline                = module.shared.rogue_pipeline
+  papertrail_destination        = var.papertrail_qa_destination
+  papertrail_destination_fastly = var.papertrail_destination_fastly_dev
 }
 
 # Longshot is DoSomething Strategic's white-labeled scholarship
 # application, used by clients like Footlocker and H&R Block.
 module "longshot" {
-  source = "longshot"
+  source = "./longshot"
 
-  papertrail_prod_destination = "${var.papertrail_prod_destination}"
-  papertrail_qa_destination   = "${var.papertrail_qa_destination}"
+  papertrail_prod_destination = var.papertrail_prod_destination
+  papertrail_qa_destination   = var.papertrail_qa_destination
 }
 
 # Quasar is DoSomething's Data Platform. This environment is
 # primarily used by Team Storm.
 module "quasar" {
-  source = "quasar"
+  source = "./quasar"
 }
 
 # The redirects property handles redirects for old domains, like
 # 'northstar-thor.dosomething.org' to 'identity-qa.dosomething.org'.
 module "redirects" {
-  source = "redirects"
+  source = "./redirects"
 }
 
 # The voter registration landing page <vote.dosomething.org>
 # is hosted on Instapage, with optional fallback to S3.
 module "vote" {
-  source = "vote"
+  source = "./vote"
 
-  papertrail_destination = "${var.papertrail_destination_fastly}"
+  papertrail_destination = var.papertrail_destination_fastly
 }
 
 # The voting application (https://git.io/fAsod) once hosted
 # voting campaigns like Celebs Gone Good & Athletes Gone Good.
 module "voting-app" {
-  source = "voting-app"
+  source = "./voting-app"
 }
+

@@ -67,10 +67,10 @@ data "aws_ssm_parameter" "mandrill_api_key" {
 
 locals {
   database_config_vars = {
-    DB_HOST      = "${data.aws_ssm_parameter.database_host.value}"
-    DB_NAME      = "${data.aws_ssm_parameter.database_name.value}"
-    DB_USERNAME  = "${data.aws_ssm_parameter.database_username.value}"
-    DB_PASSWORD  = "${data.aws_ssm_parameter.database_password.value}"
+    DB_HOST      = data.aws_ssm_parameter.database_host.value
+    DB_NAME      = data.aws_ssm_parameter.database_name.value
+    DB_USERNAME  = data.aws_ssm_parameter.database_username.value
+    DB_PASSWORD  = data.aws_ssm_parameter.database_password.value
     DB_PORT      = 27017
     DB_AUTH_NAME = "admin"
     DB_SSL       = true
@@ -81,11 +81,11 @@ locals {
     MAIL_HOST       = "smtp.mandrillapp.com"
     EMAIL_NAME      = "DoSomething.org"
     EMAIL_ADDRESS   = "no-reply@dosomething.org"
-    MANDRILL_SECRET = "${data.aws_ssm_parameter.mandrill_api_key.value}"
+    MANDRILL_SECRET = data.aws_ssm_parameter.mandrill_api_key.value
   }
 
   queue_low_config_vars = {
-    SQS_LOW_PRIORITY_QUEUE = "${module.queue_low.id}"
+    SQS_LOW_PRIORITY_QUEUE = module.queue_low.id
   }
 
   feature_config_vars = {
@@ -98,51 +98,55 @@ module "app" {
   source = "../../components/heroku_app"
 
   framework   = "laravel"
-  name        = "${var.name}"
-  domain      = "${var.domain}"
-  pipeline    = "${var.pipeline}"
-  environment = "${var.environment}"
+  name        = var.name
+  domain      = var.domain
+  pipeline    = var.pipeline
+  environment = var.environment
 
-  config_vars = "${merge(
+  config_vars = merge(
     module.iam_user.config_vars,
     module.storage.config_vars,
     module.queue_high.config_vars,
     local.queue_low_config_vars,
     local.database_config_vars,
     local.feature_config_vars,
-    local.mail_config_vars
-  )}"
+    local.mail_config_vars,
+  )
 
   # We use autoscaling in production, so don't try to manage dynos there.
-  ignore_web = "${var.environment == "production"}"
+  ignore_web = var.environment == "production"
 
   # We don't run a queue process on development right now. @TODO: Should we?
-  queue_scale = "${lookup(map("development", 0, "qa", 1, "production", 3), var.environment)}"
+  queue_scale = {
+    "development" = 0
+    "qa"          = 1
+    "production"  = 3
+  }[var.environment]
 
   with_redis = true
-  redis_type = "${var.environment == "production" ? "premium-1" : "hobby-dev"}"
+  redis_type = var.environment == "production" ? "premium-1" : "hobby-dev"
 
-  papertrail_destination = "${var.papertrail_destination}"
-  with_newrelic          = "${coalesce(var.with_newrelic, var.environment == "production")}"
+  papertrail_destination = var.papertrail_destination
+  with_newrelic          = coalesce(var.with_newrelic, var.environment == "production")
 }
 
 module "iam_user" {
   source = "../../components/iam_app_user"
-  name   = "${var.name}"
+  name   = var.name
 }
 
 module "queue_high" {
   source = "../../components/sqs_queue"
 
   name = "${var.name}-high"
-  user = "${module.iam_user.name}"
+  user = module.iam_user.name
 }
 
 module "queue_low" {
   source = "../../components/sqs_queue"
 
   name = "${var.name}-low"
-  user = "${module.iam_user.name}"
+  user = module.iam_user.name
 }
 
 // TODO: Attach 'aws_s3_bucket_public_access_block' once this
@@ -150,20 +154,21 @@ module "queue_low" {
 module "storage" {
   source = "../../components/s3_bucket"
 
-  name       = "${var.name}"
-  user       = "${module.iam_user.name}"
+  name       = var.name
+  user       = module.iam_user.name
   acl        = "private"
   versioning = true
 }
 
 output "name" {
-  value = "${var.name}"
+  value = var.name
 }
 
 output "domain" {
-  value = "${var.domain}"
+  value = var.domain
 }
 
 output "backend" {
-  value = "${module.app.backend}"
+  value = module.app.backend
 }
+

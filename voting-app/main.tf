@@ -35,7 +35,7 @@ resource "fastly_service_v1" "voting-app" {
 
   backend {
     name    = "s3-www.athletesgonegood.com"
-    address = "${module.agg.backend}"
+    address = module.agg.backend
     port    = 80
   }
 }
@@ -44,3 +44,4 @@ module "agg" {
   source = "../applications/static"
   domain = "www.athletesgonegood.com"
 }
+

@@ -53,9 +53,9 @@ locals {
   mail_config_vars = {
     MAIL_DRIVER     = "mandrill"
     MAIL_HOST       = "smtp.mandrillapp.com"
-    EMAIL_NAME      = "${var.email_name}"
-    EMAIL_ADDRESS   = "${var.email_address}"
-    MANDRILL_APIKEY = "${data.aws_ssm_parameter.mandrill_api_key.value}"
+    EMAIL_NAME      = var.email_name
+    EMAIL_ADDRESS   = var.email_address
+    MANDRILL_APIKEY = data.aws_ssm_parameter.mandrill_api_key.value
   }
 }
 
@@ -63,36 +63,36 @@ module "app" {
   source = "../../components/heroku_app"
 
   framework   = "laravel"
-  name        = "${var.name}"
-  domain      = "${var.domain}"
-  pipeline    = "${var.pipeline}"
-  environment = "${var.environment}"
+  name        = var.name
+  domain      = var.domain
+  pipeline    = var.pipeline
+  environment = var.environment
 
-  config_vars = "${merge(
+  config_vars = merge(
     module.database.config_vars,
     module.queue.config_vars,
     module.storage.config_vars,
     module.iam_user.config_vars,
-    local.mail_config_vars
-  )}"
+    local.mail_config_vars,
+  )
 
   web_scale   = 1
   queue_scale = 1
 
   with_redis = true
 
-  papertrail_destination = "${var.papertrail_destination}"
-  with_newrelic          = "${coalesce(var.with_newrelic, var.environment == "production")}"
+  papertrail_destination = var.papertrail_destination
+  with_newrelic          = coalesce(var.with_newrelic, var.environment == "production")
 }
 
 module "database" {
   source = "../../components/mariadb_instance"
 
-  name              = "${var.name}"
-  environment       = "${var.environment}"
+  name              = var.name
+  environment       = var.environment
   database_name     = "longshot"
-  instance_class    = "${var.environment == "production" ? "db.t2.medium" : "db.t2.micro"}"
-  allocated_storage = "${var.environment == "production" ? 100 : 5}"
+  instance_class    = var.environment == "production" ? "db.t2.medium" : "db.t2.micro"
+  allocated_storage = var.environment == "production" ? 100 : 5
 
   subnet_group    = "default-vpc-7899331d"
   security_groups = ["sg-c9a37db2"]
@@ -100,29 +100,30 @@ module "database" {
 
 module "iam_user" {
   source = "../../components/iam_app_user"
-  name   = "${var.name}"
+  name   = var.name
 }
 
 module "queue" {
   source = "../../components/sqs_queue"
-  name   = "${var.name}"
-  user   = "${module.iam_user.name}"
+  name   = var.name
+  user   = module.iam_user.name
 }
 
 module "storage" {
   source = "../../components/s3_bucket"
-  name   = "${var.name}"
-  user   = "${module.iam_user.name}"
+  name   = var.name
+  user   = module.iam_user.name
 }
 
 output "name" {
-  value = "${var.name}"
+  value = var.name
 }
 
 output "domain" {
-  value = "${var.domain}"
+  value = var.domain
 }
 
 output "backend" {
-  value = "${module.app.backend}"
+  value = module.app.backend
 }
+
