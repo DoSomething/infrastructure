@@ -287,6 +287,36 @@ resource "aws_db_parameter_group" "quasar-qa-pg11" {
     name  = "synchronous_commit"
     value = "off"
   }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_connections"
+    value = "on"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_disconnections"
+    value = "on"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_lock_waits"
+    value = "on"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_temp_files"
+    value = "0"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_autovacuum_min_duration"
+    value = "0"
+  }
 }
 
 resource "aws_db_parameter_group" "quasar-prod" {
