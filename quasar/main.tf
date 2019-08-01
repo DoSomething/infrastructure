@@ -291,19 +291,19 @@ resource "aws_db_parameter_group" "quasar-qa-pg11" {
   # Enabling for PG Badger query tuning analysis.
   parameter {
     name  = "log_connections"
-    value = "on"
+    value = "1"
   }
 
   # Enabling for PG Badger query tuning analysis.
   parameter {
     name  = "log_disconnections"
-    value = "on"
+    value = "1"
   }
 
   # Enabling for PG Badger query tuning analysis.
   parameter {
     name  = "log_lock_waits"
-    value = "on"
+    value = "1"
   }
 
   # Enabling for PG Badger query tuning analysis.
@@ -393,19 +393,19 @@ resource "aws_db_parameter_group" "quasar-prod-pg11" {
   # Enabling for PG Badger query tuning analysis.
   parameter {
     name  = "log_connections"
-    value = "on"
+    value = "1"
   }
 
   # Enabling for PG Badger query tuning analysis.
   parameter {
     name  = "log_disconnections"
-    value = "on"
+    value = "1"
   }
 
   # Enabling for PG Badger query tuning analysis.
   parameter {
     name  = "log_lock_waits"
-    value = "on"
+    value = "1"
   }
 
   # Enabling for PG Badger query tuning analysis.
