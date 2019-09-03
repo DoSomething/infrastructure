@@ -52,16 +52,16 @@ resource "aws_api_gateway_resource" "resource" {
   count = var.routes_count
 
   rest_api_id = aws_api_gateway_rest_api.gateway.id
-  parent_id = aws_api_gateway_rest_api.gateway.root_resource_id
-  path_part = var.routes[count.index]["path"]
+  parent_id   = aws_api_gateway_rest_api.gateway.root_resource_id
+  path_part   = var.routes[count.index]["path"]
 }
 
 resource "aws_api_gateway_method" "method" {
   count = var.routes_count
 
-  rest_api_id = aws_api_gateway_rest_api.gateway.id
-  resource_id = aws_api_gateway_resource.resource[count.index].id
-  http_method = lookup(var.routes[count.index], "method", "ANY")
+  rest_api_id   = aws_api_gateway_rest_api.gateway.id
+  resource_id   = aws_api_gateway_resource.resource[count.index].id
+  http_method   = lookup(var.routes[count.index], "method", "ANY")
   authorization = lookup(var.routes[count.index], "authorization", "NONE")
   authorizer_id = lookup(var.routes[count.index], "authorizer_id", "")
 }
@@ -75,8 +75,8 @@ resource "aws_api_gateway_integration" "integration" {
 
   # Lambda functions can only be invoked via POST.
   integration_http_method = "POST"
-  type = "AWS_PROXY"
-  uri = var.routes[count.index]["function"]
+  type                    = "AWS_PROXY"
+  uri                     = var.routes[count.index]["function"]
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
@@ -88,7 +88,7 @@ resource "aws_api_gateway_deployment" "deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.gateway.id
-  stage_name = "default"
+  stage_name  = "default"
 
   # HACK: We need to re-trigger a deployment if the routes for this API Gateway
   # change. We can do so by updating a stage variable. <https://git.io/fjLs3>
@@ -122,40 +122,40 @@ SH
 }
 
 resource "aws_lambda_permission" "gateway_permission" {
-count = var.functions_count
+  count = var.functions_count
 
-statement_id  = "AllowAPIGatewayInvoke"
-action        = "lambda:InvokeFunction"
-function_name = var.functions[count.index]
-principal     = "apigateway.amazonaws.com"
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.functions[count.index]
+  principal     = "apigateway.amazonaws.com"
 
-# The /*/* portion grants access from any HTTP method on any resource.
-source_arn = "${aws_api_gateway_deployment.deployment.execution_arn}/*/*"
+  # The /*/* portion grants access from any HTTP method on any resource.
+  source_arn = "${aws_api_gateway_deployment.deployment.execution_arn}/*/*"
 }
 
 # Custom domain (optional):
 data "aws_acm_certificate" "certificate" {
-count = var.domain == "" ? 0 : 1
+  count = var.domain == "" ? 0 : 1
 
-# If this is a *.dosomething.org subdomain, use our wildcard ACM certificate.
-# Otherwise, find a certificate for the provided domain (manually provisioned).
-domain = local.is_dosomething_domain ? "*.dosomething.org" : var.domain
+  # If this is a *.dosomething.org subdomain, use our wildcard ACM certificate.
+  # Otherwise, find a certificate for the provided domain (manually provisioned).
+  domain = local.is_dosomething_domain ? "*.dosomething.org" : var.domain
 
-statuses = ["ISSUED"]
+  statuses = ["ISSUED"]
 }
 
 resource "aws_api_gateway_domain_name" "domain" {
-count = var.domain == "" ? 0 : 1
+  count = var.domain == "" ? 0 : 1
 
-certificate_arn = data.aws_acm_certificate.certificate[0].arn
-domain_name     = var.domain
+  certificate_arn = data.aws_acm_certificate.certificate[0].arn
+  domain_name     = var.domain
 }
 
 resource "aws_api_gateway_base_path_mapping" "mapping" {
-count = var.domain == "" ? 0 : 1
+  count = var.domain == "" ? 0 : 1
 
-api_id      = aws_api_gateway_rest_api.gateway.id
-stage_name  = aws_api_gateway_deployment.deployment.stage_name
-domain_name = aws_api_gateway_domain_name.domain[0].domain_name
+  api_id      = aws_api_gateway_rest_api.gateway.id
+  stage_name  = aws_api_gateway_deployment.deployment.stage_name
+  domain_name = aws_api_gateway_domain_name.domain[0].domain_name
 }
 
