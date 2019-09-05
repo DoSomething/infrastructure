@@ -488,7 +488,7 @@ data "aws_acm_certificate" "vpn-cert" {
 }
 
 resource "aws_directory_service_directory" "vpn-ad" {
-  name     = "ad.d12g.co"
+  name     = "ad.ds.internal"
   password = random_string.admin_password.result
   edition  = "Standard"
   type     = "MicrosoftAD"
