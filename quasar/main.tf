@@ -478,10 +478,8 @@ resource "aws_db_instance" "quasar" {
 
 resource "random_string" "admin_password" {
   # Adding to generate secure password for VPN AD Domain.
-  length = 24
-
-  # We can't use '@' or '$' in MySQL passwords.
-  override_special = "!#%&*()-_=+[]{}<>:?"
+  length  = 24
+  special = false
 }
 
 
