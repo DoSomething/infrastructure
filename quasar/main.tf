@@ -476,25 +476,7 @@ resource "aws_db_instance" "quasar" {
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
 
-resource "random_string" "admin_password" {
-  # Adding to generate secure password for VPN AD Domain.
-  length  = 24
-  special = false
-}
-
-
 data "aws_acm_certificate" "vpn-cert" {
   domain = "vpn.d12g.co"
 }
 
-resource "aws_directory_service_directory" "vpn-ad" {
-  name     = "ad.ds.internal"
-  password = random_string.admin_password.result
-  edition  = "Standard"
-  type     = "MicrosoftAD"
-
-  vpc_settings {
-    vpc_id     = "${aws_vpc.vpc.id}"
-    subnet_ids = ["${aws_subnet.subnet-a.id}", "${aws_subnet.subnet-b.id}"]
-  }
-}
