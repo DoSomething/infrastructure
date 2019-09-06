@@ -5,8 +5,10 @@ variable "papertrail_log_format" {}
 
 locals {
   headers = {
-    "X-Fastly-Country-Code" = "client.geo.country_code",
-    "X-Fastly-Region-Code"  = "client.geo.region",
+    "X-Fastly-Country-Code"  = "client.geo.country_code",
+    "X-Fastly-Region-Code"   = "client.geo.region",
+    "X-Fastly-Location-Code" = "client.geo.region.ascii",
+    "X-Fastly-Postal-Code"   = "client.geo.postal_code",
   }
 }
 
