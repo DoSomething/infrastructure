@@ -126,13 +126,13 @@ resource "fastly_service_v1" "frontend-qa" {
   snippet {
     name    = "Frontend - ISO-3166-2 Request Header"
     type    = "recv"
-    content = file("${path.module}/iso3166_recv.vcl")
+    content = file("${path.root}/shared/iso3166_recv.vcl")
   }
 
   snippet {
     name    = "Frontend - ISO-3166-2 Response Header"
     type    = "deliver"
-    content = file("${path.module}/iso3166_deliver.vcl")
+    content = file("${path.root}/shared/iso3166_deliver.vcl")
   }
 
   snippet {
