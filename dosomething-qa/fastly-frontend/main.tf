@@ -124,6 +124,18 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   snippet {
+    name    = "Frontend - ISO-3166-2 Request Header"
+    type    = "recv"
+    content = file("${path.module}/iso3166_recv.vcl")
+  }
+
+  snippet {
+    name    = "Frontend - ISO-3166-2 Response Header"
+    type    = "deliver"
+    content = file("${path.module}/iso3166_deliver.vcl")
+  }
+
+  snippet {
     name    = "Frontend - Trigger International Redirect"
     type    = "recv"
     content = file("${path.module}/homepage_recv.vcl")
