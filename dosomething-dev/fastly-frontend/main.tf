@@ -3,6 +3,14 @@ variable "phoenix_backend" {}
 variable "papertrail_destination" {}
 variable "papertrail_log_format" {}
 
+locals {
+  headers = {
+    "X-Fastly-Country-Code" = "client.geo.country_code",
+    "X-Fastly-Region-Code"  = "client.geo.region",
+    "X-Fastly-Postal-Code"  = "client.geo.postal_code",
+  }
+}
+
 resource "fastly_service_v1" "frontend-dev" {
   name          = "Terraform: Frontend (Development)"
   force_destroy = true
@@ -66,36 +74,30 @@ resource "fastly_service_v1" "frontend-dev" {
     ]
   }
 
-  header {
-    name        = "Country Code"
-    type        = "request"
-    action      = "set"
-    source      = "geoip.country_code"
-    destination = "http.X-Fastly-Country-Code"
+  # Set headers on incoming HTTP requests, for the backend server.
+  dynamic "header" {
+    for_each = local.headers
+
+    content {
+      name        = "${header.key} (Request)"
+      destination = "http.${header.key}"
+      source      = header.value
+      type        = "request"
+      action      = "set"
+    }
   }
 
-  header {
-    name        = "Country Code (Debug)"
-    type        = "response"
-    action      = "set"
-    source      = "geoip.country_code"
-    destination = "http.X-Fastly-Country-Code"
-  }
+  # And set "debug" headers on HTTP responses, for inspection.
+  dynamic "header" {
+    for_each = local.headers
 
-  header {
-    name        = "Region Code"
-    type        = "request"
-    action      = "set"
-    source      = "client.geo.region"
-    destination = "http.X-Fastly-Region-Code"
-  }
-
-  header {
-    name        = "Region Code (Debug)"
-    type        = "response"
-    action      = "set"
-    source      = "client.geo.region"
-    destination = "http.X-Fastly-Region-Code"
+    content {
+      name        = "${header.key} (Response)"
+      destination = "http.${header.key}"
+      source      = header.value
+      type        = "response"
+      action      = "set"
+    }
   }
 
   request_setting {

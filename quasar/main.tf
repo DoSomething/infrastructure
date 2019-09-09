@@ -475,8 +475,3 @@ resource "aws_db_instance" "quasar" {
   performance_insights_enabled    = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
-
-data "aws_acm_certificate" "vpn-cert" {
-  domain = "vpn.d12g.co"
-}
-
