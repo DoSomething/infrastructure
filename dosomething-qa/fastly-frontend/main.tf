@@ -92,12 +92,12 @@ resource "fastly_service_v1" "frontend-qa" {
     ]
   }
 
-  // Set headers on incoming HTTP requests, for the backend server.
+  # Set headers on incoming HTTP requests, for the backend server.
   dynamic "header" {
     for_each = local.headers
 
     content {
-      name        = header.key
+      name        = "${header.key} (Request)"
       destination = "http.${header.key}"
       source      = header.value
       type        = "request"
@@ -105,12 +105,12 @@ resource "fastly_service_v1" "frontend-qa" {
     }
   }
 
-  // And set "debug" headers on HTTP responses, for inspection.
+  # And set "debug" headers on HTTP responses, for inspection.
   dynamic "header" {
     for_each = local.headers
 
     content {
-      name        = "${header.key} (Debug)"
+      name        = "${header.key} (Response)"
       destination = "http.${header.key}"
       source      = header.value
       type        = "response"
