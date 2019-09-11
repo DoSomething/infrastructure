@@ -475,3 +475,12 @@ resource "aws_db_instance" "quasar" {
   performance_insights_enabled    = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
+
+# Testing Bastion SSH dynamic runtime
+module "ssh-bastion-service" {
+  source      = "joshuamkite/ssh-bastion-service/aws"
+  version     = "5.0.0"
+  aws_profile = ""
+  aws_region  = "us-east-1"
+  vpc         = aws_vpc.vpc.id
+}
