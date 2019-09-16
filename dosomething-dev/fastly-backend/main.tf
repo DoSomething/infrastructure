@@ -71,9 +71,9 @@ resource "fastly_service_v1" "backends-dev" {
   }
 
   cache_setting {
-    name              = "pass-not-found"
-    request_condition = "is-not-found"
-    action            = "pass"
+    name            = "pass-not-found"
+    cache_condition = "is-not-found"
+    action          = "pass"
   }
 
   backend {
