@@ -50,6 +50,18 @@ resource "fastly_service_v1" "backends-qa" {
   }
 
   condition {
+    type      = "CACHE"
+    name      = "is-not-found"
+    statement = "beresp.status == 404"
+  }
+
+  cache_setting {
+    name              = "pass-not-found"
+    request_condition = "is-not-found"
+    action            = "pass"
+  }
+
+  condition {
     type      = "REQUEST"
     name      = "is-authenticated"
     statement = "req.http.Authorization"
