@@ -64,6 +64,18 @@ resource "fastly_service_v1" "backends-dev" {
     action            = "pass"
   }
 
+  condition {
+    type      = "CACHE"
+    name      = "is-not-found"
+    statement = "beresp.status == 404"
+  }
+
+  cache_setting {
+    name            = "pass-not-found"
+    cache_condition = "is-not-found"
+    action          = "pass"
+  }
+
   backend {
     address           = var.northstar_backend
     name              = var.northstar_name
