@@ -33,6 +33,6 @@ cp $tmp_dir/easyrsa3/pki/private/quasar-vpn-server.key $tmp_dir/vpn-certs/
 cp $tmp_dir/easyrsa3/pki/issued/quasar-vpn-client.d12g.co.crt $tmp_dir/vpn-certs/
 cp $tmp_dir/easyrsa3/pki/private/quasar-vpn-client.d12g.co.key $tmp_dir/vpn-certs/
 cd $tmp_dir/vpn-certs/
-aws acm import-certificate --certificate-arn $1 --certificate file://quasar-vpn-server.crt --private-key file://quasar-vpn-server.key --certificate-chain file://ca.crt --region us-east-1
-aws acm import-certificate --certificate-arn $2 --certificate file://quasar-vpn-client.d12g.co.crt --private-key file://quasar-vpn-client.d12g.co.key --certificate-chain file://ca.crt --region us-east-1
+aws acm import-certificate --certificate-arn $VPN_SERVER_CERTIFICATE_ARN --certificate file://quasar-vpn-server.crt --private-key file://quasar-vpn-server.key --certificate-chain file://ca.crt --region us-east-1
+aws acm import-certificate --certificate-arn $VPN_CLIENT_CERTIFICATE_ARN --certificate file://quasar-vpn-client.d12g.co.crt --private-key file://quasar-vpn-client.d12g.co.key --certificate-chain file://ca.crt --region us-east-1
 rm -rf $tmp_dir
