@@ -483,3 +483,15 @@ data "aws_acm_certificate" "vpn-server-cert" {
 data "aws_acm_certificate" "vpn-client-cert" {
   domain = "quasar-vpn-client.d12g.co"
 }
+
+resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
+  description            = "Quasar-Client-VPN"
+  server_certificate_arn = "${data.aws_acm_certificate.vpn-server-cert.arn}"
+  client_cidr_block      = "172.22.0.0/22"
+  split_tunnel           = true
+  transport_protocol     = "udp"
+
+  authentication_options {
+    type = "certificate-authentication"
+  }
+}
