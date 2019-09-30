@@ -492,7 +492,8 @@ resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
   transport_protocol     = "udp"
 
   authentication_options {
-    type = "certificate-authentication"
+    type                       = "certificate-authentication"
+    root_certificate_chain_arn = "${data.aws_acm_certificate.vpn-client-cert.arn}"
   }
 
   connection_log_options {
