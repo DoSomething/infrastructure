@@ -182,6 +182,8 @@ module "voting-app" {
   source = "./voting-app"
 }
 
+# We use this Lambda function to forward logs to Papertrail
+# for production applications & our Quasar warehouse.
 module "papertrail" {
   source = "./applications/papertrail"
 
