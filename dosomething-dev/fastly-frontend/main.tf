@@ -167,12 +167,19 @@ resource "fastly_service_v1" "frontend-dev" {
     content = file("${path.root}/shared/app_name.vcl")
   }
 
-
   papertrail {
     name    = "frontend"
     address = element(split(":", var.papertrail_destination), 0)
     port    = element(split(":", var.papertrail_destination), 1)
     format  = var.papertrail_log_format
+  }
+
+  dictionary {
+    name = "redirects"
+  }
+
+  dictionary {
+    name = "redirect_types"
   }
 }
 

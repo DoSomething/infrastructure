@@ -199,5 +199,13 @@ resource "fastly_service_v1" "frontend-qa" {
     port    = element(split(":", var.papertrail_destination), 1)
     format  = var.papertrail_log_format
   }
+
+  dictionary {
+    name = "redirects"
+  }
+
+  dictionary {
+    name = "redirect_types"
+  }
 }
 
