@@ -488,7 +488,7 @@ data "aws_acm_certificate" "vpn-client-cert" {
 
 # Log Group for VPN
 resource "aws_cloudwatch_log_group" "log_group" {
-  name              = "/aws/lambda/${var.papertrail_forwarder.function_name}"
+  name              = "/aws/vpn/quasar"
   retention_in_days = 14
 }
 
