@@ -43,7 +43,7 @@ module "graphql" {
   environment = "development"
   name        = "dosomething-graphql-dev"
   domain      = "graphql-dev.dosomething.org"
-  logger      = module.papertrail.arn
+  logger      = module.papertrail
 }
 
 module "northstar" {

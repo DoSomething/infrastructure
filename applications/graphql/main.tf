@@ -69,7 +69,7 @@ module "app" {
   name    = var.name
   handler = "main.handler"
   runtime = "nodejs8.10"
-  logger  = var.logger
+  logger  = var.logger.arn
 
   config_vars = {
     NODE_ENV       = "production"

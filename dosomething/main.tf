@@ -4,6 +4,7 @@ provider "aws" { alias = "west" }
 variable "northstar_pipeline" {}
 variable "phoenix_pipeline" {}
 variable "rogue_pipeline" {}
+variable "papertrail_forwarder" {}
 variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 
@@ -61,7 +62,7 @@ module "graphql" {
   environment = "production"
   name        = "dosomething-graphql"
   domain      = "graphql.dosomething.org"
-  logger      = module.papertrail.arn
+  logger      = var.papertrail_forwarder
 }
 
 module "northstar" {
@@ -118,15 +119,6 @@ module "rogue" {
   pipeline               = var.rogue_pipeline
   papertrail_destination = var.papertrail_destination
   backup_storage_bucket  = module.rogue_backup.bucket
-}
-
-
-module "papertrail" {
-  source = "../applications/papertrail"
-
-  environment            = "production"
-  name                   = "papertrail"
-  papertrail_destination = var.papertrail_destination
 }
 
 module "ashes" {

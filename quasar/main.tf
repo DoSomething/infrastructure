@@ -1,3 +1,5 @@
+variable "papertrail_forwarder" {}
+
 # Our Slack Lookerbot instance needs access to an S3 bucket to publish
 # visualizations.
 module "lookerbot" {
@@ -484,6 +486,22 @@ data "aws_acm_certificate" "vpn-client-cert" {
   domain = "quasar-vpn-client.d12g.co"
 }
 
+# Log Group for VPN
+resource "aws_cloudwatch_log_group" "log_group" {
+  name              = "/aws/lambda/${var.papertrail_forwarder.function_name}"
+  retention_in_days = 14
+}
+
+resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
+  name            = "papertrail_forwarder"
+  log_group_name  = aws_cloudwatch_log_group.log_group.name
+  destination_arn = var.papertrail_forwarder.arn
+  distribution    = "ByLogStream"
+
+  # Forward all log messages:
+  filter_pattern = ""
+}
+
 resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
   description            = "Quasar-Client-VPN"
   server_certificate_arn = "${data.aws_acm_certificate.vpn-server-cert.arn}"
@@ -497,6 +515,7 @@ resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
   }
 
   connection_log_options {
-    enabled = true
+    enabled              = true
+    cloudwatch_log_group = "${aws_cloudwatch_log_group.log_group.name}"
   }
 }

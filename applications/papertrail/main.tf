@@ -27,3 +27,6 @@ output "arn" {
   value = module.forwarder.arn
 }
 
+output "function_name" {
+  value = var.name
+}

@@ -114,6 +114,7 @@ module "dosomething" {
   northstar_pipeline            = module.shared.northstar_pipeline
   phoenix_pipeline              = module.shared.phoenix_pipeline
   rogue_pipeline                = module.shared.rogue_pipeline
+  papertrail_forwarder          = module.papertrail
   papertrail_destination        = var.papertrail_prod_destination
   papertrail_destination_fastly = var.papertrail_destination_fastly
 }
@@ -157,6 +158,8 @@ module "longshot" {
 # primarily used by Team Storm.
 module "quasar" {
   source = "./quasar"
+
+  papertrail_forwarder = module.papertrail
 }
 
 # The redirects property handles redirects for old domains, like
@@ -177,5 +180,13 @@ module "vote" {
 # voting campaigns like Celebs Gone Good & Athletes Gone Good.
 module "voting-app" {
   source = "./voting-app"
+}
+
+module "papertrail" {
+  source = "./applications/papertrail"
+
+  environment            = "production"
+  name                   = "papertrail"
+  papertrail_destination = var.papertrail_prod_destination
 }
 
