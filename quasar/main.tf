@@ -494,4 +494,8 @@ resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
   authentication_options {
     type = "certificate-authentication"
   }
+
+  connection_log_options {
+    enabled = true
+  }
 }
