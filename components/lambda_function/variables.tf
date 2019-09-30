@@ -24,7 +24,7 @@ variable "config_vars" {
 }
 
 variable "logger" {
-  description = "The Lambda function ARN to subscribe to this function's log group."
-  default     = ""
+  description = "The Lambda function module to subscribe to this function's log group."
+  default     = null
 }
 

@@ -87,7 +87,7 @@ module "papertrail" {
 module "example" {
   source = "../applications/hello-serverless"
 
-  logger = module.papertrail.arn
+  logger = module.papertrail
 }
 
 module "ashes" {

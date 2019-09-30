@@ -28,5 +28,5 @@ output "arn" {
 }
 
 output "function_name" {
-  value = var.name
+  value = module.forwarder.name
 }

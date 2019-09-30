@@ -30,7 +30,7 @@ module "app" {
   source = "../components/lambda_function"
 
   name   = "hello-serverless"
-  logger = "${module.papertrail.arn}"
+  logger = "${module.papertrail}"
 }
 ```
 
