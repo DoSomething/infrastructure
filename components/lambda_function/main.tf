@@ -55,11 +55,11 @@ resource "aws_cloudwatch_log_group" "log_group" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
-  count = var.logger == "" ? 0 : 1
+  count = var.logger != null ? 1 : 0
 
   name            = "papertrail_forwarder"
   log_group_name  = aws_cloudwatch_log_group.log_group.name
-  destination_arn = var.logger
+  destination_arn = var.logger.arn
   distribution    = "ByLogStream"
 
   # Forward all log messages:
@@ -67,10 +67,10 @@ resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch" {
-  count = var.logger == "" ? 0 : 1
+  count = var.logger != null ? 1 : 0
 
   action        = "lambda:InvokeFunction"
-  function_name = var.logger
+  function_name = var.logger.arn
   principal     = "logs.us-east-1.amazonaws.com"
   source_arn    = aws_cloudwatch_log_group.log_group.arn
 }

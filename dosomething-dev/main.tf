@@ -43,7 +43,7 @@ module "graphql" {
   environment = "development"
   name        = "dosomething-graphql-dev"
   domain      = "graphql-dev.dosomething.org"
-  logger      = module.papertrail.arn
+  logger      = module.papertrail
 }
 
 module "northstar" {
@@ -87,7 +87,7 @@ module "papertrail" {
 module "example" {
   source = "../applications/hello-serverless"
 
-  logger = module.papertrail.arn
+  logger = module.papertrail
 }
 
 module "ashes" {

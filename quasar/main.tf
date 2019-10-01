@@ -1,3 +1,10 @@
+variable "papertrail_forwarder" {}
+
+variable "logger" {
+  description = "The Lambda function ARN to subscribe to this function's log group."
+  default     = null
+}
+
 # Our Slack Lookerbot instance needs access to an S3 bucket to publish
 # visualizations.
 module "lookerbot" {
@@ -482,4 +489,47 @@ data "aws_acm_certificate" "vpn-server-cert" {
 
 data "aws_acm_certificate" "vpn-client-cert" {
   domain = "quasar-vpn-client.d12g.co"
+}
+
+# Log Group for VPN
+resource "aws_cloudwatch_log_group" "log_group" {
+  name              = "/aws/vpn/quasar"
+  retention_in_days = 14
+}
+
+resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
+  name            = "papertrail_forwarder"
+  log_group_name  = aws_cloudwatch_log_group.log_group.name
+  destination_arn = var.papertrail_forwarder.arn
+  distribution    = "ByLogStream"
+
+  # Forward all log messages:
+  filter_pattern = ""
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  count = var.logger == "" ? 0 : 1
+
+  action        = "lambda:InvokeFunction"
+  function_name = var.papertrail_forwarder.arn
+  principal     = "logs.us-east-1.amazonaws.com"
+  source_arn    = aws_cloudwatch_log_group.log_group.arn
+}
+
+resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
+  description            = "Quasar-Client-VPN"
+  server_certificate_arn = "${data.aws_acm_certificate.vpn-server-cert.arn}"
+  client_cidr_block      = "172.22.0.0/22"
+  split_tunnel           = true
+  transport_protocol     = "udp"
+
+  authentication_options {
+    type                       = "certificate-authentication"
+    root_certificate_chain_arn = "${data.aws_acm_certificate.vpn-client-cert.arn}"
+  }
+
+  connection_log_options {
+    enabled              = true
+    cloudwatch_log_group = "${aws_cloudwatch_log_group.log_group.name}"
+  }
 }

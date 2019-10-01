@@ -17,7 +17,7 @@ variable "domain" {
 
 variable "logger" {
   description = "The Lambda function ARN to subscribe to this function's log group."
-  default     = ""
+  default     = null
 }
 
 data "aws_ssm_parameter" "contentful_phoenix_space_id" {

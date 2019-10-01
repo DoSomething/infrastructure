@@ -37,7 +37,7 @@ terraform {
 # in front of (most of) our services & handles caching,
 # backend-routing, geolocation, redirects, etc.
 provider "fastly" {
-  version = "~> 0.8"
+  version = "0.9.0"
   api_key = var.fastly_api_key
 }
 
@@ -47,7 +47,7 @@ provider "fastly" {
 # visibility & to make cross-cloud dependencies (like AWS
 # resources or Fastly backends) easier to hook up.
 provider "heroku" {
-  version = "~> 2.0"
+  version = "2.2.0"
   email   = var.heroku_email
   api_key = var.heroku_api_key
 }
@@ -57,7 +57,7 @@ provider "heroku" {
 # some legacy servers on EC2. AWS credentials are stored
 # using the `aws` CLI (see installation instructions).
 provider "aws" {
-  version = "~> 2.28"
+  version = "2.30.0"
   region  = "us-east-1"
   profile = "terraform"
 }
@@ -114,6 +114,7 @@ module "dosomething" {
   northstar_pipeline            = module.shared.northstar_pipeline
   phoenix_pipeline              = module.shared.phoenix_pipeline
   rogue_pipeline                = module.shared.rogue_pipeline
+  papertrail_forwarder          = module.papertrail
   papertrail_destination        = var.papertrail_prod_destination
   papertrail_destination_fastly = var.papertrail_destination_fastly
 }
@@ -157,6 +158,8 @@ module "longshot" {
 # primarily used by Team Storm.
 module "quasar" {
   source = "./quasar"
+
+  papertrail_forwarder = module.papertrail
 }
 
 # The redirects property handles redirects for old domains, like
@@ -177,5 +180,15 @@ module "vote" {
 # voting campaigns like Celebs Gone Good & Athletes Gone Good.
 module "voting-app" {
   source = "./voting-app"
+}
+
+# We use this Lambda function to forward logs to Papertrail
+# for production applications & our Quasar warehouse.
+module "papertrail" {
+  source = "./applications/papertrail"
+
+  environment            = "production"
+  name                   = "papertrail"
+  papertrail_destination = var.papertrail_prod_destination
 }
 
