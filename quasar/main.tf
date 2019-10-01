@@ -1,5 +1,10 @@
 variable "papertrail_forwarder" {}
 
+variable "logger" {
+  description = "The Lambda function ARN to subscribe to this function's log group."
+  default     = null
+}
+
 # Our Slack Lookerbot instance needs access to an S3 bucket to publish
 # visualizations.
 module "lookerbot" {
@@ -500,6 +505,15 @@ resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
 
   # Forward all log messages:
   filter_pattern = ""
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  count = var.logger == "" ? 0 : 1
+
+  action        = "lambda:InvokeFunction"
+  function_name = var.papertrail_forwarder.arn
+  principal     = "logs.us-east-1.amazonaws.com"
+  source_arn    = aws_cloudwatch_log_group.log_group.arn
 }
 
 resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
