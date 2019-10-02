@@ -497,6 +497,11 @@ resource "aws_cloudwatch_log_group" "log_group" {
   retention_in_days = 14
 }
 
+resource "aws_cloudwatch_log_stream" "log_stream" {
+  name           = "quasar-vpn"
+  log_group_name = "${aws_cloudwatch_log_group.log_group.name}"
+}
+
 resource "aws_cloudwatch_log_subscription_filter" "papertrail_subscription" {
   name            = "papertrail_forwarder"
   log_group_name  = aws_cloudwatch_log_group.log_group.name
@@ -529,7 +534,8 @@ resource "aws_ec2_client_vpn_endpoint" "quasar-vpn-endpoint" {
   }
 
   connection_log_options {
-    enabled              = true
-    cloudwatch_log_group = "${aws_cloudwatch_log_group.log_group.name}"
+    enabled               = true
+    cloudwatch_log_group  = "${aws_cloudwatch_log_group.log_group.name}"
+    cloudwatch_log_stream = "${aws_cloudwatch_log_stream.log_stream.name}"
   }
 }
