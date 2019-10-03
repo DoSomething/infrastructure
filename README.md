@@ -4,10 +4,10 @@ This is DoSomething.org's infrastructure as code, built using [Terraform](https:
 
 ## Installation
 
-Install [Terraform](https://www.terraform.io) 0.12 and the [AWS CLI](https://aws.amazon.com/cli/). On macOS, this is easy with [Homebrew](https://brew.sh):
+Install [Terraform](https://www.terraform.io) 0.12. On macOS, this is easy with [Homebrew](https://brew.sh):
 
 ```sh
-brew install awscli terraform
+brew install terraform
 ```
 
 Create a [Terraform.io account](https://app.terraform.io/account/new) with your work email & ask for an invite to our organization in [#dev-infrastructure](https://dosomething.slack.com/messages/C03T8SDJJ/). Don't forget to [enable two-factor auth](https://www.terraform.io/docs/enterprise/users-teams-organizations/2fa.html)!  Then, [create a user API token](https://www.terraform.io/docs/enterprise/users-teams-organizations/users.html#api-tokens) and place it in your `~/.terraformrc` file, like so:
@@ -18,16 +18,10 @@ credentials "app.terraform.io" {
 }
 ```
 
-Next, configure provider secrets (see the "Terraform credentials" secure note in Lastpass) & install dependencies:
+Finally, configure your local environment & install dependencies:
 
 ```sh
-# Configure 'terraform' AWS profile:
-aws configure --profile terraform
-
-# Configure other backends w/ secrets from Lastpass:
-vi terraform.tfvars
-
-# Connect to remote backend & install dependencies:
+# Install dependencies, connect to Terraform Cloud, and configure git hooks:
 make init
 ```
 
@@ -43,11 +37,7 @@ Next, **make a plan** to find out how it will affect the current state of the sy
 make plan
 ```
 
-Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed, you can then **apply your change** to update the actual infrastructure. Terraform will make your changes, update the remote state, and ensure nobody else makes any changes until you're done:
-
-```sh
-make apply
-```
+Once you're satisfied with Terraform's plan, commit your work & make a pull request. After your pull request is reviewed and merged, you can then **apply your change** to update the actual infrastructure. Terraform Cloud will make your changes, update the remote state, and ensure nobody else makes any changes until you're done.
 
 See Terraform's [Getting Started guide](https://www.terraform.io/intro/getting-started/build.html) & [documentation](https://www.terraform.io/docs/index.html) for more details.
 
