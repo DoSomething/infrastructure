@@ -9,7 +9,7 @@ if (obj.status == 777) {
   }
 
   set obj.http.Location = var.new_location;
-  set obj.status = std.atoi(table.lookup(redirect_types, req.url, "302"));
+  set obj.status = 302;
 
   return(deliver);
 }
