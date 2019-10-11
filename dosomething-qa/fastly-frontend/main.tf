@@ -203,9 +203,5 @@ resource "fastly_service_v1" "frontend-qa" {
   dictionary {
     name = "redirects"
   }
-
-  dictionary {
-    name = "redirect_types"
-  }
 }
 
