@@ -115,10 +115,6 @@ module "storage" {
   user   = module.iam_user.name
 
   replication_target = var.backup_storage_bucket
-
-  # TODO: We should remove anywhere we depend on this behavior,
-  # such as Rogue's admin inbox, and then disable this.
-  force_public = true
 }
 
 output "name" {
