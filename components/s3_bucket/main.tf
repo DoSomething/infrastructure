@@ -11,7 +11,7 @@ variable "user" {
 # Optional variables:
 variable "acl" {
   description = "The canned ACL for this bucket. See: https://goo.gl/TFnRSY"
-  default     = "public-read"
+  default     = "private"
 }
 
 variable "versioning" {
