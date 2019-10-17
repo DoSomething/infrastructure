@@ -11,7 +11,7 @@ variable "user" {
 # Optional variables:
 variable "acl" {
   description = "The canned ACL for this bucket. See: https://goo.gl/TFnRSY"
-  default     = "public-read"
+  default     = "private"
 }
 
 variable "versioning" {
@@ -27,11 +27,6 @@ variable "archived" {
 variable "replication_target" {
   description = "Configure replication rules to the target bucket."
   default     = null
-}
-
-variable "force_public" {
-  description = "Force 'public read' permissions for objects. Not recommended."
-  default     = false
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -109,22 +104,6 @@ resource "aws_iam_user_policy" "s3_policy" {
   name   = "${var.name}-s3"
   user   = var.user
   policy = data.template_file.s3_policy[0].rendered
-}
-
-# Optional "force public" bucket policy:
-resource "aws_s3_bucket_policy" "bucket_policy" {
-  count = var.force_public ? 1 : 0
-
-  bucket = aws_s3_bucket.bucket.id
-  policy = data.template_file.public_bucket_policy.rendered
-}
-
-data "template_file" "public_bucket_policy" {
-  template = file("${path.module}/public-bucket-policy.json.tpl")
-
-  vars = {
-    bucket_arn = aws_s3_bucket.bucket.arn
-  }
 }
 
 # Replication rules:

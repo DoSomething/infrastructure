@@ -29,6 +29,7 @@ module "storage" {
 
   name = var.name
   user = module.iam_user.name
+  acl  = "public-read"
 }
 
 output "name" {
