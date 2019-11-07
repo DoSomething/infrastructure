@@ -112,17 +112,11 @@ resource "aws_iam_user" "lambda_deploy" {
 }
 
 resource "aws_iam_user_policy" "deploy_policy" {
-  user   = aws_iam_user.lambda_deploy.name
-  policy = data.template_file.deploy_policy.rendered
-}
-
-data "template_file" "deploy_policy" {
-  template = file("${path.module}/deploy-policy.json.tpl")
-
-  vars = {
+  user = aws_iam_user.lambda_deploy.name
+  policy = templatefile("${path.module}/deploy-policy.json.tpl", {
     deploy_bucket_arn   = aws_s3_bucket.deploy.arn
     lambda_function_arn = aws_lambda_function.function.arn
-  }
+  })
 }
 
 resource "aws_iam_access_key" "deploy_key" {
