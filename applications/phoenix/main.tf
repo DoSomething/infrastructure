@@ -94,7 +94,7 @@ module "app" {
 
   web_size = coalesce(
     var.web_size,
-    var.environment == "production" ? "Performance-M" : "Hobby",
+    var.environment == "production" ? "Performance-M" : "Standard-1X",
   )
 
   queue_scale = 0
