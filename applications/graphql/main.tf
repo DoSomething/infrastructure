@@ -50,6 +50,10 @@ data "aws_ssm_parameter" "gambit_password" {
   name = "/gambit/${local.gambit_env}/password"
 }
 
+data "aws_ssm_parameter" "greatschools_database_url" {
+  name = "/greatschools/database/url"
+}
+
 data "aws_ssm_parameter" "apollo_engine_api_key" {
   name = "/${var.name}-lambda/apollo/api-key"
 }
@@ -91,6 +95,8 @@ module "app" {
 
     GAMBIT_CONTENTFUL_SPACE_ID     = data.aws_ssm_parameter.contentful_gambit_space_id.value
     GAMBIT_CONTENTFUL_ACCESS_TOKEN = data.aws_ssm_parameter.contentful_gambit_content_api_key.value
+
+    SCHOOLS_DB_URL = data.aws_ssm_parameter.greatschools_database_url.value
 
     ENGINE_API_KEY = data.aws_ssm_parameter.apollo_engine_api_key.value
   }
