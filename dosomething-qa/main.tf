@@ -68,21 +68,14 @@ module "phoenix" {
   papertrail_destination = var.papertrail_destination
 }
 
-# module "rogue" {
-#   source = "../applications/rogue"
+module "rogue" {
+  source = "../applications/rogue"
 
-#   environment            = "qa"
-#   name                   = "dosomething-rogue-qa"
-#   domain                 = "activity-qa.dosomething.org"
-#   pipeline               = var.rogue_pipeline
-#   papertrail_destination = var.papertrail_destination
-#   deprecated             = true
-# }
-
-module "rogue_storage" {
-  source = "../components/s3_bucket"
-
-  name = "dosomething-rogue-qa"
+  environment            = "qa"
+  name                   = "dosomething-rogue-qa"
+  domain                 = "activity-qa.dosomething.org"
+  pipeline               = var.rogue_pipeline
+  papertrail_destination = var.papertrail_destination
 }
 
 module "papertrail" {
