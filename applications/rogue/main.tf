@@ -41,6 +41,11 @@ variable "backup_storage_bucket" {
   default     = null
 }
 
+variable "deprecated" {
+  description = "Deprecate this app, removing database users & allowing deletion."
+  default     = false
+}
+
 variable "with_newrelic" {
   # See usage below for default fallback. <https://stackoverflow.com/a/51758050/811624>
   description = "Should New Relic be enabled for this app? Enabled by default on prod."
@@ -96,6 +101,7 @@ module "database" {
   instance_class = var.environment == "production" ? "db.m4.large" : "db.t2.medium"
   multi_az       = var.environment == "production"
   is_dms_source  = true
+  deprecated     = var.deprecated
 }
 
 module "iam_user" {

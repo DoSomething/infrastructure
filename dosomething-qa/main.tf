@@ -76,6 +76,7 @@ module "rogue" {
   domain                 = "activity-qa.dosomething.org"
   pipeline               = var.rogue_pipeline
   papertrail_destination = var.papertrail_destination
+  deprecated             = true
 }
 
 module "papertrail" {
