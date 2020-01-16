@@ -31,9 +31,9 @@ module "fastly-backend" {
   northstar_domain  = module.northstar.domain
   northstar_backend = module.northstar.backend
 
-  rogue_name    = module.rogue.name
-  rogue_domain  = module.rogue.domain
-  rogue_backend = module.rogue.backend
+  rogue_name    = "dosomething-rogue-qa"
+  rogue_domain  = "activity-qa.dosomething.org"
+  rogue_backend = "dosomething-rogue-qa.herokuapp.com"
 
   papertrail_destination = var.papertrail_destination_fastly
   papertrail_log_format  = local.papertrail_log_format
@@ -68,15 +68,21 @@ module "phoenix" {
   papertrail_destination = var.papertrail_destination
 }
 
-module "rogue" {
-  source = "../applications/rogue"
+# module "rogue" {
+#   source = "../applications/rogue"
 
-  environment            = "qa"
-  name                   = "dosomething-rogue-qa"
-  domain                 = "activity-qa.dosomething.org"
-  pipeline               = var.rogue_pipeline
-  papertrail_destination = var.papertrail_destination
-  deprecated             = true
+#   environment            = "qa"
+#   name                   = "dosomething-rogue-qa"
+#   domain                 = "activity-qa.dosomething.org"
+#   pipeline               = var.rogue_pipeline
+#   papertrail_destination = var.papertrail_destination
+#   deprecated             = true
+# }
+
+module "rogue_storage" {
+  source = "../components/s3_bucket"
+
+  name = "dosomething-rogue-qa"
 }
 
 module "papertrail" {
