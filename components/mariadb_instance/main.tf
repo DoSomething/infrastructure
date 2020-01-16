@@ -133,6 +133,8 @@ resource "aws_db_instance" "database" {
 
   deletion_protection = false == var.deprecated
 
+  final_snapshot_identifier = "final-snapshot-${var.name}"
+
   tags = {
     Application = var.name
   }
