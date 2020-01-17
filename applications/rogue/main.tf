@@ -18,7 +18,7 @@
 #      'd.aed4c-371c-81f5-93d91'), here: <https://papertrailapp.com/groups/4485452>
 #
 # If configuring a production instance:
-#   8. Set 'SLACK_ENDPOINT' & 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
+#   8. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
 #
 # NOTE: We'll move more of these steps into Terraform over time!
 
