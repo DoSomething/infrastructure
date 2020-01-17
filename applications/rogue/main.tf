@@ -1,17 +1,22 @@
 # This template builds a Rogue application instance.
 #
-# Manual setup steps:
-#   - Set 'APP_KEY' by running 'php artisan generate:key'.
-#   - Set 'ROGUE_API_KEY' to a random string for this instance's v2 API key.
-#   - Create app-specific user & machine OAuth clients (via Aurora) and set the
-#     values for 'NORTHSTAR_URL', 'NORTHSTAR_AUTH_ID', 'NORTHSTAR_AUTH_SECRET',
-#      'NORTHSTAR_CLIENT_ID', and 'NORTHSTAR_CLIENT_SECRET'
-#   - Set 'BLINK_URL', 'BLINK_USERNAME', and 'BLINK_PASSWORD' if using
-#     Blink, and set 'DS_ENABLE_BLINK' environment variable to 'true'.
-#   - Set 'DS_ENABLE_BLINK', 'DS_ENABLE_GLIDE', 'DS_ENABLE_PUSH_TO_QUASAR',
-#     'DS_ENABLE_V3_QUANTITY_SUPPORT', 'FASTLY_API_TOKEN', 'FASTLY_SERVICE_ID',
-#     'FASTLY_URL', 'SLACK_ENDPOINT', and 'SLACK_WEBHOOK_INTEGRATION_URL'.
-#   - Finally, set '/newrelic/api-key' in SSM to the New Relic API Key, if using.
+# To create a new Rogue instance, 
+#   1. Configure this module's variable arguments & apply.
+#   2. The initial apply will fail trying to create 'heroku_formation' resources
+#      because code hasn't been deployed. Deploy this application's `master` branch
+#      via Heroku's web interface & then re-run the apply.
+#   3. Generate an 'APP_KEY' by running 'php artisan generate:key' on a local instance of
+#      this application. Copy-paste that value into `APP_KEY` in Heroku's web interface.
+#   4. Create app-specific user & machine OAuth clients (via Aurora) and set the
+#      appropriate values for the 'NORTHSTAR_AUTH_ID', 'NORTHSTAR_AUTH_SECRET',
+#      'NORTHSTAR_CLIENT_ID', and 'NORTHSTAR_CLIENT_SECRET' environment vars.
+#   5. Set 'BLINK_URL', 'BLINK_USERNAME', and 'BLINK_PASSWORD' if using
+#      Blink, and set 'DS_ENABLE_BLINK' environment variable to 'true'.
+#   6. Set 'FASTLY_API_TOKEN', 'FASTLY_SERVICE_ID' for the an app-specific Fastly
+#      API Key with the 'global:read' and 'purge_select' permissions.
+#
+# If configuring a production instance:
+#   7. Set 'SLACK_ENDPOINT' & 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
 #
 # NOTE: We'll move more of these steps into Terraform over time!
 
