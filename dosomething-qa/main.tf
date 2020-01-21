@@ -75,6 +75,8 @@ module "rogue" {
   name                   = "dosomething-rogue-qa"
   domain                 = "activity-qa.dosomething.org"
   pipeline               = var.rogue_pipeline
+  northstar_url          = "https://identity-qa.dosomething.org"
+  blink_url              = "https://blink-staging.dosomething.org/api/"
   papertrail_destination = var.papertrail_destination
 }
 

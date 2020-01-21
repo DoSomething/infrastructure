@@ -10,8 +10,8 @@
 #   4. Create app-specific user & machine OAuth clients (via Aurora) and set the
 #      appropriate values for the 'NORTHSTAR_AUTH_ID', 'NORTHSTAR_AUTH_SECRET',
 #      'NORTHSTAR_CLIENT_ID', and 'NORTHSTAR_CLIENT_SECRET' environment vars.
-#   5. Set 'BLINK_URL', 'BLINK_USERNAME', and 'BLINK_PASSWORD' if using
-#      Blink, and set 'DS_ENABLE_BLINK' environment variable to 'true'.
+#   5. If using Blink (for Customer.io), set 'BLINK_USERNAME' and 'BLINK_PASSWORD'
+#      via LastPass & set 'DS_ENABLE_BLINK' environment variable to 'true'.
 #   6. Set 'FASTLY_API_TOKEN', 'FASTLY_SERVICE_ID' for the an app-specific Fastly
 #      API Key with the 'global:read' and 'purge_select' permissions.
 #   7. Rename this app's Papertrail system (e.g. 'dosomething-rogue-qa' instead of
@@ -37,6 +37,14 @@ variable "domain" {
 
 variable "name" {
   description = "The application name."
+}
+
+variable "northstar_url" {
+  description = "The Northstar URL for this environment."
+}
+
+variable "blink_url" {
+  description = "The Blink URL for this environment."
 }
 
 variable "papertrail_destination" {
@@ -66,7 +74,9 @@ resource "random_id" "etcd_encryption_key" {
 locals {
   extra_config_vars = {
     # TODO: Merge this into the 'heroku_app' module if it works?
-    TEST_APP_KEY = "base64:${random_id.etcd_encryption_key.b64_std}"
+    TEST_APP_KEY  = "base64:${random_id.etcd_encryption_key.b64_std}"
+    NORTHSTAR_URL = var.northstar_url
+    BLINK_URL     = var.blink_url
   }
 }
 
