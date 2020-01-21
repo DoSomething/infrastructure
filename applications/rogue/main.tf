@@ -59,8 +59,14 @@ variable "with_newrelic" {
   default     = ""
 }
 
+resource "random_id" "etcd_encryption_key" {
+  byte_length = 32
+}
+
 locals {
-  legacy_config_vars = {
+  extra_config_vars = {
+    # TODO: Merge this into the 'heroku_app' module if it works?
+    TEST_APP_KEY = "base64:${random_id.etcd_encryption_key.b64_std}"
   }
 }
 
@@ -83,7 +89,7 @@ module "app" {
     module.queue.config_vars,
     module.iam_user.config_vars,
     module.storage.config_vars,
-    local.legacy_config_vars,
+    local.extra_config_vars,
   )
 
   # We don't run a queue process on development right now. @TODO: Should we?
