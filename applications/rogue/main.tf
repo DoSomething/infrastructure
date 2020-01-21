@@ -71,14 +71,14 @@ variable "with_newrelic" {
   default     = ""
 }
 
-resource "random_id" "etcd_encryption_key" {
+resource "random_id" "app_key" {
   byte_length = 32
 }
 
 locals {
   extra_config_vars = {
     # TODO: Merge this into the 'heroku_app' module's Laravel env vars?
-    APP_KEY = "base64:${random_id.etcd_encryption_key.b64_std}"
+    APP_KEY = "base64:${random_id.app_key.b64_std}"
 
     # Services this application relies on:
     NORTHSTAR_URL = var.northstar_url
