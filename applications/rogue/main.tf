@@ -1,10 +1,10 @@
 # This template builds a Rogue application instance.
 #
 # To create a new Rogue instance, 
-#   1. Configure this module's variable arguments & apply.
+#   1. Configure a new 'rogue' module with the required variable arguments & apply.
 #   2. The initial apply will fail trying to create 'heroku_formation' resources
 #      because code hasn't been deployed. Deploy this application's `master` branch
-#      via Heroku's web interface & then re-run the apply.
+#      via Heroku's web interface & then re-run the apply. It should be successful.
 #   3. Generate an 'APP_KEY' by running 'php artisan generate:key' on a local instance of
 #      this application. Copy-paste that value into `APP_KEY` in Heroku's web interface.
 #   4. Create app-specific user & machine OAuth clients (via Aurora) and set the
@@ -12,13 +12,15 @@
 #      'NORTHSTAR_CLIENT_ID', and 'NORTHSTAR_CLIENT_SECRET' environment vars.
 #   5. If using Blink (for Customer.io), set 'BLINK_USERNAME' and 'BLINK_PASSWORD'
 #      via LastPass & set 'DS_ENABLE_BLINK' environment variable to 'true'.
-#   6. Set 'FASTLY_API_TOKEN', 'FASTLY_SERVICE_ID' for the an app-specific Fastly
-#      API Key with the 'global:read' and 'purge_select' permissions.
-#   7. Rename this app's Papertrail system (e.g. 'dosomething-rogue-qa' instead of
+#   6. Set 'FASTLY_SERVICE_ID' to the appropriate Fastly service for this environment.
+#   7. Create an app-specific Fastly API Key with the 'global:read' and 'purge_select'
+#      permissions <https://manage.fastly.com/account/personal/tokens> and set that 
+#      secret in the 'FASTLY_API_TOKEN' environment variable.
+#   8. Rename this app's Papertrail system (e.g. 'dosomething-rogue-qa' instead of
 #      'd.aed4c-371c-81f5-93d91'), here: <https://papertrailapp.com/groups/4485452>
 #
 # If configuring a production instance:
-#   8. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
+#   9. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
 #
 # NOTE: We'll move more of these steps into Terraform over time!
 
