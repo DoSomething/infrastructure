@@ -45,6 +45,10 @@ variable "northstar_url" {
   description = "The Northstar URL for this environment."
 }
 
+variable "graphql_url" {
+  description = "The GraphQL gateway URL for this environment."
+}
+
 variable "blink_url" {
   description = "The Blink URL for this environment."
 }
@@ -78,6 +82,7 @@ locals {
     # TODO: Merge this into the 'heroku_app' module if it works?
     TEST_APP_KEY  = "base64:${random_id.etcd_encryption_key.b64_std}"
     NORTHSTAR_URL = var.northstar_url
+    GRAPHQL_URL   = var.graphql_url
     BLINK_URL     = var.blink_url
   }
 }
