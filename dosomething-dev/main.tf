@@ -73,6 +73,9 @@ module "rogue" {
   name                   = "dosomething-rogue-dev"
   domain                 = "activity-dev.dosomething.org"
   pipeline               = var.rogue_pipeline
+  northstar_url          = "https://identity-dev.dosomething.org"
+  graphql_url            = "https://graphql-dev.dosomething.org/graphql"
+  blink_url              = "https://blink-staging.dosomething.org/api/"
   papertrail_destination = var.papertrail_destination
 }
 

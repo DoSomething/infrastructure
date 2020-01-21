@@ -1,17 +1,26 @@
 # This template builds a Rogue application instance.
 #
-# Manual setup steps:
-#   - Set 'APP_KEY' by running 'php artisan generate:key'.
-#   - Set 'ROGUE_API_KEY' to a random string for this instance's v2 API key.
-#   - Create app-specific user & machine OAuth clients (via Aurora) and set the
-#     values for 'NORTHSTAR_URL', 'NORTHSTAR_AUTH_ID', 'NORTHSTAR_AUTH_SECRET',
-#      'NORTHSTAR_CLIENT_ID', and 'NORTHSTAR_CLIENT_SECRET'
-#   - Set 'BLINK_URL', 'BLINK_USERNAME', and 'BLINK_PASSWORD' if using
-#     Blink, and set 'DS_ENABLE_BLINK' environment variable to 'true'.
-#   - Set 'DS_ENABLE_BLINK', 'DS_ENABLE_GLIDE', 'DS_ENABLE_PUSH_TO_QUASAR',
-#     'DS_ENABLE_V3_QUANTITY_SUPPORT', 'FASTLY_API_TOKEN', 'FASTLY_SERVICE_ID',
-#     'FASTLY_URL', 'SLACK_ENDPOINT', and 'SLACK_WEBHOOK_INTEGRATION_URL'.
-#   - Finally, set '/newrelic/api-key' in SSM to the New Relic API Key, if using.
+# To create a new Rogue instance, 
+#   1. Configure a new 'rogue' module with the required variable arguments & apply.
+#   2. The initial apply will fail trying to create 'heroku_formation' resources
+#      because code hasn't been deployed. Deploy this application's `master` branch
+#      via Heroku's web interface & then re-run the apply. It should be successful.
+#   3. Generate an 'APP_KEY' by running 'php artisan generate:key' on a local instance of
+#      this application. Copy-paste that value into `APP_KEY` in Heroku's web interface.
+#   4. Create app-specific user & machine OAuth clients (via Aurora) and set the
+#      appropriate values for the 'NORTHSTAR_AUTH_ID', 'NORTHSTAR_AUTH_SECRET',
+#      'NORTHSTAR_CLIENT_ID', and 'NORTHSTAR_CLIENT_SECRET' environment vars.
+#   5. If using Blink (for Customer.io), set 'BLINK_USERNAME' and 'BLINK_PASSWORD'
+#      via LastPass & set 'DS_ENABLE_BLINK' environment variable to 'true'.
+#   6. Set 'FASTLY_SERVICE_ID' to the appropriate Fastly service for this environment.
+#   7. Create an app-specific Fastly API Key with the 'global:read' and 'purge_select'
+#      permissions <https://manage.fastly.com/account/personal/tokens> and set that 
+#      secret in the 'FASTLY_API_TOKEN' environment variable.
+#   8. Rename this app's Papertrail system (e.g. 'dosomething-rogue-qa' instead of
+#      'd.aed4c-371c-81f5-93d91'), here: <https://papertrailapp.com/groups/4485452>
+#
+# If configuring a production instance:
+#   9. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
 #
 # NOTE: We'll move more of these steps into Terraform over time!
 
@@ -30,6 +39,18 @@ variable "domain" {
 
 variable "name" {
   description = "The application name."
+}
+
+variable "northstar_url" {
+  description = "The Northstar URL for this environment."
+}
+
+variable "graphql_url" {
+  description = "The GraphQL gateway URL for this environment."
+}
+
+variable "blink_url" {
+  description = "The Blink URL for this environment."
 }
 
 variable "papertrail_destination" {
@@ -52,13 +73,17 @@ variable "with_newrelic" {
   default     = ""
 }
 
+resource "random_id" "etcd_encryption_key" {
+  byte_length = 32
+}
+
 locals {
-  # TODO: Remove these once application is updated to use new vars.
-  legacy_config_vars = {
-    S3_KEY                = module.iam_user.config_vars["AWS_ACCESS_KEY"]
-    S3_SECRET             = module.iam_user.config_vars["AWS_SECRET_KEY"]
-    SQS_ACCESS_KEY_ID     = module.iam_user.config_vars["AWS_ACCESS_KEY"]
-    SQS_SECRET_ACCESS_KEY = module.iam_user.config_vars["AWS_SECRET_KEY"]
+  extra_config_vars = {
+    # TODO: Merge this into the 'heroku_app' module if it works?
+    TEST_APP_KEY  = "base64:${random_id.etcd_encryption_key.b64_std}"
+    NORTHSTAR_URL = var.northstar_url
+    GRAPHQL_URL   = var.graphql_url
+    BLINK_URL     = var.blink_url
   }
 }
 
@@ -81,7 +106,7 @@ module "app" {
     module.queue.config_vars,
     module.iam_user.config_vars,
     module.storage.config_vars,
-    local.legacy_config_vars,
+    local.extra_config_vars,
   )
 
   # We don't run a queue process on development right now. @TODO: Should we?

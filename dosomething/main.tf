@@ -117,6 +117,9 @@ module "rogue" {
   name                   = "dosomething-rogue"
   domain                 = "activity.dosomething.org"
   pipeline               = var.rogue_pipeline
+  northstar_url          = "https://identity.dosomething.org"
+  graphql_url            = "https://graphql.dosomething.org/graphql"
+  blink_url              = "https://blink.dosomething.org/api/"
   papertrail_destination = var.papertrail_destination
   backup_storage_bucket  = module.rogue_backup.bucket
 }
