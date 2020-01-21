@@ -60,12 +60,7 @@ variable "with_newrelic" {
 }
 
 locals {
-  # TODO: Remove these once application is updated to use new vars.
   legacy_config_vars = {
-    S3_KEY                = module.iam_user.config_vars["AWS_ACCESS_KEY"]
-    S3_SECRET             = module.iam_user.config_vars["AWS_SECRET_KEY"]
-    SQS_ACCESS_KEY_ID     = module.iam_user.config_vars["AWS_ACCESS_KEY"]
-    SQS_SECRET_ACCESS_KEY = module.iam_user.config_vars["AWS_SECRET_KEY"]
   }
 }
 
