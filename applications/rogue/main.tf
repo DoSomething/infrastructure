@@ -5,22 +5,20 @@
 #   2. The initial apply will fail trying to create 'heroku_formation' resources
 #      because code hasn't been deployed. Deploy this application's `master` branch
 #      via Heroku's web interface & then re-run the apply. It should be successful.
-#   3. Generate an 'APP_KEY' by running 'php artisan generate:key' on a local instance of
-#      this application. Copy-paste that value into `APP_KEY` in Heroku's web interface.
-#   4. Create app-specific user & machine OAuth clients (via Aurora) and set the
+#   3. Create app-specific user & machine OAuth clients (via Aurora) and set the
 #      appropriate values for the 'NORTHSTAR_AUTH_ID', 'NORTHSTAR_AUTH_SECRET',
 #      'NORTHSTAR_CLIENT_ID', and 'NORTHSTAR_CLIENT_SECRET' environment vars.
-#   5. If using Blink (for Customer.io), set 'BLINK_USERNAME' and 'BLINK_PASSWORD'
+#   4. If using Blink (for Customer.io), set 'BLINK_USERNAME' and 'BLINK_PASSWORD'
 #      via LastPass & set 'DS_ENABLE_BLINK' environment variable to 'true'.
-#   6. Set 'FASTLY_SERVICE_ID' to the appropriate Fastly service for this environment.
-#   7. Create an app-specific Fastly API Key with the 'global:read' and 'purge_select'
+#   5. Set 'FASTLY_SERVICE_ID' to the appropriate Fastly service for this environment.
+#   6. Create an app-specific Fastly API Key with the 'global:read' and 'purge_select'
 #      permissions <https://manage.fastly.com/account/personal/tokens> and set that 
 #      secret in the 'FASTLY_API_TOKEN' environment variable.
-#   8. Rename this app's Papertrail system (e.g. 'dosomething-rogue-qa' instead of
+#   7. Rename this app's Papertrail system (e.g. 'dosomething-rogue-qa' instead of
 #      'd.aed4c-371c-81f5-93d91'), here: <https://papertrailapp.com/groups/4485452>
 #
 # If configuring a production instance:
-#   9. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
+#   8. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
 #
 # NOTE: We'll move more of these steps into Terraform over time!
 
@@ -73,14 +71,16 @@ variable "with_newrelic" {
   default     = ""
 }
 
-resource "random_id" "etcd_encryption_key" {
+resource "random_id" "app_key" {
   byte_length = 32
 }
 
 locals {
   extra_config_vars = {
-    # TODO: Merge this into the 'heroku_app' module if it works?
-    TEST_APP_KEY  = "base64:${random_id.etcd_encryption_key.b64_std}"
+    # TODO: Merge this into the 'heroku_app' module's Laravel env vars?
+    APP_KEY = "base64:${random_id.app_key.b64_std}"
+
+    # Services this application relies on:
     NORTHSTAR_URL = var.northstar_url
     GRAPHQL_URL   = var.graphql_url
     BLINK_URL     = var.blink_url
