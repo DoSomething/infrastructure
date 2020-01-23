@@ -1,12 +1,56 @@
-provider "aws" {}
-provider "aws" { alias = "west" }
-
+variable "fastly_api_key" {}
+variable "heroku_email" {}
+variable "heroku_api_key" {}
+variable "papertrail_destination" {}
+variable "papertrail_destination_fastly" {}
 variable "northstar_pipeline" {}
 variable "phoenix_pipeline" {}
 variable "rogue_pipeline" {}
-variable "papertrail_forwarder" {}
-variable "papertrail_destination" {}
-variable "papertrail_destination_fastly" {}
+
+terraform {
+  backend "remote" {
+    organization = "dosomething"
+
+    workspaces {
+      prefix = "dosomething-"
+    }
+  }
+}
+
+provider "fastly" {
+  version = "0.9.0"
+  api_key = var.fastly_api_key
+}
+
+provider "heroku" {
+  version = "2.2.0"
+  email   = var.heroku_email
+  api_key = var.heroku_api_key
+}
+
+provider "aws" {
+  version = "2.30.0"
+  region  = "us-east-1"
+  profile = "terraform"
+}
+
+provider "aws" {
+  alias   = "west"
+  region  = "us-west-1"
+  profile = "terraform"
+}
+
+provider "template" {
+  version = "~> 2.1"
+}
+
+provider "random" {
+  version = "~> 2.0"
+}
+
+provider "null" {
+  version = "~> 2.1"
+}
 
 locals {
   papertrail_log_format = "%t '%r' status=%>s app=%%{X-Application-Name}o cache=\"%%{X-Cache}o\" country=%%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%%{User-Agent}i\" service=%%{time.elapsed.msec}Vms"
