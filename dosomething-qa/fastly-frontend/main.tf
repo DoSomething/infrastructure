@@ -27,7 +27,7 @@ resource "fastly_service_v1" "frontend-qa" {
 
   response_object {
     name              = "robots.txt deny"
-    content           = file("${path.root}/shared/deny-robots.txt")
+    content           = file("${path.module}/deny-robots.txt")
     request_condition = "path-robots"
   }
 
@@ -40,7 +40,7 @@ resource "fastly_service_v1" "frontend-qa" {
   response_object {
     name              = "timed synthetic takeover"
     request_condition = "timed-synthetic-takeover"
-    content           = file("${path.root}/shared/takeovers/election.html")
+    content           = file("${path.module}/takeovers/election.html")
   }
 
   backend {
@@ -126,13 +126,13 @@ resource "fastly_service_v1" "frontend-qa" {
   snippet {
     name    = "Frontend - ISO-3166-2 Request Header"
     type    = "recv"
-    content = file("${path.root}/shared/iso3166_recv.vcl")
+    content = file("${path.module}/iso3166_recv.vcl")
   }
 
   snippet {
     name    = "Frontend - ISO-3166-2 Response Header"
     type    = "deliver"
-    content = file("${path.root}/shared/iso3166_deliver.vcl")
+    content = file("${path.module}/iso3166_deliver.vcl")
   }
 
   snippet {
@@ -176,7 +176,7 @@ resource "fastly_service_v1" "frontend-qa" {
   snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
-    content = file("${path.root}/shared/app_name.vcl")
+    content = file("${path.module}/app_name.vcl")
   }
 
   snippet {
@@ -190,7 +190,7 @@ resource "fastly_service_v1" "frontend-qa" {
   snippet {
     name    = "Shared - Static Homepage Takeover"
     type    = "recv"
-    content = file("${path.root}/shared/takeover_recv.vcl")
+    content = file("${path.module}/takeover_recv.vcl")
   }
 
   papertrail {
