@@ -1,8 +1,11 @@
+variable "fastly_api_key" {}
+variable "heroku_email" {}
+variable "heroku_api_key" {}
+variable "papertrail_destination" {}
+variable "papertrail_destination_fastly" {}
 variable "northstar_pipeline" {}
 variable "phoenix_pipeline" {}
 variable "rogue_pipeline" {}
-variable "papertrail_destination" {}
-variable "papertrail_destination_fastly" {}
 
 terraform {
   backend "remote" {
