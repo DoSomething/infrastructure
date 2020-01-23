@@ -26,7 +26,7 @@ terraform {
     organization = "dosomething"
 
     workspaces {
-      name = "infrastructure"
+      prefix = "dosomething-"
     }
   }
 }
