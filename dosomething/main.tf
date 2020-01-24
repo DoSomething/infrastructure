@@ -182,7 +182,6 @@ module "papertrail" {
   papertrail_destination = var.papertrail_destination
 }
 
-output {
-  name  = "papertrail_forwarder"
+output "papertrail_forwarder" {
   value = module.forwarder
 }
