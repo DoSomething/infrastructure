@@ -1,3 +1,27 @@
+terraform {
+  backend "remote" {
+    organization = "dosomething"
+
+    workspaces {
+      name = "quasar"
+    }
+  }
+}
+
+provider "aws" {
+  version = "2.30.0"
+  region  = "us-east-1"
+  profile = "terraform"
+}
+
+provider "template" {
+  version = "~> 2.1"
+}
+
+provider "random" {
+  version = "~> 2.0"
+}
+
 # Our Slack Lookerbot instance needs access to an S3 bucket to publish
 # visualizations.
 module "lookerbot" {
