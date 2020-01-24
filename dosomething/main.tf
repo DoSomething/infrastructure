@@ -183,5 +183,5 @@ module "papertrail" {
 }
 
 output "papertrail_forwarder" {
-  value = module.forwarder
+  value = module.papertrail
 }
