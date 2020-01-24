@@ -13,11 +13,6 @@ terraform {
   }
 }
 
-provider "fastly" {
-  version = "0.9.0"
-  api_key = var.fastly_api_key
-}
-
 provider "heroku" {
   version = "2.2.0"
   email   = var.heroku_email
