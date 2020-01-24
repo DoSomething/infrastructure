@@ -1,3 +1,5 @@
+variable "heroku_email" {}
+variable "heroku_api_key" {}
 variable "papertrail_prod_destination" {}
 variable "papertrail_qa_destination" {}
 
