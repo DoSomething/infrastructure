@@ -1,10 +1,3 @@
-variable "papertrail_forwarder" {}
-
-variable "logger" {
-  description = "The Lambda function ARN to subscribe to this function's log group."
-  default     = null
-}
-
 # Our Slack Lookerbot instance needs access to an S3 bucket to publish
 # visualizations.
 module "lookerbot" {
