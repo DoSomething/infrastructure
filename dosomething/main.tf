@@ -106,7 +106,7 @@ module "graphql" {
   environment = "production"
   name        = "dosomething-graphql"
   domain      = "graphql.dosomething.org"
-  logger      = var.papertrail_forwarder
+  logger      = module.papertrail
 }
 
 module "northstar" {
@@ -179,5 +179,10 @@ module "papertrail" {
 
   environment            = "production"
   name                   = "papertrail"
-  papertrail_destination = var.papertrail_prod_destination
+  papertrail_destination = var.papertrail_destination
+}
+
+output {
+  name  = "papertrail_forwarder"
+  value = module.forwarder
 }
