@@ -1,3 +1,20 @@
+variable "fastly_api_key" {}
+
+terraform {
+  backend "remote" {
+    organization = "dosomething"
+
+    workspaces {
+      name = "redirects"
+    }
+  }
+}
+
+provider "fastly" {
+  version = "0.9.0"
+  api_key = var.fastly_api_key
+}
+
 resource "fastly_service_v1" "redirects" {
   name          = "Terraform: Domain Redirects, #1"
   force_destroy = true
