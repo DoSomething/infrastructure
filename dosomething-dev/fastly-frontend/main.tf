@@ -107,20 +107,20 @@ resource "fastly_service_v1" "frontend-dev" {
 
   response_object {
     name              = "robots.txt deny"
-    content           = file("${path.root}/shared/deny-robots.txt")
+    content           = file("${path.module}/deny-robots.txt")
     request_condition = "path-robots"
   }
 
   snippet {
     name    = "Frontend - ISO-3166-2 Request Header"
     type    = "recv"
-    content = file("${path.root}/shared/iso3166_recv.vcl")
+    content = file("${path.module}/iso3166_recv.vcl")
   }
 
   snippet {
     name    = "Frontend - ISO-3166-2 Response Header"
     type    = "deliver"
-    content = file("${path.root}/shared/iso3166_deliver.vcl")
+    content = file("${path.module}/iso3166_deliver.vcl")
   }
 
   snippet {
@@ -164,7 +164,7 @@ resource "fastly_service_v1" "frontend-dev" {
   snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
-    content = file("${path.root}/shared/app_name.vcl")
+    content = file("${path.module}/app_name.vcl")
   }
 
   papertrail {

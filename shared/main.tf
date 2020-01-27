@@ -1,3 +1,28 @@
+variable "heroku_email" {}
+variable "heroku_api_key" {}
+
+terraform {
+  backend "remote" {
+    organization = "dosomething"
+
+    workspaces {
+      name = "shared"
+    }
+  }
+}
+
+provider "aws" {
+  version = "2.30.0"
+  region  = "us-east-1"
+  profile = "terraform"
+}
+
+provider "heroku" {
+  version = "2.2.0"
+  email   = var.heroku_email
+  api_key = var.heroku_api_key
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_kms_alias" "default" {

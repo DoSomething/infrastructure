@@ -70,7 +70,7 @@ resource "fastly_service_v1" "backends" {
 
   response_object {
     name              = "robots.txt deny for phoenix-preview"
-    content           = file("${path.root}/shared/deny-robots.txt")
+    content           = file("${path.module}/deny-robots.txt")
     request_condition = "path-robots-preview"
   }
 
@@ -176,7 +176,7 @@ resource "fastly_service_v1" "backends" {
   snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
-    content = file("${path.root}/shared/app_name.vcl")
+    content = file("${path.module}/app_name.vcl")
   }
 
   papertrail {

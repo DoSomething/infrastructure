@@ -1,4 +1,26 @@
+variable "fastly_api_key" {}
 variable "papertrail_destination" {}
+
+terraform {
+  backend "remote" {
+    organization = "dosomething"
+
+    workspaces {
+      name = "vote-instapage"
+    }
+  }
+}
+
+provider "aws" {
+  version = "2.30.0"
+  region  = "us-east-1"
+  profile = "terraform"
+}
+
+provider "fastly" {
+  version = "0.9.0"
+  api_key = var.fastly_api_key
+}
 
 variable "s3_routes" {
   default = "^/(static|vendor)"
