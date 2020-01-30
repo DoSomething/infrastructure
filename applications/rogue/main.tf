@@ -23,7 +23,7 @@
 #      changes. More details here <https://www.pivotaltracker.com/story/show/170956852> .
 #
 # If configuring a production instance:
-#   8. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
+#   9. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
 #
 # NOTE: We'll move more of these steps into Terraform over time!
 
