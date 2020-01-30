@@ -16,6 +16,11 @@
 #      secret in the 'FASTLY_API_TOKEN' environment variable.
 #   7. Rename this app's Papertrail system (e.g. 'dosomething-rogue-qa' instead of
 #      'd.aed4c-371c-81f5-93d91'), here: <https://papertrailapp.com/groups/4485452>
+#   8. When setting up a new Rogue RDS instance or restoring an instance from backups
+#      make sure, as the mysql admin user, to run the following command:
+#      `call mysql.rds_set_configuration('binlog retention hours', 24);`
+#      This is required for the Data team's Fivetran connector to pull incremental data
+#      changes. More details here <https://www.pivotaltracker.com/story/show/170956852> .
 #
 # If configuring a production instance:
 #   8. Set 'SLACK_WEBHOOK_INTEGRATION_URL' for #notify-badass-members integration.
