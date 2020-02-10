@@ -42,10 +42,7 @@ resource "aws_s3_bucket" "deploy" {
 resource "aws_s3_bucket_object" "release" {
   bucket = aws_s3_bucket.deploy.id
   key    = "release.zip"
-
-  # We hard-code this module's path (from the root) here to avoid an issue
-  # where ${path.module} marks this as "dirty" on different machines.
-  source = "components/lambda_function/default-${var.runtime}.zip"
+  source = "default-${var.runtime}.zip"
 }
 
 # Log group:
