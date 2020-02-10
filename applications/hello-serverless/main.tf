@@ -6,7 +6,7 @@ module "app" {
   source = "../../components/lambda_function"
 
   name    = "hello-serverless"
-  runtime = "nodejs8.10"
+  runtime = "nodejs12.x"
   logger  = var.logger
 }
 
