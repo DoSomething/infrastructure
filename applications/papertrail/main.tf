@@ -14,7 +14,7 @@ module "forwarder" {
   source = "../../components/lambda_function"
 
   name    = var.name
-  runtime = "nodejs8.10"
+  runtime = "nodejs12.x"
   handler = "handler.log"
 
   config_vars = {
