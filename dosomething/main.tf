@@ -29,7 +29,7 @@ provider "heroku" {
 }
 
 provider "aws" {
-  version = "2.30.0"
+  version = "2.48.0"
   region  = "us-east-1"
   profile = "terraform"
 }

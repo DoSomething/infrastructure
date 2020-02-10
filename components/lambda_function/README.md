@@ -8,14 +8,14 @@ For all options, see the [variables](https://github.com/DoSomething/infrastructu
 
 ### Usage
 
-We currently support Lambda functions running `nodejs8.10`, `python2.7`, and `python3.7`.
+We currently support Lambda functions running `nodejs12.x`, `python2.7`, and `python3.7`.
 
 ```hcl
 module "app" {
   source = "../components/lambda_function"
 
   name    = "hello-serverless"
-  runtime = "nodejs8.10"
+  runtime = "nodejs12.x"
 
   # Optional: Run the 'handler' function exported from 'main.js'.
   # This defaults to 'main.handler' if not explicitly set.

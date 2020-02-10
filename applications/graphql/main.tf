@@ -72,7 +72,7 @@ module "app" {
 
   name    = var.name
   handler = "main.handler"
-  runtime = "nodejs8.10"
+  runtime = "nodejs12.x"
   logger  = var.logger
 
   config_vars = {

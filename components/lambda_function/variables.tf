@@ -4,7 +4,7 @@ variable "name" {
 }
 
 variable "runtime" {
-  description = "The Lambda runtime to use. We support nodejs8.10, python2.7, and python3.7"
+  description = "The Lambda runtime to use. We support nodejs12.x, python2.7, and python3.7"
 }
 
 variable "handler" {
