@@ -42,7 +42,7 @@ resource "aws_s3_bucket" "deploy" {
 resource "aws_s3_bucket_object" "release" {
   bucket = aws_s3_bucket.deploy.id
   key    = "release.zip"
-  source = "default-${var.runtime}.zip"
+  source = "${path.module}/default-${var.runtime}.zip"
 }
 
 # Log group:
