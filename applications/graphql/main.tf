@@ -111,7 +111,7 @@ module "contentful_webhook" {
 
   name    = "${var.name}-webhook"
   handler = "webhook.handler"
-  runtime = "nodejs8.10"
+  runtime = "nodejs12.x"
   logger  = var.logger
 
   config_vars = {
