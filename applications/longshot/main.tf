@@ -62,27 +62,17 @@ locals {
 module "app" {
   source = "../../components/heroku_app"
 
-  framework   = "laravel"
+  framework   = "express"
   name        = var.name
   domain      = var.domain
   pipeline    = var.pipeline
   environment = var.environment
 
-  config_vars = merge(
-    module.database.config_vars,
-    module.queue.config_vars,
-    module.storage.config_vars,
-    module.iam_user.config_vars,
-    local.mail_config_vars,
-  )
-
   web_scale   = 1
-  queue_scale = 1
-
-  with_redis = true
+  queue_scale = 0
 
   papertrail_destination = var.papertrail_destination
-  with_newrelic          = coalesce(var.with_newrelic, var.environment == "production")
+  with_newrelic          = false
 }
 
 module "database" {
@@ -101,12 +91,6 @@ module "database" {
 module "iam_user" {
   source = "../../components/iam_app_user"
   name   = var.name
-}
-
-module "queue" {
-  source = "../../components/sqs_queue"
-  name   = var.name
-  user   = module.iam_user.name
 }
 
 module "storage" {
