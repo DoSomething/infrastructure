@@ -102,7 +102,7 @@ resource "fastly_service_v1" "backends" {
     address           = var.northstar_backend
     name              = var.northstar_name
     request_condition = "backend-northstar"
-    shield            = "iad-va-us"
+    shield            = "bwi-va-us"
     auto_loadbalance  = false
     port              = 443
   }
@@ -111,7 +111,7 @@ resource "fastly_service_v1" "backends" {
     address           = var.phoenix_preview_backend
     name              = var.phoenix_preview_name
     request_condition = "backend-phoenix-preview"
-    shield            = "iad-va-us"
+    shield            = "bwi-va-us"
     auto_loadbalance  = false
     port              = 443
   }
@@ -120,7 +120,7 @@ resource "fastly_service_v1" "backends" {
     address           = var.rogue_backend
     name              = var.rogue_name
     request_condition = "backend-rogue"
-    shield            = "iad-va-us"
+    shield            = "bwi-va-us"
     auto_loadbalance  = false
     port              = 443
   }
