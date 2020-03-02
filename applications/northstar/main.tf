@@ -116,12 +116,7 @@ module "app" {
   # We use autoscaling in production, so don't try to manage dynos there.
   ignore_web = var.environment == "production"
 
-  # We don't run a queue process on development right now. @TODO: Should we?
-  queue_scale = {
-    "development" = 0
-    "qa"          = 1
-    "production"  = 3
-  }[var.environment]
+  queue_scale = 1
 
   with_redis = true
   redis_type = var.environment == "production" ? "premium-1" : "hobby-dev"
