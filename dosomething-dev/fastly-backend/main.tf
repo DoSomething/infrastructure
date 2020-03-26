@@ -172,6 +172,12 @@ resource "fastly_service_v1" "backends-dev" {
     content = file("${path.module}/app_name.vcl")
   }
 
+  snippet {
+    name    = "Fix Geolocation With Shielding On"
+    type    = "recv"
+    content = file("${path.module}/recv_geolocation.vcl")
+  }
+
   papertrail {
     name    = "backend"
     address = element(split(":", var.papertrail_destination), 0)
