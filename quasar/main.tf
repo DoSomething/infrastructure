@@ -265,7 +265,7 @@ resource "aws_db_parameter_group" "quasar-qa-pg11" {
   # Sets effective RAM available to PG Query planner before using disk.
   parameter {
     name  = "effective_cache_size"
-    value = "24000000"
+    value = "12000000"
   }
 
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
@@ -280,7 +280,7 @@ resource "aws_db_parameter_group" "quasar-qa-pg11" {
   # Based on 50 connections.
   parameter {
     name  = "work_mem"
-    value = "20971"
+    value = "41943"
   }
 
   # Recommended to only allow SSL connections from clients.
@@ -464,8 +464,8 @@ data "aws_ssm_parameter" "prod_password" {
 resource "aws_db_instance" "quasar-qa" {
   allocated_storage               = 4000
   engine                          = "postgres"
-  engine_version                  = "11.4"
-  instance_class                  = "db.m5.2xlarge"
+  engine_version                  = "11.6"
+  instance_class                  = "db.m5.xlarge"
   allow_major_version_upgrade     = true
   name                            = "quasar"
   username                        = data.aws_ssm_parameter.qa_username.value
