@@ -499,3 +499,24 @@ resource "aws_db_instance" "quasar" {
   performance_insights_enabled    = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
+
+
+# Provide S3 Bucket for Customer.io data file exports.
+
+locals {
+  cio_export = "quasar-cio"
+}
+
+module "iam_user" {
+  source = "../components/iam_app_user"
+  name   = local.cio_export
+}
+
+module "storage" {
+  source = "../components/s3_bucket"
+
+  name       = local.cio_export
+  user       = module.iam_user.name
+  acl        = "private"
+  versioning = true
+}
