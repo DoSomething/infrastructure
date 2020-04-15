@@ -502,15 +502,20 @@ resource "aws_db_instance" "quasar" {
 
 
 # Provide S3 Bucket for Customer.io data file exports.
+
+locals {
+  cio_export = "quasar-cio"
+}
+
 module "iam_user" {
   source = "../components/iam_app_user"
-  name   = "quasar-cio"
+  name   = local.cio_export
 }
 
 module "storage" {
   source = "../components/s3_bucket"
 
-  name       = var.name
+  name       = local.cio_export
   user       = module.iam_user.name
   acl        = "private"
   versioning = true
