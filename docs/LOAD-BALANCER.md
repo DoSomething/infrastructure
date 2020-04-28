@@ -9,7 +9,7 @@ Documentation for Load-Balancer:
 * How to login to the Nginx Load-balancer server: 
 	* Login to bastion server: `ssh aws-admin` (if you have the SSH config setup), or `ssh ec2-user@jump.dosomething.org`.
 	* `ssh nginx-lb`. In case the `/etc/hosts` file is borked, you can also use `ssh 10.100.60.26`. 
-* All Nginx server config files live in `/etc/nginx/conf.d` and take the filname format: `example-com.conf`.
+* All Nginx server config files live in `/etc/nginx/conf.d` and take the filename format: `example-com.conf`.
 * To check Nginx config: `sudo nginx -T`. 
 * To Reload/Restart/Start/Stop/Status Nginx service: `sudo systemctl nginx reload/restart/start/stop/status` (associated command with mapped '/' separated command).
 
@@ -21,7 +21,7 @@ server {
     return 302 https://www.newdomain.com; # If you want to pass on the URI, you can use the format: https://www.newdomain$request_uri
 }
 ```
-* Generate the server certificate using: `sudo certbot --nginx -d example.com`. You can pass additional `-d example2.com` flags to the cerbot command to generate a certificate per domain. 
+* Generate the server certificate using: `sudo certbot --nginx -d example.com`. You can pass additional `-d example2.com` flags to the certbot command to generate a certificate per domain. 
 * At the `certbot` prompt to re-direct all traffic from `http->https`, default to yes.
 * Once the certificate is generated, run `sudo systemctl reload nginx`. 
 * Finally test validity of certificate renewal via: `sudo certbot renew --dry-run`. 
