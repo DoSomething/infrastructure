@@ -1,7 +1,7 @@
 Documentation for Load-Balancer:
 
 ## Server Setup Instructions:
-* Setup [Nginx setup guide)(https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04) for Ubuntu 18.04 on a new EC2 instance. *Supplementary step*: Add [Nginx](https://www.nginx.com/resources/wiki/start/topics/tutorials/install/) PPA to run latest stable Nginx version, instead of the default OS Nginx, since it's not updated as frequently and can lag on some feature/security fixes.
+* [Setup Nginx](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04) for Ubuntu 18.04 on a new EC2 instance. *Supplementary step*: Add [Nginx](https://www.nginx.com/resources/wiki/start/topics/tutorials/install/) PPA to run latest stable Nginx version, instead of the default OS Nginx, since it's not updated as frequently and can lag on some feature/security fixes.
 * Setup LetsEncrypt according to [this](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04) guide on the server.
 * The Elastic IP assigned to the load-balancer instance _must_ be: `54.172.90.245`.
 
