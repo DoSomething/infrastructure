@@ -140,8 +140,3 @@ module "papertrail" {
 
   papertrail_destination = var.papertrail_destination
 }
-
-module "ashes" {
-  source = "./ashes"
-}
-

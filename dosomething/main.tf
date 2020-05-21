@@ -168,10 +168,6 @@ module "rogue" {
   backup_storage_bucket  = module.rogue_backup.bucket
 }
 
-module "ashes" {
-  source = "./ashes"
-}
-
 # We use this Lambda function to forward logs to Papertrail
 # for production applications & our Quasar warehouse.
 module "papertrail" {
