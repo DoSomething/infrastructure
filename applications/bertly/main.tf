@@ -66,9 +66,9 @@ resource "random_string" "app_secret" {
 module "gateway" {
   source = "../../components/api_gateway_proxy"
 
-  function_arn        = "${module.app.arn}"
-  function_invoke_arn = "${module.app.invoke_arn}"
   name                = var.name
+  function_arn        = module.app.arn
+  function_invoke_arn = module.app.invoke_arn
 
   domain      = var.domain
   certificate = var.certificate
