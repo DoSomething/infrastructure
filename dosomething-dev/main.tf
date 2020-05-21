@@ -141,7 +141,3 @@ module "example" {
   logger = module.papertrail
 }
 
-module "ashes" {
-  source = "./ashes"
-}
-
