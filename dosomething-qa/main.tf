@@ -56,6 +56,17 @@ locals {
   papertrail_log_format = "%t '%r' status=%>s app=%%{X-Application-Name}o cache=\"%%{X-Cache}o\" country=%%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%%{User-Agent}i\" service=%%{time.elapsed.msec}Vms"
 }
 
+module "bertly" {
+  source = "../applications/bertly"
+
+  environment   = "qa"
+  name          = "dosomething-bertly-qa"
+  domain        = "qa.dosome.click"
+  certificate   = "*.dosome.click"
+  northstar_url = "https://identity-qa.dosomething.org"
+  logger        = module.papertrail
+}
+
 module "chompy" {
   source = "../applications/chompy"
 

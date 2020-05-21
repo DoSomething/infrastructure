@@ -56,6 +56,17 @@ locals {
   papertrail_log_format = "%t '%r' status=%>s app=%%{X-Application-Name}o cache=\"%%{X-Cache}o\" country=%%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%%{User-Agent}i\" service=%%{time.elapsed.msec}Vms"
 }
 
+module "bertly" {
+  source = "../applications/bertly"
+
+  environment   = "development"
+  name          = "dosomething-bertly-dev"
+  domain        = "dev.dosome.click"
+  certificate   = "*.dosome.click"
+  northstar_url = "https://identity-dev.dosomething.org"
+  logger        = module.papertrail
+}
+
 module "fastly-frontend" {
   source = "./fastly-frontend"
 
