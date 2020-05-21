@@ -3,12 +3,18 @@ variable "name" {
   description = "The name for this bucket (usually the application name)."
 }
 
+# Optional variables:
 variable "user" {
   description = "The IAM user to grant permissions to read/write to this bucket."
   default     = null
 }
 
-# Optional variables:
+variable "roles" {
+  description = "The IAM roles which should have access to this bucket."
+  type        = list(string)
+  default     = []
+}
+
 variable "acl" {
   description = "The canned ACL for this bucket. See: https://goo.gl/TFnRSY"
   default     = "private"
@@ -27,6 +33,10 @@ variable "archived" {
 variable "replication_target" {
   description = "Configure replication rules to the target bucket."
   default     = null
+}
+
+locals {
+  s3_policy = templatefile("${path.module}/iam-policy.json.tpl", { bucket_arn = aws_s3_bucket.bucket.arn })
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -89,21 +99,26 @@ resource "random_id" "lifecycle_rule_id" {
 }
 
 # IAM policy:
-data "template_file" "s3_policy" {
-  count    = var.user != null ? 1 : 0
-  template = file("${path.module}/iam-policy.json.tpl")
-
-  vars = {
-    bucket_arn = aws_s3_bucket.bucket.arn
-  }
-}
-
 resource "aws_iam_user_policy" "s3_policy" {
   count = var.user != null ? 1 : 0
 
   name   = "${var.name}-s3"
   user   = var.user
-  policy = data.template_file.s3_policy[0].rendered
+  policy = local.s3_policy
+}
+
+resource "aws_iam_policy" "s3_role_policy" {
+  count = length(var.roles) >= 1 ? 1 : 0
+  name  = "${var.name}-s3"
+  path  = "/"
+
+  policy = local.s3_policy
+}
+
+resource "aws_iam_role_policy_attachment" "s3_role_policy" {
+  count      = length(var.roles)
+  role       = var.roles[count.index]
+  policy_arn = aws_iam_policy.s3_role_policy[0].arn
 }
 
 # Replication rules:
