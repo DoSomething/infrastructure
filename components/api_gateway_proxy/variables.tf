@@ -20,3 +20,7 @@ variable "domain" {
   default = ""
 }
 
+variable "certificate" {
+  description = "The ACM certificate to use for this domain, e.g. *.dosomething.org"
+  default     = "*.dosomething.org"
+}
