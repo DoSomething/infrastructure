@@ -1,8 +1,3 @@
-locals {
-  # Hack! Check if `var.domain` is a DS.org subdomain. <https://stackoverflow.com/a/47243622/811624>
-  is_dosomething_domain = replace(var.domain, ".dosomething.org", "") != var.domain
-}
-
 resource "aws_api_gateway_rest_api" "gateway" {
   name        = var.name
   description = "Managed with Terraform."
@@ -139,7 +134,7 @@ data "aws_acm_certificate" "certificate" {
 
   # If this is a *.dosomething.org subdomain, use our wildcard ACM certificate.
   # Otherwise, find a certificate for the provided domain (manually provisioned).
-  domain = local.is_dosomething_domain ? "*.dosomething.org" : var.domain
+  domain = var.certificate
 
   statuses = ["ISSUED"]
 }

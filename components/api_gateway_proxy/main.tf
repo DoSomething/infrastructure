@@ -1,8 +1,10 @@
 module "api_gateway" {
   source = "../api_gateway"
 
-  name   = var.name
-  domain = var.domain
+  name = var.name
+
+  domain      = var.domain
+  certificate = var.certificate
 
   functions_count = 1
   functions       = [var.function_arn]
