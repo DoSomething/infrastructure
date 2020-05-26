@@ -367,14 +367,14 @@ resource "aws_db_parameter_group" "quasar-qa-pg12" {
   # Sets effective RAM available to PG Query planner before using disk.
   parameter {
     name  = "effective_cache_size"
-    value = "12000000"
+    value = "${12 * 1000 * 1000 }" # 12GB
   }
 
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
   # Amount of RAM available for cleanup tasks like vacuum, reindex, etc.
   parameter {
     name  = "maintenance_work_mem"
-    value = "2000000"
+    value = "${2 * 1000 * 1000 }" # 2GB
   }
 
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
@@ -393,7 +393,7 @@ resource "aws_db_parameter_group" "quasar-qa-pg12" {
   # Only log queries with a duration longer than this to get slow queries.
   parameter {
     name  = "log_min_duration_statement"
-    value = "1000"
+    value = "1000" # 1 second, measured in milliseconds
   }
 
   # Only log slow queries.
@@ -405,12 +405,6 @@ resource "aws_db_parameter_group" "quasar-qa-pg12" {
   parameter {
     name  = "log_duration"
     value = "0"
-  }
-
-  # Testing turning synchronization off to see if improves performance
-  parameter {
-    name  = "synchronous_commit"
-    value = "off"
   }
 
   # Enabling for PG Badger query tuning analysis.
