@@ -343,6 +343,108 @@ resource "aws_db_parameter_group" "quasar-qa-pg11" {
   }
 }
 
+resource "aws_db_parameter_group" "quasar-qa-pg12" {
+  name   = "quasar-qa-pg12"
+  family = "postgres12"
+
+  # Required for DMS CDC Replication:
+  # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.PostgreSQL.html#CHAP_Source.PostgreSQL.v10
+  parameter {
+    name         = "rds.logical_replication"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
+  # Required for DMS CDC Replication:
+  # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.PostgreSQL.html#CHAP_Source.PostgreSQL.v10
+  parameter {
+    name         = "max_logical_replication_workers"
+    value        = "500"
+    apply_method = "pending-reboot"
+  }
+
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Sets effective RAM available to PG Query planner before using disk.
+  parameter {
+    name  = "effective_cache_size"
+    value = "12000000"
+  }
+
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Amount of RAM available for cleanup tasks like vacuum, reindex, etc.
+  parameter {
+    name  = "maintenance_work_mem"
+    value = "2000000"
+  }
+
+  # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
+  # Amount of RAM available for joins/sort queries per connection.
+  # Based on 50 connections.
+  parameter {
+    name  = "work_mem"
+    value = "26214"
+  }
+
+  # Recommended to only allow SSL connections from clients.
+  parameter {
+    name  = "rds.force_ssl"
+    value = "1"
+  }
+
+  # Only log queries with a duration longer than this to get slow queries.
+  parameter {
+    name  = "log_min_duration_statement"
+    value = "1000"
+  }
+
+  # Only log slow queries.
+  parameter {
+    name  = "log_statement"
+    value = "none"
+  }
+
+  parameter {
+    name  = "log_duration"
+    value = "0"
+  }
+
+  # Testing turning synchronization off to see if improves performance
+  parameter {
+    name  = "synchronous_commit"
+    value = "off"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_disconnections"
+    value = "1"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_lock_waits"
+    value = "1"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_temp_files"
+    value = "0"
+  }
+
+  # Enabling for PG Badger query tuning analysis.
+  parameter {
+    name  = "log_autovacuum_min_duration"
+    value = "0"
+  }
+}
+
 resource "aws_db_parameter_group" "quasar-prod-pg11" {
   name   = "quasar-prod-pg11"
   family = "postgres11"
