@@ -367,14 +367,14 @@ resource "aws_db_parameter_group" "quasar-qa-pg12" {
   # Sets effective RAM available to PG Query planner before using disk.
   parameter {
     name  = "effective_cache_size"
-    value = "${12 * 1000 * 1000 }" # 12GB
+    value = 12 * 1000 * 1000 # 12GB
   }
 
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
   # Amount of RAM available for cleanup tasks like vacuum, reindex, etc.
   parameter {
     name  = "maintenance_work_mem"
-    value = "${2 * 1000 * 1000 }" # 2GB
+    value = 2 * 1000 * 1000 # 2GB
   }
 
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
