@@ -50,17 +50,12 @@ data "aws_ssm_parameter" "prod_password" {
 # longform values above and source from components/vpc module.
 module "network" {
   source = "../components/vpc"
-
-  rds_sec_group = module.aws_security_group.rds.id
 }
 
 # Trying to setup parameter groups necessry to remove existing 
 # longform values above and source from components/postgresql_instance module.
 module "parameters" {
   source = "../components/postgresql_instance"
-
-  qa_param_group   = module.aws_db_parameter_group.quasar-qa-pg11.id
-  prod_param_group = module.aws_db_parameter_group.quasar-prod-pg11.id
 }
 
 resource "aws_db_instance" "quasar-qa" {
@@ -72,8 +67,8 @@ resource "aws_db_instance" "quasar-qa" {
   name                            = "quasar"
   username                        = data.aws_ssm_parameter.qa_username.value
   password                        = data.aws_ssm_parameter.qa_password.value
-  parameter_group_name            = module.parameters.qa_param_group
-  vpc_security_group_ids          = module.network.rds_sec_group
+  parameter_group_name            = module.parameters.aws_db_parameter_group.quasar-qa-pg11.id
+  vpc_security_group_ids          = module.network.aws_security_group.rds.id
   deletion_protection             = true
   storage_encrypted               = true
   copy_tags_to_snapshot           = true
@@ -91,8 +86,8 @@ resource "aws_db_instance" "quasar" {
   name                            = "quasar_prod_warehouse"
   username                        = data.aws_ssm_parameter.prod_username.value
   password                        = data.aws_ssm_parameter.prod_password.value
-  parameter_group_name            = module.parameters.prod_param_group
-  vpc_security_group_ids          = module.network.rds_sec_group
+  parameter_group_name            = module.parameters.aws_db_parameter_group.quasar-prod-pg11.id
+  vpc_security_group_ids          = module.network.aws_security_group.rds.id
   deletion_protection             = true
   storage_encrypted               = true
   copy_tags_to_snapshot           = true
