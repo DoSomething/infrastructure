@@ -48,11 +48,6 @@ data "aws_ssm_parameter" "prod_password" {
 
 # Trying to setup network resources necessary to remove existing
 # longform values above and source from components/vpc module.
-variable "rds_sec_group" {
-  description = "Security group for Quasar RDS instances."
-  default     = ""
-}
-
 module "network" {
   source = "../components/vpc"
 
@@ -61,17 +56,6 @@ module "network" {
 
 # Trying to setup parameter groups necessry to remove existing 
 # longform values above and source from components/postgresql_instance module.
-
-variable "qa_param_group" {
-  description = "PostgreSQL parameter group for Quasar QA RDS Instance."
-  default     = ""
-}
-
-variable "prod_param_group" {
-  description = "PostgreSQL parameter group for Quasar Prod RDS Instance."
-  default     = ""
-}
-
 module "parameters" {
   source = "../components/postgresql_instance"
 
@@ -88,8 +72,8 @@ resource "aws_db_instance" "quasar-qa" {
   name                            = "quasar"
   username                        = data.aws_ssm_parameter.qa_username.value
   password                        = data.aws_ssm_parameter.qa_password.value
-  parameter_group_name            = var.qa_param_group
-  vpc_security_group_ids          = var.rds_sec_group
+  parameter_group_name            = module.parameters.qa_param_group
+  vpc_security_group_ids          = module.network.rds_sec_group
   deletion_protection             = true
   storage_encrypted               = true
   copy_tags_to_snapshot           = true
@@ -107,8 +91,8 @@ resource "aws_db_instance" "quasar" {
   name                            = "quasar_prod_warehouse"
   username                        = data.aws_ssm_parameter.prod_username.value
   password                        = data.aws_ssm_parameter.prod_password.value
-  parameter_group_name            = var.prod_param_group
-  vpc_security_group_ids          = var.rds_sec_group
+  parameter_group_name            = module.parameters.prod_param_group
+  vpc_security_group_ids          = module.network.rds_sec_group
   deletion_protection             = true
   storage_encrypted               = true
   copy_tags_to_snapshot           = true
