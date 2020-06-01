@@ -50,6 +50,7 @@ data "aws_ssm_parameter" "prod_password" {
 # longform values above and source from components/vpc module.
 variable "rds_sec_group" {
   description = "Security group for Quasar RDS instances."
+  default     = ""
 }
 
 module "network" {
@@ -63,10 +64,12 @@ module "network" {
 
 variable "qa_param_group" {
   description = "PostgreSQL parameter group for Quasar QA RDS Instance."
+  default     = ""
 }
 
 variable "prod_param_group" {
   description = "PostgreSQL parameter group for Quasar Prod RDS Instance."
+  default     = ""
 }
 
 module "parameters" {
