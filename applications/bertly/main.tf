@@ -52,7 +52,7 @@ module "app" {
   source = "../../components/lambda_function"
 
   name    = var.name
-  handler = "main.handler"
+  handler = "bootstrap/lambda.handler"
   runtime = "nodejs12.x"
   logger  = var.logger
 
