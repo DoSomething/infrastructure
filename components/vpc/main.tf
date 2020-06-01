@@ -2,7 +2,7 @@
 
 resource "aws_vpc" "quasar_vpc" {
   description = "Quasar VPC IP range."
-  cidr_block = "10.255.0.0/16"
+  cidr_block  = "10.255.0.0/16"
 
   tags = {
     Name = "Quasar"
@@ -11,8 +11,8 @@ resource "aws_vpc" "quasar_vpc" {
 
 resource "aws_subnet" "subnet-a" {
   description = "1st RDS subnet for multi-AZ DB setup."
-  vpc_id     = aws_vpc.quasar_vpc.id
-  cidr_block = "10.255.100.0/24"
+  vpc_id      = aws_vpc.quasar_vpc.id
+  cidr_block  = "10.255.100.0/24"
 
   tags = {
     Name = "Quasar RDS - 1A"
@@ -21,8 +21,8 @@ resource "aws_subnet" "subnet-a" {
 
 resource "aws_subnet" "subnet-b" {
   description = "2nd RDS subnet for multi-AZ DB setup."
-  vpc_id     = aws_vpc.quasar_vpc.id
-  cidr_block = "10.255.101.0/24"
+  vpc_id      = aws_vpc.quasar_vpc.id
+  cidr_block  = "10.255.101.0/24"
 
   tags = {
     Name = "Quasar RDS - 1E"
