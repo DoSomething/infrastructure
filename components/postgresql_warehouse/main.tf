@@ -1,3 +1,19 @@
+variable "allocated_storage" {
+  description = "The amount of storage (in GB) to allocate for this instance."
+}
+
+variable "instance_type" {
+  description = "The RDS instance type for this database."
+}
+
+variable "username" {
+  description = "The master username for the RDS PostgreSQL instance."
+}
+
+variable "password" {
+  description = "The master password for the RDS PostgreSQL instance."
+}
+
 resource "aws_db_parameter_group" "quasar-qa-pg11" {
   name   = "quasar-qa-pg11"
   family = "postgres11"
@@ -313,4 +329,23 @@ resource "aws_db_parameter_group" "quasar-prod-pg11" {
     name  = "log_autovacuum_min_duration"
     value = "0"
   }
+}
+
+resource "aws_db_instance" "quasar" {
+  allocated_storage               = var.allocated_storage
+  engine                          = "postgres"
+  engine_version                  = "11.4"
+  instance_class                  = var.instance_type
+  name                            = var.name
+  username                        = var.username
+  password                        = var.password
+  parameter_group_name            = module.parameters.aws_db_parameter_group.quasar-prod-pg11.id
+  vpc_security_group_ids          = module.vpc.rds_security_group.id
+  deletion_protection             = true
+  storage_encrypted               = true
+  copy_tags_to_snapshot           = true
+  monitoring_interval             = "10"
+  publicly_accessible             = true
+  performance_insights_enabled    = true
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }

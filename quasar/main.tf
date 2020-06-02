@@ -54,51 +54,30 @@ module "vpc" {
 
 # Trying to setup parameter groups necessry to remove existing 
 # longform values above and source from components/postgresql_instance module.
-module "parameters" {
-  source = "../components/postgresql_instance"
+module "warehouse" {
+  source = "../components/postgresql_warehouse"
+
+  name              = "quasar_prod_warehouse"
+  instance_class    = "db.m5.4xlarge"
+  allocated_storage = 4000
+
+  username = data.aws_ssm_parameter.prod_username.value
+  password = data.aws_ssm_parameter.prod_password.value
 }
 
-resource "aws_db_instance" "quasar-qa" {
-  allocated_storage               = 4000
-  engine                          = "postgres"
-  engine_version                  = "11.6"
-  instance_class                  = "db.m5.xlarge"
-  allow_major_version_upgrade     = true
-  name                            = "quasar"
-  username                        = data.aws_ssm_parameter.qa_username.value
-  password                        = data.aws_ssm_parameter.qa_password.value
-  parameter_group_name            = module.parameters.aws_db_parameter_group.quasar-qa-pg11.id
-  vpc_security_group_ids          = module.network.aws_security_group.rds.id
-  deletion_protection             = true
-  storage_encrypted               = true
-  copy_tags_to_snapshot           = true
-  monitoring_interval             = "10"
-  publicly_accessible             = true
-  performance_insights_enabled    = true
-  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
-}
+module "warehouse-qa" {
+  source = "../components/postgresql_warehouse"
 
-resource "aws_db_instance" "quasar" {
-  allocated_storage               = 4000
-  engine                          = "postgres"
-  engine_version                  = "11.4"
-  instance_class                  = "db.m5.4xlarge"
-  name                            = "quasar_prod_warehouse"
-  username                        = data.aws_ssm_parameter.prod_username.value
-  password                        = data.aws_ssm_parameter.prod_password.value
-  parameter_group_name            = module.parameters.aws_db_parameter_group.quasar-prod-pg11.id
-  vpc_security_group_ids          = module.network.aws_security_group.rds.id
-  deletion_protection             = true
-  storage_encrypted               = true
-  copy_tags_to_snapshot           = true
-  monitoring_interval             = "10"
-  publicly_accessible             = true
-  performance_insights_enabled    = true
-  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+  name              = "quasar" # TODO: This is misleading!
+  instance_class    = "db.m5.xlarge"
+  allocated_storage = 4000
+
+  username               = data.aws_ssm_parameter.qa_username.value
+  password               = data.aws_ssm_parameter.qa_password.value
+  vpc_security_group_ids = module.vpc.rds_security_group.id
 }
 
 # Provide S3 Bucket for Customer.io data file exports.
-
 locals {
   cio_export = "quasar-cio"
 }
