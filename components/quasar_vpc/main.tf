@@ -230,3 +230,8 @@ resource "aws_security_group_rule" "rds-egress" {
   protocol          = "-1" # All protocols.
   cidr_blocks       = ["0.0.0.0/0"]
 }
+
+output "rds_security_group" {
+  description = "The security group for RDS instances in this VPC."
+  value       = aws_security_group.rds
+}

@@ -48,8 +48,8 @@ data "aws_ssm_parameter" "prod_password" {
 
 # Trying to setup network resources necessary to remove existing
 # longform values above and source from components/vpc module.
-module "network" {
-  source = "../components/vpc"
+module "vpc" {
+  source = "../components/quasar_vpc"
 }
 
 # Trying to setup parameter groups necessry to remove existing 
