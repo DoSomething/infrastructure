@@ -57,20 +57,31 @@ module "vpc" {
 module "warehouse" {
   source = "../components/postgresql_warehouse"
 
-  name              = "quasar_prod_warehouse"
-  instance_class    = "db.m5.4xlarge"
-  allocated_storage = 4000
+  database_name        = "quasar_prod_warehouse"
+  parameter_group_name = "quasar-prod-pg11"
+  instance_class       = "db.m5.4xlarge"
 
-  username = data.aws_ssm_parameter.prod_username.value
-  password = data.aws_ssm_parameter.prod_password.value
+  allocated_storage    = 4000
+  effective_cache_size = 48 * 1000 * 1000 #48GB
+  maintenance_work_mem = 2 * 1000 * 1000  # 2GB
+  work_mem             = 120 * 1000       # 120MB
+
+  username               = data.aws_ssm_parameter.prod_username.value
+  password               = data.aws_ssm_parameter.prod_password.value
+  vpc_security_group_ids = module.vpc.rds_security_group.id
 }
 
 module "warehouse-qa" {
   source = "../components/postgresql_warehouse"
 
-  name              = "quasar" # TODO: This is misleading!
-  instance_class    = "db.m5.xlarge"
-  allocated_storage = 4000
+  database_name        = "quasar" # TODO: This is misleading!
+  parameter_group_name = "quasar-qa-pg11"
+  instance_class       = "db.m5.xlarge"
+
+  allocated_storage    = 4000
+  effective_cache_size = 12 * 1000 * 1000 # 12GB
+  maintenance_work_mem = 2 * 1000 * 1000  # 2GB
+  work_mem             = 41943            # 42MB
 
   username               = data.aws_ssm_parameter.qa_username.value
   password               = data.aws_ssm_parameter.qa_password.value
