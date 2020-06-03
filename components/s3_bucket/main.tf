@@ -124,7 +124,7 @@ resource "aws_iam_role_policy_attachment" "s3_role_policy" {
 }
 
 # 'Public Access Block' configuration:
-resource "aws_s3_bucket_public_access_block" "example" {
+resource "aws_s3_bucket_public_access_block" "private_policy" {
   count  = var.private ? 1 : 0
   bucket = aws_s3_bucket.bucket.id
 
