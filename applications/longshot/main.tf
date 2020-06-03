@@ -59,6 +59,11 @@ module "database" {
   security_groups = ["sg-c9a37db2"]
 }
 
+module "iam_user" {
+  source = "../../components/iam_app_user"
+  name   = var.name
+}
+
 module "storage" {
   source  = "../../components/s3_bucket"
   name    = var.name
