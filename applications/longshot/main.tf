@@ -1,13 +1,6 @@
-# This template builds a Longshot application instance, with
-# database, queue, caching, and storage resources. Be sure to
-# set the application's required SSM parameters before
-# provisioning a new application as well:
-#   - /{name}/rds/username
-#   - /{name}/rds/password
-#   - /mandrill/api-key
-#
-# And required if using New Relic:
-#   - /newrelic/api-key
+# This template manages resources for old Longshot apps,
+# a retired scholarship application run by DSS. We now use
+# Heroku to handle SSL redirects & S3 to keep old storage.
 
 # Required variables:
 variable "environment" {
@@ -26,37 +19,13 @@ variable "domain" {
   description = "The domain this application will be accessible at, e.g. longshot.dosomething.org"
 }
 
-variable "email_name" {
-  description = "The default 'from' name for this application's mail driver."
-}
-
-variable "email_address" {
-  description = "The default email address for this application's mail driver."
-}
-
 variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
 
-variable "with_newrelic" {
-  # See usage below for default fallback. <https://stackoverflow.com/a/51758050/811624>
-  description = "Should New Relic be enabled for this app? Enabled by default on prod."
-  default     = ""
-}
-
-data "aws_ssm_parameter" "mandrill_api_key" {
-  name = "/mandrill/api-key"
-}
-
-locals {
-  # Environment variables for configuring Mandrill:
-  mail_config_vars = {
-    MAIL_DRIVER     = "mandrill"
-    MAIL_HOST       = "smtp.mandrillapp.com"
-    EMAIL_NAME      = var.email_name
-    EMAIL_ADDRESS   = var.email_address
-    MANDRILL_APIKEY = data.aws_ssm_parameter.mandrill_api_key.value
-  }
+variable "deprecated" {
+  description = "Deprecate this application, removing database users & allowing deletion."
+  default     = false
 }
 
 module "app" {
@@ -78,6 +47,8 @@ module "app" {
 module "database" {
   source = "../../components/mariadb_instance"
 
+  deprecated = var.deprecated
+
   name              = var.name
   environment       = var.environment
   database_name     = "longshot"
@@ -88,15 +59,9 @@ module "database" {
   security_groups = ["sg-c9a37db2"]
 }
 
-module "iam_user" {
-  source = "../../components/iam_app_user"
-  name   = var.name
-}
-
 module "storage" {
   source  = "../../components/s3_bucket"
   name    = var.name
-  user    = module.iam_user.name
   private = true
 }
 
