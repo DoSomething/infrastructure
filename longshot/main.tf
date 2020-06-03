@@ -41,6 +41,18 @@ resource "heroku_pipeline" "longshot" {
   name = "longshot"
 }
 
+module "longshot-qa" {
+  source = "../applications/longshot"
+
+  name        = "longshot-qa"
+  domain      = "longshot-qa.dosomething.org"
+  pipeline    = "${heroku_pipeline.longshot.id}"
+  environment = "qa"
+  deprecated  = true
+
+  papertrail_destination = "${var.papertrail_qa_destination}"
+}
+
 module "longshot-footlocker" {
   source = "../applications/longshot"
 
@@ -48,6 +60,7 @@ module "longshot-footlocker" {
   domain      = "footlockerscholarathletes.com"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
+  deprecated  = true
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
@@ -59,6 +72,7 @@ module "longshot-footlocker-internal" {
   domain      = "www.flscholarship.com"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
+  deprecated  = true
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }
@@ -77,6 +91,7 @@ module "hrblock" {
   domain      = "caps.hrblock.com"
   pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
+  deprecated  = true
 
   papertrail_destination = "${var.papertrail_prod_destination}"
 }

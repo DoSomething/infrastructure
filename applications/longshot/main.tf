@@ -23,6 +23,11 @@ variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
 
+variable "deprecated" {
+  description = "Deprecate this application, removing database users & allowing deletion."
+  default     = false
+}
+
 module "app" {
   source = "../../components/heroku_app"
 
@@ -42,7 +47,7 @@ module "app" {
 module "database" {
   source = "../../components/mariadb_instance"
 
-  deprecated = true
+  deprecated = var.deprecated
 
   name              = var.name
   environment       = var.environment
