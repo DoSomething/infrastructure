@@ -51,9 +51,10 @@ module "iam_user" {
 }
 
 module "storage" {
-  source  = "../../components/s3_bucket"
-  name    = var.name
-  private = true
+  source   = "../../components/s3_bucket"
+  name     = var.name
+  private  = true
+  archived = true
 }
 
 output "name" {
