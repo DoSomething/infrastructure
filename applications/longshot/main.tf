@@ -44,12 +44,6 @@ module "app" {
   with_newrelic          = false
 }
 
-
-module "iam_user" {
-  source = "../../components/iam_app_user"
-  name   = var.name
-}
-
 module "storage" {
   source   = "../../components/s3_bucket"
   name     = var.name
