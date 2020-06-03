@@ -39,6 +39,14 @@ resource "aws_s3_bucket" "deploy" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "private_policy" {
+  bucket = aws_s3_bucket.deploy.id
+
+  block_public_acls   = true
+  block_public_policy = true
+  ignore_public_acls  = true
+}
+
 resource "aws_s3_bucket_object" "release" {
   bucket = aws_s3_bucket.deploy.id
   key    = "release.zip"

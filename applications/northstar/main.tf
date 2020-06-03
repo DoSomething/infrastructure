@@ -144,14 +144,12 @@ module "queue_low" {
   user = module.iam_user.name
 }
 
-// TODO: Attach 'aws_s3_bucket_public_access_block' once this
-// is merged in to the AWS provider. <https://git.io/fpxqg>
 module "storage" {
   source = "../../components/s3_bucket"
 
   name       = var.name
   user       = module.iam_user.name
-  acl        = "private"
+  private    = true
   versioning = true
 }
 

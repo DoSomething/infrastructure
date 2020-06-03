@@ -15,11 +15,6 @@ variable "roles" {
   default     = []
 }
 
-variable "acl" {
-  description = "The canned ACL for this bucket. See: https://goo.gl/TFnRSY"
-  default     = "private"
-}
-
 variable "versioning" {
   description = "Enable versioning on this bucket. See: https://goo.gl/idPRVV"
   default     = false
@@ -28,6 +23,11 @@ variable "versioning" {
 variable "archived" {
   description = "Should the contents of this bucket be archived to Glacier?"
   default     = false
+}
+
+variable "private" {
+  description = "Should we force all objects in this bucket to be private?"
+  default     = true
 }
 
 variable "replication_target" {
@@ -41,7 +41,9 @@ locals {
 
 resource "aws_s3_bucket" "bucket" {
   bucket = var.name
-  acl    = var.acl
+
+  # The canned ACL for this bucket. See: https://goo.gl/TFnRSY
+  acl = var.private ? "private" : "public-read"
 
   versioning {
     # Versioning must be enabled if we have a replication target.
@@ -119,6 +121,16 @@ resource "aws_iam_role_policy_attachment" "s3_role_policy" {
   count      = length(var.roles)
   role       = var.roles[count.index]
   policy_arn = aws_iam_policy.s3_role_policy[0].arn
+}
+
+# 'Public Access Block' configuration:
+resource "aws_s3_bucket_public_access_block" "private_policy" {
+  count  = var.private ? 1 : 0
+  bucket = aws_s3_bucket.bucket.id
+
+  block_public_acls   = true
+  block_public_policy = true
+  ignore_public_acls  = true
 }
 
 # Replication rules:
