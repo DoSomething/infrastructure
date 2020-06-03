@@ -137,8 +137,8 @@ resource "fastly_service_v1" "vote" {
 }
 
 resource "aws_s3_bucket" "vote" {
-  bucket  = "vote.dosomething.org"
-  private = false
+  bucket = "vote.dosomething.org"
+  acl    = "public-read"
 
   # see: https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteAccessPermissionsReqd.html 
   policy = file("${path.module}/policy-vote.json")
