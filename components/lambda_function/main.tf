@@ -31,12 +31,21 @@ resource "aws_lambda_function" "function" {
 
 # Deploy artifacts:
 resource "aws_s3_bucket" "deploy" {
-  bucket  = "${var.name}-deploy"
-  private = true
+  bucket = "${var.name}-deploy"
+  acl    = "private"
 
   versioning {
     enabled = true
   }
+}
+
+resource "aws_s3_bucket_public_access_block" "private_policy" {
+  count  = var.private ? 1 : 0
+  bucket = aws_s3_bucket.deploy.id
+
+  block_public_acls   = true
+  block_public_policy = true
+  ignore_public_acls  = true
 }
 
 resource "aws_s3_bucket_object" "release" {
