@@ -31,8 +31,8 @@ resource "aws_lambda_function" "function" {
 
 # Deploy artifacts:
 resource "aws_s3_bucket" "deploy" {
-  bucket = "${var.name}-deploy"
-  acl    = "private"
+  bucket  = "${var.name}-deploy"
+  private = true
 
   versioning {
     enabled = true

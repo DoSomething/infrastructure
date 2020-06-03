@@ -84,9 +84,9 @@ module "database" {
 module "storage" {
   source = "../../components/s3_bucket"
 
-  name  = "${var.name}-logs"
-  roles = [module.app.lambda_role]
-  acl   = "private"
+  name    = "${var.name}-logs"
+  roles   = [module.app.lambda_role]
+  private = true
 }
 
 output "backend" {

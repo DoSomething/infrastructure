@@ -27,9 +27,9 @@ module "iam_user" {
 module "storage" {
   source = "../../components/s3_bucket"
 
-  name = var.name
-  user = module.iam_user.name
-  acl  = "public-read"
+  name    = var.name
+  user    = module.iam_user.name
+  private = false
 }
 
 output "name" {

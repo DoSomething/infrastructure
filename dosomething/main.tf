@@ -145,13 +145,13 @@ module "phoenix_preview" {
 module "rogue_backup" {
   source = "../components/s3_bucket"
   providers = {
-    aws = "aws.west"
+    aws = aws.west
   }
 
   name       = "dosomething-rogue-backup"
-  acl        = "private"
   versioning = true
   archived   = true
+  private    = true
 }
 
 module "rogue" {

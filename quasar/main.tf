@@ -612,6 +612,6 @@ module "storage" {
 
   name       = local.cio_export
   user       = module.iam_user.name
-  acl        = "private"
   versioning = true
+  private    = true
 }
