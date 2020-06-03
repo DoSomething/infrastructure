@@ -40,7 +40,6 @@ resource "aws_s3_bucket" "deploy" {
 }
 
 resource "aws_s3_bucket_public_access_block" "private_policy" {
-  count  = var.private ? 1 : 0
   bucket = aws_s3_bucket.deploy.id
 
   block_public_acls   = true
