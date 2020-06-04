@@ -2,6 +2,10 @@ variable "database_name" {
   description = "The name used for this database."
 }
 
+variable "engine_version" {
+  description = "The PostgreSQL version to use for this instance."
+}
+
 variable "parameter_group_name" {
   description = "The name used for this database's parameter group."
 }
@@ -149,7 +153,7 @@ resource "aws_db_parameter_group" "pg11" {
 resource "aws_db_instance" "quasar" {
   allocated_storage               = var.allocated_storage
   engine                          = "postgres"
-  engine_version                  = "11.4"
+  engine_version                  = var.engine_version
   allow_major_version_upgrade     = true
   instance_class                  = var.instance_class
   name                            = var.database_name
