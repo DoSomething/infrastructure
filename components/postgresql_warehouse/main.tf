@@ -151,7 +151,7 @@ resource "aws_db_instance" "quasar" {
   engine                          = "postgres"
   engine_version                  = "11.4"
   instance_class                  = var.instance_class
-  name                            = var.name
+  name                            = var.database_name
   username                        = var.username
   password                        = var.password
   parameter_group_name            = aws_db_parameter_group.pg11.id
