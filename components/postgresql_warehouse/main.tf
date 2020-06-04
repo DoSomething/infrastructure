@@ -154,7 +154,7 @@ resource "aws_db_instance" "quasar" {
   name                            = var.name
   username                        = var.username
   password                        = var.password
-  parameter_group_name            = module.parameters.aws_db_parameter_group.pg11.id
+  parameter_group_name            = aws_db_parameter_group.pg11.id
   vpc_security_group_ids          = var.vpc_security_group_ids
   deletion_protection             = true
   storage_encrypted               = true
