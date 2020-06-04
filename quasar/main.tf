@@ -109,3 +109,8 @@ module "storage" {
   private    = true
 }
 
+module "fivetran_logging" {
+  source = "../components/fivetran_cloudwatch_role"
+
+}
+
