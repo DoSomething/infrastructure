@@ -68,7 +68,7 @@ module "warehouse" {
 
   username               = data.aws_ssm_parameter.prod_username.value
   password               = data.aws_ssm_parameter.prod_password.value
-  vpc_security_group_ids = module.vpc.rds_security_group.id
+  vpc_security_group_ids = [module.vpc.rds_security_group.id]
 }
 
 module "warehouse-qa" {
@@ -85,7 +85,7 @@ module "warehouse-qa" {
 
   username               = data.aws_ssm_parameter.qa_username.value
   password               = data.aws_ssm_parameter.qa_password.value
-  vpc_security_group_ids = module.vpc.rds_security_group.id
+  vpc_security_group_ids = [module.vpc.rds_security_group.id]
 }
 
 # Provide S3 Bucket for Customer.io data file exports.
