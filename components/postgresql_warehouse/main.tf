@@ -109,10 +109,10 @@ resource "aws_db_parameter_group" "pg11" {
     value = "0"
   }
 
-  # Testing turning synchronization off to see if improves performance
   parameter {
-    name  = "synchronous_commit"
-    value = "off"
+    apply_method = "immediate"
+    name         = "statement_timeout"
+    value        = "0"
   }
 
   # Enabling for PG Badger query tuning analysis.
@@ -150,6 +150,7 @@ resource "aws_db_instance" "quasar" {
   allocated_storage               = var.allocated_storage
   engine                          = "postgres"
   engine_version                  = "11.4"
+  allow_major_version_upgrade     = true
   instance_class                  = var.instance_class
   name                            = var.database_name
   username                        = var.username
