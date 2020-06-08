@@ -62,6 +62,17 @@ module "assets" {
   domain = "assets.dosomething.org"
 }
 
+module "bertly" {
+  source = "../applications/bertly"
+
+  environment   = "production"
+  name          = "dosomething-bertly"
+  domain        = "new.dosome.click"
+  certificate   = "*.dosome.click"
+  northstar_url = "https://identity.dosomething.org"
+  logger        = module.papertrail
+}
+
 module "chompy" {
   source = "../applications/chompy"
 
