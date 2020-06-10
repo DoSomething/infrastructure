@@ -112,4 +112,5 @@ module "storage" {
 module "fivetran_logging" {
   source = "../components/fivetran_cloudwatch_role"
 
+  fivetran_cloudwatch_integration_external_id = var.fivetran_cloudwatch_integration_external_id
 }
