@@ -89,6 +89,14 @@ module "storage" {
   private = true
 }
 
+module "fivetran_role" {
+  source = "../../components/fivetran_s3_role"
+
+  environment = var.environment
+  name        = var.name
+  bucket      = module.storage.bucket
+}
+
 output "backend" {
   value = module.gateway.base_url
 }
