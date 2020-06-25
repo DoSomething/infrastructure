@@ -17,3 +17,8 @@ resource "aws_iam_role" "fivetran_role" {
     external_id         = data.aws_ssm_parameter.external_id.value
   })
 }
+
+resource "aws_iam_role_policy_attachment" "fivetran_policy_attachment" {
+  role       = "${aws_iam_role.fivetran_role.name}"
+  policy_arn = "${aws_iam_policy.fivetran_policy.arn}"
+}

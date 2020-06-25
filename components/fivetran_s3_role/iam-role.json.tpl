@@ -7,5 +7,7 @@
         "StringEquals": {
             "sts:ExternalId": "${external_id}" 
         }
-    }
+    },
+    "Effect": "Allow",
+    "Sid": ""
   }
