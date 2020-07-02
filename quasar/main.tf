@@ -90,6 +90,15 @@ module "warehouse-qa" {
   vpc_security_group_ids = [module.vpc.rds_security_group.id]
 }
 
+module "glue-qa" {
+  source = "../components/glue_destination"
+
+  name                   = "quasar-qa"
+  subnet                 = module.vpc.subnet
+  vpc_security_group_ids = [module.vpc.rds_security_group.id]
+  warehouse              = module.warehouse-qa.instance
+}
+
 # Provide S3 Bucket for Customer.io data file exports.
 locals {
   cio_export = "quasar-cio"

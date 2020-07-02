@@ -89,6 +89,13 @@ module "storage" {
   private = true
 }
 
+module "glue_source" {
+  source = "../../components/glue_source"
+
+  name   = var.name
+  bucket = module.storage.bucket
+}
+
 module "fivetran_role" {
   source = "../../components/fivetran_s3_role"
 

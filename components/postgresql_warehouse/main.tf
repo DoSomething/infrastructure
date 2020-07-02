@@ -169,3 +169,8 @@ resource "aws_db_instance" "quasar" {
   performance_insights_enabled    = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
+
+output "instance" {
+  description = "The AWS RDS database instance."
+  value       = aws_db_instance.quasar
+}

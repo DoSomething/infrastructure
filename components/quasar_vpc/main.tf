@@ -235,3 +235,8 @@ output "rds_security_group" {
   description = "The security group for RDS instances in this VPC."
   value       = aws_security_group.rds
 }
+
+output "subnet" {
+  description = "A primary AWS subnet for this multi-AZ VPC."
+  value       = aws_subnet.subnet-a
+}
