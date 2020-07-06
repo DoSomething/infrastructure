@@ -1,11 +1,24 @@
 # This is the Quasar VPC layout.
 
+locals {
+  name = "dosomething-quasar"
+
+  # NOTE: We share these resources between all environments.
+  environment = "production"
+
+  # These are all for our data stack.
+  stack = "data"
+}
+
 # Quasar VPC IP Range:
 resource "aws_vpc" "quasar_vpc" {
   cidr_block = "10.255.0.0/16"
 
   tags = {
-    Name = "Quasar"
+    Name        = "Quasar"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 
@@ -15,7 +28,10 @@ resource "aws_subnet" "subnet-a" {
   cidr_block = "10.255.100.0/24"
 
   tags = {
-    Name = "Quasar RDS - 1A"
+    Name        = "Quasar RDS - 1A"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 
@@ -25,7 +41,10 @@ resource "aws_subnet" "subnet-b" {
   cidr_block = "10.255.101.0/24"
 
   tags = {
-    Name = "Quasar RDS - 1E"
+    Name        = "Quasar RDS - 1E"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 
@@ -38,7 +57,10 @@ resource "aws_security_group" "bastion" {
   vpc_id      = aws_vpc.quasar_vpc.id
 
   tags = {
-    Name = "Quasar-Bastion"
+    Name        = "Quasar-Bastion"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 
@@ -71,7 +93,10 @@ resource "aws_security_group" "jenkins" {
   vpc_id      = aws_vpc.quasar_vpc.id
 
   tags = {
-    Name = "Quasar-Jenkins"
+    Name        = "Quasar-Jenkins"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 
@@ -108,7 +133,10 @@ resource "aws_security_group" "haproxy" {
   vpc_id      = aws_vpc.quasar_vpc.id
 
   tags = {
-    Name = "Quasar-HA-Proxy"
+    Name        = "Quasar-HA-Proxy"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 
@@ -161,7 +189,10 @@ resource "aws_security_group" "etl" {
   vpc_id      = aws_vpc.quasar_vpc.id
 
   tags = {
-    Name = "Quasar-ETL"
+    Name        = "Quasar-ETL"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 
@@ -200,7 +231,10 @@ resource "aws_security_group" "rds" {
   vpc_id      = aws_vpc.quasar_vpc.id
 
   tags = {
-    Name = "Quasar-RDS"
+    Name        = "Quasar-RDS"
+    Application = local.name
+    Environment = local.environment
+    Stack       = local.stack
   }
 }
 

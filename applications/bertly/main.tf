@@ -34,6 +34,9 @@ data "aws_ssm_parameter" "bertly_api_key" {
 }
 
 locals {
+  # This application is part of our backend stack.
+  stack = "backend"
+
   config_vars = {
     APP_NAME   = var.name
     APP_URL    = "https://${var.domain}"
@@ -51,7 +54,10 @@ locals {
 module "app" {
   source = "../../components/lambda_function"
 
-  name    = var.name
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
   handler = "bootstrap/lambda.handler"
   runtime = "nodejs12.x"
   logger  = var.logger
@@ -66,7 +72,10 @@ resource "random_string" "app_secret" {
 module "gateway" {
   source = "../../components/api_gateway_proxy"
 
-  name                = var.name
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
   function_arn        = module.app.arn
   function_invoke_arn = module.app.invoke_arn
 
@@ -84,7 +93,10 @@ module "database" {
 module "storage" {
   source = "../../components/s3_bucket"
 
-  name    = "${var.name}-logs"
+  name        = "${var.name}-logs"
+  environment = var.environment
+  stack       = local.stack
+
   roles   = [module.app.lambda_role]
   private = true
 }

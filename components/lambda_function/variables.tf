@@ -3,6 +3,14 @@ variable "name" {
   description = "The application name."
 }
 
+variable "environment" {
+  description = "The environment for this Lambda: development, qa, or production."
+}
+
+variable "stack" {
+  description = "The 'stack' for this Lambda: web, sms, backend, data."
+}
+
 variable "runtime" {
   description = "The Lambda runtime to use. We support nodejs12.x, python2.7, and python3.7"
 }

@@ -1,6 +1,12 @@
 resource "aws_api_gateway_rest_api" "gateway" {
   name        = var.name
   description = "Managed with Terraform."
+
+  tags = {
+    Application = var.name
+    Environment = var.environment
+    Stack       = var.stack
+  }
 }
 
 # Configure the root resource method & integration:

@@ -3,6 +3,14 @@ variable "name" {
   description = "The application name."
 }
 
+variable "environment" {
+  description = "The environment for this gateway: development, qa, or production."
+}
+
+variable "stack" {
+  description = "The 'stack' for this gateway: web, sms, backend, data."
+}
+
 variable "functions_count" {
   # Temporary hack to work around Terraform 0.11 limitation. <https://git.io/fjLYC>
 }

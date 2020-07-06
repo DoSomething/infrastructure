@@ -7,6 +7,10 @@ variable "environment" {
   description = "The environment for this database: development, qa, or production."
 }
 
+variable "stack" {
+  description = "The 'stack' for this database: web, sms, backend, data."
+}
+
 variable "instance_class" {
   description = "The RDS instance class. See: https://goo.gl/vTMqx9"
 }
@@ -90,6 +94,12 @@ resource "aws_db_parameter_group" "replication_settings" {
     name  = "binlog_checksum"
     value = "NONE"
   }
+
+  tags = {
+    Application = var.name
+    Environment = var.environment
+    Stack       = var.stack
+  }
 }
 
 resource "random_string" "master_password" {
@@ -137,6 +147,8 @@ resource "aws_db_instance" "database" {
 
   tags = {
     Application = var.name
+    Environment = var.environment
+    Stack       = var.stack
   }
 }
 

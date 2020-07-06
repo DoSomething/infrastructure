@@ -1,5 +1,13 @@
+variable "name" {
+  description = "The name for this warehouse."
+}
+
+variable "environment" {
+  description = "The environment for this database: development, qa, or production."
+}
+
 variable "database_name" {
-  description = "The name used for this database."
+  description = "The name used for the default database."
 }
 
 variable "engine_version" {
@@ -40,6 +48,10 @@ variable "work_mem" {
 
 variable "vpc_security_group_ids" {
   description = "The VPC security group IDs to grant access to this database."
+}
+
+locals {
+  stack = "data"
 }
 
 resource "aws_db_parameter_group" "pg11" {
@@ -148,6 +160,12 @@ resource "aws_db_parameter_group" "pg11" {
     name  = "log_autovacuum_min_duration"
     value = "0"
   }
+
+  tags = {
+    Application = var.name
+    Environment = var.environment
+    Stack       = local.stack
+  }
 }
 
 resource "aws_db_instance" "quasar" {
@@ -168,4 +186,10 @@ resource "aws_db_instance" "quasar" {
   publicly_accessible             = true
   performance_insights_enabled    = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+
+  tags = {
+    Application = var.name
+    Environment = var.environment
+    Stack       = local.stack
+  }
 }

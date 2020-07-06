@@ -79,6 +79,9 @@ locals {
     CONTENTFUL_USE_PREVIEW_API = var.use_contentful_preview_api
     CONTENTFUL_CACHE           = false == var.use_contentful_preview_api
   }
+
+  # This application is part of our frontend stack.
+  stack = "web"
 }
 
 module "app" {
@@ -109,8 +112,10 @@ module "app" {
 module "database" {
   source = "../../components/mariadb_instance"
 
-  name           = var.name
-  environment    = var.environment
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
   instance_class = var.environment == "production" ? "db.t2.medium" : "db.t2.micro"
 }
 

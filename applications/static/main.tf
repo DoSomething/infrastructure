@@ -2,6 +2,14 @@ variable "domain" {
   description = "The domain this bucket will be accessible at, e.g. assets.dosomething.org"
 }
 
+variable "environment" {
+  description = "The environment for this bucket: development, qa, or production."
+}
+
+variable "stack" {
+  description = "The 'stack' for this bucket: web, sms, backend, data."
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = var.domain
   acl    = "public-read"
@@ -16,6 +24,12 @@ resource "aws_s3_bucket" "bucket" {
 
     # Allow CORS requests from DS.org properties & local development apps.
     allowed_origins = ["https://*.dosomething.org", "http://*.test"]
+  }
+
+  tags = {
+    Application = var.domain
+    Environment = var.environment
+    Stack       = var.stack
   }
 }
 

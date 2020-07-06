@@ -3,6 +3,14 @@ variable "name" {
   description = "The application name."
 }
 
+variable "environment" {
+  description = "The environment for this database: development, qa, or production."
+}
+
+variable "stack" {
+  description = "The 'stack' for this database: web, sms, backend, data."
+}
+
 variable "roles" {
   description = "The IAM roles which should have access to this resource."
   type        = list(string)
@@ -23,6 +31,12 @@ resource "aws_dynamodb_table" "table" {
   attribute {
     name = "id"
     type = "S"
+  }
+
+  tags = {
+    Application = var.name
+    Environment = var.environment
+    Stack       = var.stack
   }
 }
 

@@ -59,7 +59,9 @@ locals {
 module "assets" {
   source = "../applications/static"
 
-  domain = "assets.dosomething.org"
+  domain      = "assets.dosomething.org"
+  environment = "production"
+  stack       = "web"
 }
 
 module "bertly" {
@@ -159,7 +161,10 @@ module "rogue_backup" {
     aws = aws.west
   }
 
-  name       = "dosomething-rogue-backup"
+  name        = "dosomething-rogue-backup"
+  environment = "production"
+  stack       = "web"
+
   versioning = true
   archived   = true
   private    = true

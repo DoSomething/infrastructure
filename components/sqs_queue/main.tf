@@ -3,6 +3,14 @@ variable "name" {
   description = "The name for this queue (usually the application name)."
 }
 
+variable "environment" {
+  description = "The environment for this queue: development, qa, or production."
+}
+
+variable "stack" {
+  description = "The 'stack' for this queue: web, sms, backend, data."
+}
+
 variable "user" {
   description = "The IAM user to grant permissions to read/write to this queue."
 }
@@ -10,6 +18,12 @@ variable "user" {
 resource "aws_sqs_queue" "queue" {
   name                      = var.name
   message_retention_seconds = 60 * 60 * 24 * 14 # 14 days (maximum).
+
+  tags = {
+    Application = var.name
+    Environment = var.environment
+    Stack       = var.stack
+  }
 }
 
 data "template_file" "sqs_policy" {
