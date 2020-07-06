@@ -47,6 +47,7 @@ module "app" {
 module "storage" {
   source = "../../components/s3_bucket"
 
+  application = "dosomething-longshot"
   name        = var.name
   environment = var.environment
   stack       = "web"
