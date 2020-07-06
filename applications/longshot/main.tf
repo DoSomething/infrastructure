@@ -45,8 +45,12 @@ module "app" {
 }
 
 module "storage" {
-  source   = "../../components/s3_bucket"
-  name     = var.name
+  source = "../../components/s3_bucket"
+
+  name        = var.name
+  environment = var.environment
+  stack       = "web"
+
   private  = true
   archived = true
 }
