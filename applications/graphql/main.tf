@@ -73,6 +73,7 @@ locals {
 module "app" {
   source = "../../components/lambda_function"
 
+  application = var.name
   name        = var.name
   environment = var.environment
   stack       = local.stack
@@ -115,6 +116,7 @@ resource "random_string" "webhook_secret" {
 module "contentful_webhook" {
   source = "../../components/lambda_function"
 
+  application = var.name
   name        = "${var.name}-webhook"
   environment = var.environment
   stack       = local.stack
@@ -163,6 +165,7 @@ module "gateway" {
 module "cache" {
   source = "../../components/dynamodb_cache"
 
+  application = var.name
   name        = "${var.name}-cache"
   environment = var.environment
   stack       = local.stack

@@ -1,6 +1,10 @@
 # Required variables:
 variable "name" {
-  description = "The application name."
+  description = "The Lambda name."
+}
+
+variable "application" {
+  description = "The application this Lambda is provisioned for (e.g. 'dosomething-rogue')."
 }
 
 variable "environment" {

@@ -29,7 +29,7 @@ resource "aws_lambda_function" "function" {
   role = aws_iam_role.lambda_exec.arn
 
   tags = {
-    Application = var.name
+    Application = var.application
     Environment = var.environment
     Stack       = var.stack
   }
@@ -42,6 +42,12 @@ resource "aws_s3_bucket" "deploy" {
 
   versioning {
     enabled = true
+  }
+
+  tags = {
+    Application = var.application
+    Environment = var.environment
+    Stack       = var.stack
   }
 }
 

@@ -14,6 +14,7 @@ module "forwarder" {
   source = "../../components/lambda_function"
 
   name        = var.name
+  application = var.name
   environment = var.environment
   stack       = "backend"
 

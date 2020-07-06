@@ -136,6 +136,7 @@ module "iam_user" {
 module "queue_high" {
   source = "../../components/sqs_queue"
 
+  application = var.name
   name        = "${var.name}-high"
   environment = var.environment
   stack       = local.stack
@@ -146,6 +147,7 @@ module "queue_high" {
 module "queue_low" {
   source = "../../components/sqs_queue"
 
+  application = var.name
   name        = "${var.name}-low"
   environment = var.environment
   stack       = local.stack
@@ -156,6 +158,7 @@ module "queue_low" {
 module "storage" {
   source = "../../components/s3_bucket"
 
+  application = var.name
   name        = var.name
   environment = var.environment
   stack       = local.stack
