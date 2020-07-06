@@ -161,6 +161,7 @@ module "rogue_backup" {
     aws = aws.west
   }
 
+  application = "dosomething-rogue"
   name        = "dosomething-rogue-backup"
   environment = "production"
   stack       = "web"
