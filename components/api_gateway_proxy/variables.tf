@@ -3,6 +3,14 @@ variable "name" {
   description = "The application name."
 }
 
+variable "environment" {
+  description = "The environment for this gateway: development, qa, or production."
+}
+
+variable "stack" {
+  description = "The 'stack' for this gateway: web, sms, backend, data."
+}
+
 variable "function_arn" {
   description = "The Lambda function's ARN."
 }

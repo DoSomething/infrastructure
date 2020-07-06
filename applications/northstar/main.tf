@@ -92,6 +92,9 @@ locals {
     DS_ENABLE_PASSWORD_GRANT = false
     DS_ENABLE_RATE_LIMITING  = true
   }
+
+  # This application is part of our backend stack.
+  stack = "backend"
 }
 
 module "app" {
@@ -133,21 +136,30 @@ module "iam_user" {
 module "queue_high" {
   source = "../../components/sqs_queue"
 
-  name = "${var.name}-high"
+  name        = "${var.name}-high"
+  environment = var.environment
+  stack       = local.stack
+
   user = module.iam_user.name
 }
 
 module "queue_low" {
   source = "../../components/sqs_queue"
 
-  name = "${var.name}-low"
+  name        = "${var.name}-low"
+  environment = var.environment
+  stack       = local.stack
+
   user = module.iam_user.name
 }
 
 module "storage" {
   source = "../../components/s3_bucket"
 
-  name       = var.name
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
   user       = module.iam_user.name
   private    = true
   versioning = true

@@ -65,12 +65,18 @@ locals {
 
   # Gambit only has a production & QA environment:
   gambit_env = local.env == "dev" ? "qa" : local.env
+
+  # This application is part of our backend stack.
+  stack = "backend"
 }
 
 module "app" {
   source = "../../components/lambda_function"
 
-  name    = var.name
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
   handler = "main.handler"
   runtime = "nodejs12.x"
   logger  = var.logger
@@ -109,7 +115,10 @@ resource "random_string" "webhook_secret" {
 module "contentful_webhook" {
   source = "../../components/lambda_function"
 
-  name    = "${var.name}-webhook"
+  name        = "${var.name}-webhook"
+  environment = var.environment
+  stack       = local.stack
+
   handler = "webhook.handler"
   runtime = "nodejs12.x"
   logger  = var.logger
@@ -126,7 +135,10 @@ module "contentful_webhook" {
 module "gateway" {
   source = "../../components/api_gateway"
 
-  name   = var.name
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
   domain = var.domain
 
   functions_count = 2
@@ -151,7 +163,10 @@ module "gateway" {
 module "cache" {
   source = "../../components/dynamodb_cache"
 
-  name  = "${var.name}-cache"
+  name        = "${var.name}-cache"
+  environment = var.environment
+  stack       = local.stack
+
   roles = [module.app.lambda_role, module.contentful_webhook.lambda_role]
 }
 

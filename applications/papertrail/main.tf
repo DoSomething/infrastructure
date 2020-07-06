@@ -13,7 +13,10 @@ variable "papertrail_destination" {
 module "forwarder" {
   source = "../../components/lambda_function"
 
-  name    = var.name
+  name        = var.name
+  environment = var.environment
+  stack       = "backend"
+
   runtime = "nodejs12.x"
   handler = "handler.log"
 

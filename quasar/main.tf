@@ -57,6 +57,9 @@ module "vpc" {
 module "warehouse" {
   source = "../components/postgresql_warehouse"
 
+  name        = "dosomething-quasar"
+  environment = "production"
+
   database_name        = "quasar_prod_warehouse"
   parameter_group_name = "quasar-prod-pg11"
   instance_class       = "db.m5.4xlarge"
@@ -74,6 +77,9 @@ module "warehouse" {
 
 module "warehouse-qa" {
   source = "../components/postgresql_warehouse"
+
+  name        = "dosomething-quasar-qa"
+  environment = "qa"
 
   database_name        = "quasar" # TODO: This is misleading!
   parameter_group_name = "quasar-qa-pg11"
@@ -103,7 +109,10 @@ module "iam_user" {
 module "storage" {
   source = "../components/s3_bucket"
 
-  name       = local.cio_export
+  name        = local.cio_export
+  environment = "production"
+  stack       = "data"
+
   user       = module.iam_user.name
   versioning = true
   private    = true

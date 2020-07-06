@@ -65,6 +65,9 @@ resource "fastly_service_v1" "voting-app" {
 
 module "agg" {
   source = "../applications/static"
-  domain = "www.athletesgonegood.com"
+
+  domain      = "www.athletesgonegood.com"
+  environment = "production"
+  stack       = "web"
 }
 

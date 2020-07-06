@@ -90,6 +90,9 @@ locals {
     GRAPHQL_URL   = var.graphql_url
     BLINK_URL     = var.blink_url
   }
+
+  # This application is part of our backend stack.
+  stack = "backend"
 }
 
 module "app" {
@@ -126,8 +129,10 @@ module "app" {
 module "database" {
   source = "../../components/mariadb_instance"
 
-  name           = var.name
-  environment    = var.environment
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
   instance_class = var.environment == "production" ? "db.m4.large" : "db.t2.medium"
   multi_az       = var.environment == "production"
   is_dms_source  = true
@@ -141,14 +146,22 @@ module "iam_user" {
 
 module "queue" {
   source = "../../components/sqs_queue"
-  name   = var.name
-  user   = module.iam_user.name
+
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
+  user = module.iam_user.name
 }
 
 module "storage" {
   source = "../../components/s3_bucket"
-  name   = var.name
-  user   = module.iam_user.name
+
+  name        = var.name
+  environment = var.environment
+  stack       = local.stack
+
+  user = module.iam_user.name
 
   replication_target = var.backup_storage_bucket
 }

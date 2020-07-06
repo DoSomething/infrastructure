@@ -1,7 +1,9 @@
 module "api_gateway" {
   source = "../api_gateway"
 
-  name = var.name
+  name        = var.name
+  environment = var.environment
+  stack       = var.stack
 
   domain      = var.domain
   certificate = var.certificate

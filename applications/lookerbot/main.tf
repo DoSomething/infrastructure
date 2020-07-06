@@ -27,7 +27,10 @@ module "iam_user" {
 module "storage" {
   source = "../../components/s3_bucket"
 
-  name    = var.name
+  name        = var.name
+  environment = "production"
+  stack       = "data"
+
   user    = module.iam_user.name
   private = false
 }

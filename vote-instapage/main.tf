@@ -147,5 +147,11 @@ resource "aws_s3_bucket" "vote" {
     index_document = "index.html"
     error_document = "error.html"
   }
+
+  tags = {
+    Application = "vote.dosomething.org"
+    Environment = "production"
+    Stack       = "web"
+  }
 }
 
