@@ -1,6 +1,6 @@
 # Required variables:
 variable "name" {
-  description = "The application name."
+  description = "The Lambda name."
 }
 
 variable "environment" {

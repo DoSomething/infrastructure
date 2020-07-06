@@ -1,6 +1,6 @@
 # Required variables:
 variable "name" {
-  description = "The application name."
+  description = "The DynamoDB table name."
 }
 
 variable "environment" {
