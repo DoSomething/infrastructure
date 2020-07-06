@@ -54,6 +54,7 @@ locals {
 module "app" {
   source = "../../components/lambda_function"
 
+  application = var.name
   name        = var.name
   environment = var.environment
   stack       = local.stack
@@ -93,6 +94,7 @@ module "database" {
 module "storage" {
   source = "../../components/s3_bucket"
 
+  application = var.name
   name        = "${var.name}-logs"
   environment = var.environment
   stack       = local.stack

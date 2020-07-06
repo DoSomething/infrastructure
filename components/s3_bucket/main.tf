@@ -3,6 +3,10 @@ variable "name" {
   description = "The name for this bucket (usually the application name)."
 }
 
+variable "application" {
+  description = "The application this bucket is provisioned for (e.g. 'dosomething-rogue')."
+}
+
 variable "environment" {
   description = "The environment for this bucket: development, qa, or production."
 }
@@ -98,7 +102,7 @@ resource "aws_s3_bucket" "bucket" {
   }
 
   tags = {
-    Application = var.name
+    Application = var.application
     Environment = var.environment
     Stack       = var.stack
   }

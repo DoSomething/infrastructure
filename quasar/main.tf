@@ -109,6 +109,7 @@ module "iam_user" {
 module "storage" {
   source = "../components/s3_bucket"
 
+  application = local.cio_export
   name        = local.cio_export
   environment = "production"
   stack       = "data"

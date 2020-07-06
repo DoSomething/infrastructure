@@ -5,6 +5,7 @@ variable "logger" {
 module "app" {
   source = "../../components/lambda_function"
 
+  application = "hello-serverless"
   name        = "hello-serverless"
   environment = "development"
   stack       = "web"

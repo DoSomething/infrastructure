@@ -3,6 +3,10 @@ variable "name" {
   description = "The Lambda name."
 }
 
+variable "application" {
+  description = "The application this Lambda is provisioned for (e.g. 'dosomething-rogue')."
+}
+
 variable "environment" {
   description = "The environment for this Lambda: development, qa, or production."
 }

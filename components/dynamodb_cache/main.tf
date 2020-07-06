@@ -3,6 +3,10 @@ variable "name" {
   description = "The DynamoDB table name."
 }
 
+variable "application" {
+  description = "The application this cache is provisioned for (e.g. 'dosomething-graphql')."
+}
+
 variable "environment" {
   description = "The environment for this database: development, qa, or production."
 }
@@ -34,7 +38,7 @@ resource "aws_dynamodb_table" "table" {
   }
 
   tags = {
-    Application = var.name
+    Application = var.application
     Environment = var.environment
     Stack       = var.stack
   }

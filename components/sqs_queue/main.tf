@@ -3,6 +3,10 @@ variable "name" {
   description = "The name for this queue (usually the application name)."
 }
 
+variable "application" {
+  description = "The application this queue is provisioned for (e.g. 'dosomething-rogue')."
+}
+
 variable "environment" {
   description = "The environment for this queue: development, qa, or production."
 }
@@ -20,7 +24,7 @@ resource "aws_sqs_queue" "queue" {
   message_retention_seconds = 60 * 60 * 24 * 14 # 14 days (maximum).
 
   tags = {
-    Application = var.name
+    Application = var.application
     Environment = var.environment
     Stack       = var.stack
   }
