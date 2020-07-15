@@ -20,6 +20,14 @@ variable "logger" {
   default     = null
 }
 
+data "aws_ssm_parameter" "algolia_app_id" {
+  name = "/algolia/app-id"
+}
+
+data "aws_ssm_parameter" "algolia_secret" {
+  name = "/${var.name}/algolia/api-key"
+}
+
 data "aws_ssm_parameter" "contentful_phoenix_space_id" {
   # All environments of this application use the same space.
   name = "/contentful/phoenix/space-id"
@@ -95,6 +103,9 @@ module "app" {
     # TODO: Remove Gambit Conversations vars once https://github.com/DoSomething/graphql/pull/57 is deployed everywhere.
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = data.aws_ssm_parameter.gambit_username.value
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = data.aws_ssm_parameter.gambit_password.value
+
+    ALGOLIA_APP_ID = data.aws_ssm_parameter.algolia_app_id.value
+    ALGOLIA_SECRET = data.aws_ssm_parameter.algolia_secret.value
 
     PHOENIX_CONTENTFUL_SPACE_ID      = data.aws_ssm_parameter.contentful_phoenix_space_id.value
     PHOENIX_CONTENTFUL_ACCESS_TOKEN  = data.aws_ssm_parameter.contentful_phoenix_content_api_key.value
