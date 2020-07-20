@@ -195,6 +195,14 @@ module "papertrail" {
   papertrail_destination = var.papertrail_destination
 }
 
+# We use this bucket to store longer-term Papertrail log
+# archives (e.g. for analysis with Athena).
+module "log_archive" {
+  source = "../components/log_archive"
+
+  name = "dosomething-papertrail"
+}
+
 output "papertrail_forwarder" {
   value = module.papertrail
 }
