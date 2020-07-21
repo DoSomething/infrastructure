@@ -21,7 +21,12 @@ resource "aws_s3_bucket_policy" "papertrail_access_policy" {
 resource "aws_s3_bucket_public_access_block" "private_policy" {
   bucket = aws_s3_bucket.archive.id
 
-  block_public_acls   = true
-  block_public_policy = true
-  ignore_public_acls  = true
+  # We don't want to risk a bug causing individual
+  # log files to be marked with "public" ACLs.
+  block_public_acls  = true
+  ignore_public_acls = true
+
+  # We need a "public" policy to grant Papertrail
+  # write access to this bucket! See: policy.json.tpl.
+  block_public_policy = false
 }
