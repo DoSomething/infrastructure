@@ -102,8 +102,10 @@ locals {
       APP_ENV   = var.environment
       APP_DEBUG = "false"
 
-      # Configure logging for Heroku drain:
-      APP_LOG = "errorlog"
+      # Configure logging for Heroku drain. (The 'APP_LOG' environment variable
+      # is used in Laravel 5.5, and LOG_CHANNEL is used in Laravel 5.6+).
+      APP_LOG     = "errorlog"
+      LOG_CHANNEL = "errorlog"
 
       # Alongside the Trusted Proxy module, this allows us to use SSL behind
       # Heroku's load balancer. Heroku strips these headers on incoming traffic
