@@ -69,8 +69,8 @@ module "bertly" {
 
   environment   = "production"
   name          = "dosomething-bertly"
-  domain        = "new.dosome.click"
-  certificate   = "*.dosome.click"
+  domain        = "dosome.click"
+  certificate   = "dosome.click"
   northstar_url = "https://identity.dosomething.org"
   logger        = module.papertrail
 }
