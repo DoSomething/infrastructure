@@ -28,6 +28,10 @@ output "secret" {
 
 output "config_vars" {
   value = {
+    AWS_ACCESS_KEY_ID = aws_iam_access_key.aws_key.id
+    AWS_SECRET_ACCESS_KEY = aws_iam_access_key.aws_key.se
+
+    # @TODO: Remove these old vars once safe to do so!
     AWS_ACCESS_KEY = aws_iam_access_key.aws_key.id
     AWS_SECRET_KEY = aws_iam_access_key.aws_key.secret
   }
