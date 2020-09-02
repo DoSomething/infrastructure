@@ -21,7 +21,7 @@ variable "logger" {
 }
 
 data "aws_ssm_parameter" "airtable_api_key" {
-  name = "/${var.name}/airtable/api-key"
+  name = "/airtable/api-key"
 }
 
 data "aws_ssm_parameter" "algolia_app_id" {
@@ -193,4 +193,3 @@ module "cache" {
 output "backend" {
   value = module.gateway.base_url
 }
-
