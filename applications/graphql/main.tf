@@ -20,6 +20,10 @@ variable "logger" {
   default     = null
 }
 
+data "aws_ssm_parameter" "airtable_api_key" {
+  name = "/airtable/api-key"
+}
+
 data "aws_ssm_parameter" "algolia_app_id" {
   name = "/algolia/app-id"
 }
@@ -104,6 +108,8 @@ module "app" {
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = data.aws_ssm_parameter.gambit_username.value
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = data.aws_ssm_parameter.gambit_password.value
 
+    AIRTABLE_API_KEY = data.aws_ssm_parameter.airtable_api_key.value
+
     ALGOLIA_APP_ID = data.aws_ssm_parameter.algolia_app_id.value
     ALGOLIA_SECRET = data.aws_ssm_parameter.algolia_secret.value
 
@@ -187,4 +193,3 @@ module "cache" {
 output "backend" {
   value = module.gateway.base_url
 }
-
