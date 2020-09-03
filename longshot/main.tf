@@ -37,49 +37,23 @@ provider "null" {
   version = "~> 2.1"
 }
 
-resource "heroku_pipeline" "longshot" {
-  name = "longshot"
-}
-
 module "longshot-footlocker" {
   source = "../applications/longshot"
 
   name        = "longshot-footlocker"
-  domain      = "footlockerscholarathletes.com"
-  pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
-  deprecated  = true
-
-  papertrail_destination = "${var.papertrail_prod_destination}"
 }
 
 module "longshot-footlocker-internal" {
   source = "../applications/longshot"
 
   name        = "longshot-footlocker-internal"
-  domain      = "www.flscholarship.com"
-  pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
-  deprecated  = true
-
-  papertrail_destination = "${var.papertrail_prod_destination}"
-}
-
-# Attach base domain for FLScholarship.com as well.
-# TODO: Is there a better way to handle ANAMEs?
-resource "heroku_domain" "flscholarship_base_domain" {
-  app      = module.longshot-footlocker-internal.name
-  hostname = "flscholarship.com"
 }
 
 module "hrblock" {
   source = "../applications/longshot"
 
   name        = "longshot-hrblock"
-  domain      = "caps.hrblock.com"
-  pipeline    = "${heroku_pipeline.longshot.id}"
   environment = "production"
-  deprecated  = true
-
-  papertrail_destination = "${var.papertrail_prod_destination}"
 }
