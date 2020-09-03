@@ -50,8 +50,8 @@ output "id" {
 
 output "config_vars" {
   value = {
-    AWS_SQS_QUEUE     = aws_sqs_queue.queue.id
-    QUEUE_CONNECTION  = "sqs"
+    AWS_SQS_QUEUE    = aws_sqs_queue.queue.id
+    QUEUE_CONNECTION = "sqs"
 
     # @TODO: Remove these old vars once safe to do so!
     QUEUE_DRIVER      = "sqs"
