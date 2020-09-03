@@ -205,9 +205,9 @@ output "config_vars" {
     FILESYSTEM_DRIVER = "s3"
 
     # @TODO: Remove these old vars once safe to do so!
-    STORAGE_DRIVER    = "s3"
-    S3_BUCKET         = aws_s3_bucket.bucket.id
-    S3_REGION         = aws_s3_bucket.bucket.region
+    STORAGE_DRIVER = "s3"
+    S3_BUCKET      = aws_s3_bucket.bucket.id
+    S3_REGION      = aws_s3_bucket.bucket.region
   }
 }
 
