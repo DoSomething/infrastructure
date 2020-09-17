@@ -37,18 +37,6 @@ resource "fastly_service_v1" "frontend" {
     statement = "req.http.host == \"${var.assets_domain}\""
   }
 
-  condition {
-    type      = "REQUEST"
-    name      = "timed-synthetic-takeover"
-    statement = "req.http.X-Timed-Synthetic-Response == \"true\""
-  }
-
-  response_object {
-    name              = "timed synthetic takeover"
-    request_condition = "timed-synthetic-takeover"
-    content           = file("${path.module}/takeovers/election.html")
-  }
-
   backend {
     name              = "s3-assets.dosomething.org"
     address           = var.assets_backend
@@ -149,31 +137,31 @@ resource "fastly_service_v1" "frontend" {
   }
 
   snippet {
-    name    = "Frontend - ISO-3166-2 Request Header"
+    name    = "ISO-3166-2 Request Header"
     type    = "recv"
     content = file("${path.module}/iso3166_recv.vcl")
   }
 
   snippet {
-    name    = "Frontend - ISO-3166-2 Response Header"
+    name    = "ISO-3166-2 Response Header"
     type    = "deliver"
     content = file("${path.module}/iso3166_deliver.vcl")
   }
 
   snippet {
-    name    = "Frontend - Trigger International Redirect"
+    name    = "Trigger Homepage Redirect"
     type    = "recv"
     content = file("${path.module}/homepage_recv.vcl")
   }
 
   snippet {
-    name    = "Frontend - Handle International Redirect"
+    name    = "Handle Homepage Redirect"
     type    = "error"
     content = file("${path.module}/homepage_error.vcl")
   }
 
   snippet {
-    name    = "Frontend - Trigger Redirect"
+    name    = "Trigger Aurora Redirect"
     type    = "recv"
     content = file("${path.module}/redirect_recv.vcl")
 
@@ -181,19 +169,19 @@ resource "fastly_service_v1" "frontend" {
   }
 
   snippet {
-    name    = "Frontend - Handle Redirect"
+    name    = "Handle Aurora Redirect"
     type    = "error"
     content = file("${path.module}/redirect_error.vcl")
   }
 
   snippet {
-    name    = "ProjectPages - Trigger Redirect"
+    name    = "Legacy Paths - Trigger Redirect"
     type    = "recv"
     content = file("${path.module}/legacy_redirects_recv.vcl")
   }
 
   snippet {
-    name    = "ProjectPages - Handle Redirect"
+    name    = "Legacy Paths - Handle Redirect"
     type    = "error"
     content = file("${path.module}/legacy_redirects_error.vcl")
   }
@@ -202,20 +190,6 @@ resource "fastly_service_v1" "frontend" {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = file("${path.module}/app_name.vcl")
-  }
-
-  snippet {
-    name    = "Frontend - Homepage Takeover Configuration"
-    type    = "recv"
-    content = file("${path.module}/takeover_config.vcl")
-
-    priority = 0 # Make sure we configure this before it runs below!
-  }
-
-  snippet {
-    name    = "Shared - Static Homepage Takeover"
-    type    = "recv"
-    content = file("${path.module}/takeover_recv.vcl")
   }
 
   papertrail {
