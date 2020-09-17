@@ -22,7 +22,7 @@ locals {
 }
 
 resource "fastly_service_v1" "backends" {
-  name          = "Terraform: Backends"
+  name          = var.name
   force_destroy = true
 
   # Configure backend, domain, and condition for each app:
