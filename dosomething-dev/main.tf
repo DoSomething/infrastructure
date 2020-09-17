@@ -78,22 +78,15 @@ module "fastly-frontend" {
 }
 
 module "fastly-backend" {
-  source = "./fastly-backend"
+  source = "../components/fastly_backends"
+  name   = "Fastly: Backends (Development)"
 
-  northstar_name    = module.northstar.name
-  northstar_domain  = module.northstar.domain
-  northstar_backend = module.northstar.backend
-
-  phoenix_name    = module.phoenix.name
-  phoenix_domain  = module.phoenix.domain
-  phoenix_backend = module.phoenix.backend
-
-  rogue_name    = module.rogue.name
-  rogue_domain  = module.rogue.domain
-  rogue_backend = module.rogue.backend
+  backends = [
+    module.northstar,
+    module.rogue,
+  ]
 
   papertrail_destination = var.papertrail_destination_fastly
-  papertrail_log_format  = local.papertrail_log_format
 }
 
 module "graphql" {
