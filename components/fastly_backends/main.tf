@@ -1,11 +1,17 @@
-variable "northstar_name" {}
-variable "northstar_domain" {}
-variable "northstar_backend" {}
-variable "rogue_name" {}
-variable "rogue_domain" {}
-variable "rogue_backend" {}
-variable "papertrail_destination" {}
-variable "papertrail_log_format" {}
+variable "name" {
+  description = "The name for this Fastly property."
+  type        = string
+}
+
+variable "backends" {
+  description = "The domains/backends to route traffic to in this property."
+  type        = list(object({ name = string, domain = string, backend = string }))
+}
+
+variable "papertrail_destination" {
+  description = "The Papertrail log destination to write logs to."
+  type        = string
+}
 
 locals {
   headers = {
@@ -15,48 +21,76 @@ locals {
   }
 }
 
-resource "fastly_service_v1" "backends-qa" {
-  name          = "Terraform: Backends (QA)"
+resource "fastly_service_v1" "backends" {
+  name          = var.name
   force_destroy = true
 
-  domain {
-    name = var.northstar_domain
+  # Configure backend, domain, and condition for each app:
+  dynamic "domain" {
+    for_each = var.backends
+
+    content {
+      name = domain.value.domain
+    }
   }
 
-  domain {
-    name = var.rogue_domain
+  dynamic "condition" {
+    for_each = var.backends
+
+    content {
+      type      = "RESPONSE"
+      name      = "response-${condition.value.name}"
+      statement = "req.http.host == \"${condition.value.domain}\""
+    }
   }
 
-  condition {
-    type      = "REQUEST"
-    name      = "backend-northstar-qa"
-    statement = "req.http.host == \"${var.northstar_domain}\""
+  dynamic "condition" {
+    for_each = var.backends
+
+    content {
+      type      = "REQUEST"
+      name      = "backend-${condition.value.name}"
+      statement = "req.http.host == \"${condition.value.domain}\""
+    }
   }
 
-  condition {
-    type      = "RESPONSE"
-    name      = "response-northstar-qa"
-    statement = "req.http.host == \"${var.northstar_domain}\""
+  dynamic "backend" {
+    for_each = var.backends
+
+    content {
+      address           = backend.value.backend
+      name              = backend.value.name
+      request_condition = "backend-${backend.value.name}" # defined above.
+      port              = 443
+
+      # We use shielding to increase chances that we get cache hits. We don't rely
+      # on Fastly for load balancing (since that is handled by Heroku's router).
+      shield           = "bwi-va-us"
+      auto_loadbalance = false
+    }
   }
 
-  condition {
-    type      = "REQUEST"
-    name      = "backend-rogue-qa"
-    statement = "req.http.host == \"${var.rogue_domain}\""
+  # Fix issue with geolocation when shielding is enabled:
+  snippet {
+    name    = "Fix Geolocation With Shielding On"
+    type    = "recv"
+    content = file("${path.module}/recv_geolocation.vcl")
   }
 
-  condition {
-    type      = "RESPONSE"
-    name      = "response-rogue-qa"
-    statement = "req.http.host == \"${var.rogue_domain}\""
-  }
-
+  # Configure 'robots.txt' global deny for backends:
   condition {
     type      = "REQUEST"
     name      = "path-robots"
     statement = "req.url.basename == \"robots.txt\""
   }
 
+  response_object {
+    name              = "robots.txt deny"
+    content           = file("${path.module}/deny-robots.txt")
+    request_condition = "path-robots"
+  }
+
+  # Do not cache 'not found' & authenticated requests:
   condition {
     type      = "CACHE"
     name      = "is-not-found"
@@ -81,24 +115,7 @@ resource "fastly_service_v1" "backends-qa" {
     action            = "pass"
   }
 
-  backend {
-    address           = var.northstar_backend
-    name              = var.northstar_name
-    request_condition = "backend-northstar-qa"
-    shield            = "bwi-va-us"
-    auto_loadbalance  = false
-    port              = 443
-  }
-
-  backend {
-    address           = var.rogue_backend
-    name              = var.rogue_name
-    request_condition = "backend-rogue-qa"
-    shield            = "bwi-va-us"
-    auto_loadbalance  = false
-    port              = 443
-  }
-
+  # Enable GZIP to make things speedy!
   gzip {
     name = "gzip"
 
@@ -152,34 +169,24 @@ resource "fastly_service_v1" "backends-qa" {
     }
   }
 
+  # Force SSL at the edge:
   request_setting {
     name      = "Force SSL"
     force_ssl = true
   }
 
-  response_object {
-    name              = "robots.txt deny"
-    content           = file("${path.module}/deny-robots.txt")
-    request_condition = "path-robots"
-  }
-
+  # Set an 'X-Origin-Name' header for debugging & for logging to Papertrail:
   snippet {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = file("${path.module}/app_name.vcl")
   }
 
-  snippet {
-    name    = "Fix Geolocation With Shielding On"
-    type    = "recv"
-    content = file("${path.module}/recv_geolocation.vcl")
-  }
-
+  # Write requests to this Fastly property to the provided Papertrail drain:
   papertrail {
     name    = "backend"
     address = element(split(":", var.papertrail_destination), 0)
     port    = element(split(":", var.papertrail_destination), 1)
-    format  = var.papertrail_log_format
+    format  = "%t '%r' status=%>s app=%%{X-Application-Name}o cache=\"%%{X-Cache}o\" country=%%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%%{User-Agent}i\" service=%%{time.elapsed.msec}Vms"
   }
 }
-
