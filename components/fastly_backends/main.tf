@@ -3,8 +3,8 @@ variable "name" {
   type        = string
 }
 
-variable "backends" {
-  description = "The domains/backends to route traffic to in this property."
+variable "applications" {
+  description = "The application modules to route traffic to."
   type        = list(object({ name = string, domain = string, backend = string }))
 }
 
@@ -27,7 +27,7 @@ resource "fastly_service_v1" "backends" {
 
   # Configure backend, domain, and condition for each app:
   dynamic "domain" {
-    for_each = var.backends
+    for_each = var.applications
 
     content {
       name = domain.value.domain
@@ -35,7 +35,7 @@ resource "fastly_service_v1" "backends" {
   }
 
   dynamic "condition" {
-    for_each = var.backends
+    for_each = var.applications
 
     content {
       type      = "RESPONSE"
@@ -45,7 +45,7 @@ resource "fastly_service_v1" "backends" {
   }
 
   dynamic "condition" {
-    for_each = var.backends
+    for_each = var.applications
 
     content {
       type      = "REQUEST"
@@ -55,7 +55,7 @@ resource "fastly_service_v1" "backends" {
   }
 
   dynamic "backend" {
-    for_each = var.backends
+    for_each = var.applications
 
     content {
       address           = backend.value.backend

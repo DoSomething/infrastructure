@@ -81,7 +81,7 @@ module "fastly-backend" {
   source = "../components/fastly_backends"
   name   = "Fastly: Backends (Development)"
 
-  backends = [
+  applications = [
     module.northstar,
     module.rogue,
   ]
