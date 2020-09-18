@@ -1,5 +1,3 @@
-variable "assets_domain" {}
-variable "assets_backend" {}
 variable "phoenix_name" {}
 variable "phoenix_backend" {}
 variable "papertrail_destination" {}
