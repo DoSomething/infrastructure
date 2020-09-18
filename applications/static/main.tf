@@ -10,6 +10,64 @@ variable "stack" {
   description = "The 'stack' for this bucket: web, sms, backend, data."
 }
 
+resource "fastly_service_v1" "cdn" {
+  name          = "Terraform: ${var.domain}"
+  force_destroy = true
+
+  domain {
+    name = var.domain
+  }
+
+  backend {
+    name    = "s3-${var.domain}"
+    address = "${aws_s3_bucket.bucket.id}.s3-website-${aws_s3_bucket.bucket.region}.amazonaws.com"
+    port    = 80
+  }
+
+  request_setting {
+    name      = "Force SSL"
+    force_ssl = true
+  }
+
+  gzip {
+    name = "gzip"
+
+    extensions = ["css", "js", "html", "eot", "ico", "otf", "ttf", "json"]
+
+    content_types = [
+      "text/html",
+      "application/x-javascript",
+      "text/css",
+      "application/javascript",
+      "text/javascript",
+      "application/json",
+      "application/vnd.ms-fontobject",
+      "application/x-font-opentype",
+      "application/x-font-truetype",
+      "application/x-font-ttf",
+      "application/xml",
+      "font/eot",
+      "font/opentype",
+      "font/otf",
+      "image/svg+xml",
+      "image/vnd.microsoft.icon",
+      "text/plain",
+      "text/xml",
+    ]
+  }
+
+  # The S3 backend only returns a 'Vary' header if a request has a CORS header on it, which
+  # means we may accidentally cache a CORS-less response for everyone. This rule adds the
+  # expected 'Vary' if it isn't already set on the response.
+  header {
+    name        = "S3 Vary"
+    type        = "cache"
+    action      = "set"
+    destination = "http.Vary"
+    source      = "\"Origin, Access-Control-Request-Headers, Access-Control-Request-Method\""
+  }
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = var.domain
   acl    = "public-read"
@@ -66,12 +124,3 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.bucket.id
   policy = data.template_file.public_bucket_policy.rendered
 }
-
-output "domain" {
-  value = var.domain
-}
-
-output "backend" {
-  value = "${aws_s3_bucket.bucket.id}.s3-website-${aws_s3_bucket.bucket.region}.amazonaws.com"
-}
-
