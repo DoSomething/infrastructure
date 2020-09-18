@@ -52,10 +52,6 @@ provider "null" {
   version = "~> 2.1"
 }
 
-locals {
-  papertrail_log_format = "%t '%r' status=%>s app=%%{X-Application-Name}o cache=\"%%{X-Cache}o\" country=%%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%%{User-Agent}i\" service=%%{time.elapsed.msec}Vms"
-}
-
 module "bertly" {
   source = "../applications/bertly"
 
@@ -68,18 +64,16 @@ module "bertly" {
 }
 
 module "fastly-frontend" {
-  source = "./fastly-frontend"
+  source = "../components/fastly_frontend"
+  name   = "Terraform: Frontend (Development)"
 
-  phoenix_name    = module.phoenix.name
-  phoenix_backend = module.phoenix.backend
-
+  application            = module.phoenix
   papertrail_destination = var.papertrail_destination_fastly
-  papertrail_log_format  = local.papertrail_log_format
 }
 
 module "fastly-backend" {
   source = "../components/fastly_backends"
-  name   = "Fastly: Backends (Development)"
+  name   = "Terraform: Backends (Development)"
 
   applications = [
     module.northstar,

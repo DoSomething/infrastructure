@@ -1,7 +1,17 @@
-variable "phoenix_name" {}
-variable "phoenix_backend" {}
-variable "papertrail_destination" {}
-variable "papertrail_log_format" {}
+variable "name" {
+  description = "The name for this Fastly property."
+  type        = string
+}
+
+variable "application" {
+  description = "The application module to route traffic to."
+  type        = object({ name = string, domain = string, backend = string })
+}
+
+variable "papertrail_destination" {
+  description = "The Papertrail log destination to write logs to."
+  type        = string
+}
 
 locals {
   headers = {
@@ -11,41 +21,17 @@ locals {
   }
 }
 
-resource "fastly_service_v1" "frontend-qa" {
-  name          = "Terraform: Frontend (QA)"
+resource "fastly_service_v1" "frontend" {
+  name          = var.name
   force_destroy = true
 
   domain {
-    name = "qa.dosomething.org"
-  }
-
-  condition {
-    type      = "REQUEST"
-    name      = "path-robots"
-    statement = "req.url.basename == \"robots.txt\""
-  }
-
-  response_object {
-    name              = "robots.txt deny"
-    content           = file("${path.module}/deny-robots.txt")
-    request_condition = "path-robots"
-  }
-
-  condition {
-    type      = "REQUEST"
-    name      = "timed-synthetic-takeover"
-    statement = "req.http.X-Timed-Synthetic-Response == \"true\""
-  }
-
-  response_object {
-    name              = "timed synthetic takeover"
-    request_condition = "timed-synthetic-takeover"
-    content           = file("${path.module}/takeovers/election.html")
+    name = var.application.domain
   }
 
   backend {
-    address          = var.phoenix_backend
-    name             = var.phoenix_name
+    address          = var.application.backend
+    name             = var.application.name
     auto_loadbalance = false
     port             = 443
   }
@@ -124,31 +110,31 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   snippet {
-    name    = "Frontend - ISO-3166-2 Request Header"
+    name    = "ISO-3166-2 Request Header"
     type    = "recv"
     content = file("${path.module}/iso3166_recv.vcl")
   }
 
   snippet {
-    name    = "Frontend - ISO-3166-2 Response Header"
+    name    = "ISO-3166-2 Response Header"
     type    = "deliver"
     content = file("${path.module}/iso3166_deliver.vcl")
   }
 
   snippet {
-    name    = "Frontend - Trigger International Redirect"
+    name    = "Trigger Homepage Redirect"
     type    = "recv"
     content = file("${path.module}/homepage_recv.vcl")
   }
 
   snippet {
-    name    = "Frontend - Handle International Redirect"
+    name    = "Handle Homepage Redirect"
     type    = "error"
     content = file("${path.module}/homepage_error.vcl")
   }
 
   snippet {
-    name    = "Frontend - Trigger Redirect"
+    name    = "Trigger Aurora Redirect"
     type    = "recv"
     content = file("${path.module}/redirect_recv.vcl")
 
@@ -156,19 +142,19 @@ resource "fastly_service_v1" "frontend-qa" {
   }
 
   snippet {
-    name    = "Frontend - Handle Redirect"
+    name    = "Handle Aurora Redirect"
     type    = "error"
     content = file("${path.module}/redirect_error.vcl")
   }
 
   snippet {
-    name    = "ProjectPages - Trigger Redirect"
+    name    = "Legacy Paths - Trigger Redirect"
     type    = "recv"
     content = file("${path.module}/legacy_redirects_recv.vcl")
   }
 
   snippet {
-    name    = "ProjectPages - Handle Redirect"
+    name    = "Legacy Paths - Handle Redirect"
     type    = "error"
     content = file("${path.module}/legacy_redirects_error.vcl")
   }
@@ -179,25 +165,11 @@ resource "fastly_service_v1" "frontend-qa" {
     content = file("${path.module}/app_name.vcl")
   }
 
-  snippet {
-    name    = "Frontend - Homepage Takeover Configuration"
-    type    = "recv"
-    content = file("${path.module}/takeover_config.vcl")
-
-    priority = 0 # Make sure we configure this before it runs below!
-  }
-
-  snippet {
-    name    = "Shared - Static Homepage Takeover"
-    type    = "recv"
-    content = file("${path.module}/takeover_recv.vcl")
-  }
-
   papertrail {
     name    = "frontend"
     address = element(split(":", var.papertrail_destination), 0)
     port    = element(split(":", var.papertrail_destination), 1)
-    format  = var.papertrail_log_format
+    format  = "%t '%r' status=%>s app=%%{X-Application-Name}o cache=\"%%{X-Cache}o\" country=%%{X-Fastly-Country-Code}o ip=\"%a\" user-agent=\"%%{User-Agent}i\" service=%%{time.elapsed.msec}Vms"
   }
 
   dictionary {
