@@ -10,6 +10,11 @@ variable "stack" {
   description = "The 'stack' for this bucket: web, sms, backend, data."
 }
 
+variable "force_ssl" {
+  description = "Should we force all traffic to SSL for this app?"
+  default     = true
+}
+
 resource "fastly_service_v1" "cdn" {
   name          = "Terraform: ${var.domain}"
   force_destroy = true
@@ -26,7 +31,7 @@ resource "fastly_service_v1" "cdn" {
 
   request_setting {
     name      = "Force SSL"
-    force_ssl = true
+    force_ssl = var.force_ssl
   }
 
   gzip {
