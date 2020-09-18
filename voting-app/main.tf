@@ -27,5 +27,7 @@ module "agg" {
   domain      = "www.athletesgonegood.com"
   environment = "production"
   stack       = "web"
+
+  force_ssl = false # We don't have an SSL certificate for this domain.
 }
 
