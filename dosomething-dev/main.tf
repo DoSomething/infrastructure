@@ -67,7 +67,7 @@ module "fastly-frontend" {
   source = "../components/fastly_frontend"
   name   = "Terraform: Frontend (Development)"
 
-  environment            = "production"
+  environment            = "development"
   application            = module.phoenix
   papertrail_destination = var.papertrail_destination_fastly
 }
