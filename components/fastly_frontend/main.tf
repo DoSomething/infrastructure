@@ -3,6 +3,10 @@ variable "name" {
   type        = string
 }
 
+variable "environment" {
+  description = "The environment for this property: development, qa, or production."
+}
+
 variable "application" {
   description = "The application module to route traffic to."
   type        = object({ name = string, domain = string, backend = string })
@@ -163,6 +167,24 @@ resource "fastly_service_v1" "frontend" {
     name    = "Shared - Set X-Origin-Name Header"
     type    = "fetch"
     content = file("${path.module}/app_name.vcl")
+  }
+
+  # Configure 'robots.txt' global deny for backends:
+  condition {
+    type      = "REQUEST"
+    name      = "path-robots"
+    statement = "req.url.basename == \"robots.txt\""
+  }
+
+  dynamic "response_object" {
+    # If we're not in production, add a 'robots.txt' to deny web crawlers.
+    for_each = var.environment != "production" ? [1] : []
+
+    content {
+      name              = "robots.txt deny"
+      content           = file("${path.module}/deny-robots.txt")
+      request_condition = "path-robots"
+    }
   }
 
   papertrail {
