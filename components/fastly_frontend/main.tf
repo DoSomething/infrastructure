@@ -169,7 +169,6 @@ resource "fastly_service_v1" "frontend" {
     content = file("${path.module}/app_name.vcl")
   }
 
-  # Configure 'robots.txt' global deny for backends:
   condition {
     type      = "REQUEST"
     name      = "path-robots"
