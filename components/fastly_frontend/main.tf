@@ -18,10 +18,38 @@ variable "papertrail_destination" {
 }
 
 locals {
-  headers = {
+  request_headers = {
+    # Provide geolocation information to web servers:
     "X-Fastly-Country-Code" = "client.geo.country_code",
     "X-Fastly-Region-Code"  = "client.geo.region",
     "X-Fastly-Postal-Code"  = "client.geo.postal_code",
+  }
+
+  response_headers = {
+    # Expose geolocation information in debug headers:
+    "X-Fastly-Country-Code" = "client.geo.country_code",
+    "X-Fastly-Region-Code"  = "client.geo.region",
+    "X-Fastly-Postal-Code"  = "client.geo.postal_code",
+
+    # Ensures that we don't leak sensitive items from URLs in Referrer headers: we will
+    # send full URL if same-origin and HTTPS, origin-only (e.g. 'www.dosomething.org')
+    # when crossing domains, and nothing at all when going to HTTP.
+    "Referrer-Policy" = "\"strict-origin-when-cross-origin\""
+
+    # Enforce HTTPS for all traffic (TODO: https://www.pivotaltracker.com/story/show/174911098)
+    "Strict-Transport-Security" = "\"max-age=300; includeSubDomains\"" # 5 minutes.
+
+    # Prevent sniffing content types:
+    "X-Content-Type-Options" = "\"nosniff\""
+
+    # Restrict this application from being embedded as an iframe on
+    # third-party domains, to prevent click-jacking attacks:
+    "X-Frame-Options" = "\"SAMEORIGIN\""
+
+    # Enable XSS filtering in some browsers. This should be
+    # replaced by a strong Content Security Policy in the future.
+    # TODO: https://www.pivotaltracker.com/story/show/174911196
+    "X-XSS-Protection" = "\"1\""
   }
 }
 
@@ -82,9 +110,8 @@ resource "fastly_service_v1" "frontend" {
     ]
   }
 
-  # Set headers on incoming HTTP requests, for the backend server.
   dynamic "header" {
-    for_each = local.headers
+    for_each = local.request_headers
 
     content {
       name        = "${header.key} (Request)"
@@ -95,9 +122,8 @@ resource "fastly_service_v1" "frontend" {
     }
   }
 
-  # And set "debug" headers on HTTP responses, for inspection.
   dynamic "header" {
-    for_each = local.headers
+    for_each = local.response_headers
 
     content {
       name        = "${header.key} (Response)"
