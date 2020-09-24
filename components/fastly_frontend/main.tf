@@ -134,6 +134,24 @@ resource "fastly_service_v1" "frontend" {
     }
   }
 
+  # Override: Remove 'X-Frame-Options' on URL(s) that we do
+  # want to allow embedding from external domains:
+  condition {
+    type      = "RESPONSE"
+    name      = "allow-embed"
+    statement = "req.url ~ \"^/us/about/voter-registration-thank-you\""
+  }
+
+  header {
+    name               = "Allow Embed on Path(s)"
+    type               = "response"
+    action             = "delete"
+    destination        = "http.X-Frame-Options"
+    response_condition = "allow-embed"
+    priority           = 200 # This needs to happen after we add the response header, above.
+  }
+
+  # Redirect any HTTP traffic to HTTPS:
   request_setting {
     name      = "Force SSL"
     force_ssl = true
