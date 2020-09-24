@@ -52,6 +52,10 @@ variable "vpc_security_group_ids" {
 
 locals {
   stack = "data"
+
+  # We keep backups for 14 days in producion, and otherwise the minimum
+  # amount in order to satisfy functionality.
+  backup_retention = var.environment == "production" ? 14 : 1
 }
 
 resource "aws_db_parameter_group" "pg11" {
@@ -77,7 +81,7 @@ resource "aws_db_parameter_group" "pg11" {
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
   # Sets effective RAM available to PG Query planner before using disk.
   # TODO: It'd be great to make this value dynamic by accessing RAM from
-  # instance type var and having something like (rds.ram_value * .75) * 1000 * 1000. 
+  # instance type var and having something like (rds.ram_value * .75) * 1000 * 1000.
   parameter {
     name  = "effective_cache_size"
     value = var.effective_cache_size
@@ -86,7 +90,7 @@ resource "aws_db_parameter_group" "pg11" {
   # Recommended by PGTuner tool: https://pgtune.leopard.in.ua/#/
   # Amount of RAM available for cleanup tasks like vacuum, reindex, etc.
   # TODO: It'd be great to make this value dynamic by accessing RAM from
-  # instance type var and having something like (rds.ram_value * .125) * 1000 * 1000. 
+  # instance type var and having something like (rds.ram_value * .125) * 1000 * 1000.
   parameter {
     name  = "maintenance_work_mem"
     value = var.maintenance_work_mem
@@ -96,7 +100,7 @@ resource "aws_db_parameter_group" "pg11" {
   # Amount of RAM available for joins/sort queries per connection.
   # Based on 50 connections.
   # TODO: Not sure we can dynamically generate this, but maybe set a default
-  # value and override per QA/Prod environment. 
+  # value and override per QA/Prod environment.
   parameter {
     name  = "work_mem"
     value = var.work_mem
@@ -173,6 +177,8 @@ resource "aws_db_instance" "quasar" {
   engine                          = "postgres"
   engine_version                  = var.engine_version
   allow_major_version_upgrade     = true
+  backup_retention_period         = local.backup_retention # See above!
+  backup_window                   = "06:00-07:00"          # 1-2am ET.
   instance_class                  = var.instance_class
   name                            = var.database_name
   username                        = var.username
