@@ -178,7 +178,6 @@ resource "aws_db_instance" "quasar" {
   engine_version                  = var.engine_version
   allow_major_version_upgrade     = true
   backup_retention_period         = local.backup_retention # See above!
-  backup_window                   = "06:00-07:00"          # 1-2am ET.
   instance_class                  = var.instance_class
   name                            = var.database_name
   username                        = var.username
