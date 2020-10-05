@@ -52,7 +52,7 @@ module "vpc" {
   source = "../components/quasar_vpc"
 }
 
-# Trying to setup parameter groups necessry to remove existing 
+# Trying to setup parameter groups necessry to remove existing
 # longform values above and source from components/postgresql_instance module.
 module "warehouse" {
   source = "../components/postgresql_warehouse"
@@ -117,4 +117,10 @@ module "storage" {
   user       = module.iam_user.name
   versioning = true
   private    = true
+}
+
+module "quasar_s3_export_role" {
+  source = "../components/quasar_s3_export_role"
+
+  bucket      = "dosomething-archive"
 }
