@@ -122,5 +122,4 @@ module "storage" {
 module "quasar_s3_export_role" {
   source = "../components/quasar_s3_export_role"
 
-  bucket      = "dosomething-archive"
 }

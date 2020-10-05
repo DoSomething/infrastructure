@@ -1,6 +1,6 @@
 data "aws_iam_policy_document" "quasar_s3_export_role" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
