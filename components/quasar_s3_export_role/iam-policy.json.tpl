@@ -19,8 +19,7 @@
               "s3:DeleteObject*"
           ],
           "Resource": [
-              "arn:aws:s3:::dosomething-archive",
-              "arn:aws:s3:::dosomething-archive/*"
+            "${bucket_arn}/*"
           ]
       }
   ]
