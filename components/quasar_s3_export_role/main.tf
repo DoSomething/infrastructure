@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "quasar_s3_export_role" {
 
 resource "aws_iam_policy" "policy" {
   name   = "ExportPolicy"
-  policy = templatefile("${path.module}/policy.json.tpl", { bucket_arn = aws_s3_bucket.dosomething_quasar_archive.arn })
+  policy = templatefile("${path.module}/iam-policy.json.tpl", { bucket_arn = aws_s3_bucket.dosomething_quasar_archive.arn })
 }
 
 resource "aws_iam_role" "role" {
