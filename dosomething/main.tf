@@ -165,6 +165,7 @@ module "rogue" {
   domain                 = "activity.dosomething.org"
   pipeline               = var.rogue_pipeline
   northstar_url          = "https://identity.dosomething.org"
+  gambit_url             = "https://gambit-conversations-prod.herokuapp.com"
   graphql_url            = "https://graphql.dosomething.org/graphql"
   blink_url              = "https://blink.dosomething.org/api/"
   papertrail_destination = var.papertrail_destination

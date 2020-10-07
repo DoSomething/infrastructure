@@ -54,6 +54,12 @@ variable "graphql_url" {
 
 variable "blink_url" {
   description = "The Blink URL for this environment."
+  default     = null
+}
+
+variable "gambit_url" {
+  description = "The Gambit URL for this environment."
+  default     = null
 }
 
 variable "papertrail_destination" {
@@ -81,18 +87,39 @@ resource "random_id" "app_key" {
 }
 
 locals {
+  # Gambit only has QA & Production environments.
+  gambit_env = var.environment == "development" ? "qa" : var.environment
+
   extra_config_vars = {
     # TODO: Merge this into the 'heroku_app' module's Laravel env vars?
     APP_KEY = "base64:${random_id.app_key.b64_std}"
 
     # Services this application relies on:
     NORTHSTAR_URL = var.northstar_url
+    GAMBIT_URL    = var.gambit_url
     GRAPHQL_URL   = var.graphql_url
     BLINK_URL     = var.blink_url
+
+    # API credentials for Gambit:
+    GAMBIT_USERNAME = data.aws_ssm_parameter.gambit_username.value
+    GAMBIT_PASSWORD = data.aws_ssm_parameter.gambit_password.value
+
+    # Feature flags:
+    DS_ENABLE_BLINK        = var.environment != "development" # TODO: Remove after updating app to read 'DS_ENABLE_CUSTOMER_IO'.
+    DS_ENABLE_CUSTOMER_IO  = var.environment != "development"
+    DS_ENABLE_GAMBIT_RELAY = var.gambit_url != null
   }
 
   # This application is part of our backend stack.
   stack = "backend"
+}
+
+data "aws_ssm_parameter" "gambit_username" {
+  name = "/gambit/${local.gambit_env}/username"
+}
+
+data "aws_ssm_parameter" "gambit_password" {
+  name = "/gambit/${local.gambit_env}/password"
 }
 
 module "app" {
