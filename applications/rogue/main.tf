@@ -3,7 +3,7 @@
 # To create a new Rogue instance, 
 #   1. Configure a new 'rogue' module with the required variable arguments & apply.
 #   2. The initial apply will fail trying to create 'heroku_formation' resources
-#      because code hasn't been deployed. Deploy this application's `master` branch
+#      because code hasn't been deployed. Deploy this application's default branch
 #      via Heroku's web interface & then re-run the apply. It should be successful.
 #   3. Create app-specific user & machine OAuth clients (via Aurora) and set the
 #      appropriate values for the 'NORTHSTAR_AUTH_ID', 'NORTHSTAR_AUTH_SECRET',

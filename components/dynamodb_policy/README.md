@@ -2,7 +2,7 @@
 
 This module grants an application access to tables in [DynamoDB](https://aws.amazon.com/dynamodb/). An application is allowed to create or update the schema for any tables prefixed by the same `${var.name}-`. For safety, applications cannot delete their tables.
 
-For all options, see the [variables](https://github.com/DoSomething/infrastructure/blob/master/components/dynamodb_policy/variables.tf) this module accepts.
+For all options, see the [variables](https://github.com/DoSomething/infrastructure/blob/main/components/dynamodb_policy/variables.tf) this module accepts.
 
 ### Usage
 

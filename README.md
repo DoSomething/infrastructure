@@ -18,7 +18,7 @@ credentials "app.terraform.io" {
 }
 ```
 
-You can run `terraform format` at any time to format your code, or install the Terraform extension [for your editor](https://github.com/hashicorp/terraform-ls/blob/master/docs/USAGE.md).
+You can run `terraform format` at any time to format your code, or install the Terraform extension [for your editor](https://github.com/hashicorp/terraform-ls/blob/main/docs/USAGE.md).
 
 Alright, now you're ready to build some infrastructure!! 🏗
 
@@ -26,7 +26,7 @@ Alright, now you're ready to build some infrastructure!! 🏗
 
 Terraform allows us to create & modify infrastructure declaratively. The files in this repository define what infrastructure (apps, databases, queues, domains, etc.) we _should_ have, and Terraform figures out what changes it needs to make the get there based on what currently exists.
 
-We separate our configuration into workspaces. We also build re-usable modules in the [`applications/`](https://github.com/DoSomething/infrastructure/tree/master/applications) and [`components/`](https://github.com/DoSomething/infrastructure/tree/master/components) directories that can be re-used to provision the same type of thing in multiple places.
+We separate our configuration into workspaces. We also build re-usable modules in the [`applications/`](https://github.com/DoSomething/infrastructure/tree/main/applications) and [`components/`](https://github.com/DoSomething/infrastructure/tree/main/components) directories that can be re-used to provision the same type of thing in multiple places.
 
 See Terraform's [Getting Started guide](https://www.terraform.io/intro/getting-started/build.html) & [documentation](https://www.terraform.io/docs/index.html) for more details.
 
@@ -61,12 +61,12 @@ and will be promptly addressed. Thank you for taking the time to responsibly dis
 - [Terraform AWS Provider](https://www.terraform.io/docs/providers/aws/) - API documentation for `aws_` resources
 - [Terraform Fastly Provider](https://www.terraform.io/docs/providers/fastly/) - API documentation for `fastly_` resources
 - [Terraform Heroku Provider](https://www.terraform.io/docs/providers/heroku/) - API documentation for `heroku_` resources
-- [Serverless Guide](https://github.com/DoSomething/infrastructure/blob/master/docs/serverless-guide.md) - how to use our "serverless" modules
+- [Serverless Guide](https://github.com/DoSomething/infrastructure/blob/main/docs/serverless-guide.md) - how to use our "serverless" modules
 
 
 ## License
 
 &copy; DoSomething.org. This config is free software, and may be redistributed under the terms specified
-in the [LICENSE](https://github.com/DoSomething/infrastructure/blob/master/LICENSE) file. The name and logo for
+in the [LICENSE](https://github.com/DoSomething/infrastructure/blob/main/LICENSE) file. The name and logo for
 DoSomething.org are trademarks of Do Something, Inc and may not be used without permission.
 
