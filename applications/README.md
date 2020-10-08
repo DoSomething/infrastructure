@@ -1,0 +1,3 @@
+# Applications
+
+These modules provision full applications, like [Northstar](https://github.com/DoSomething/infrastructure/tree/master/applications/northstar) or [Rogue](https://github.com/DoSomething/infrastructure/tree/master/applications/rogue). Each module should include all the [components](https://github.com/DoSomething/infrastructure/tree/master/components) needed by an application, such as databases or queues. Applications may be customized using variables, such as `environment`.
