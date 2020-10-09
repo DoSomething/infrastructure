@@ -27,11 +27,11 @@ variable "instance_class" {
 }
 
 variable "username" {
-  description = "The master username for the RDS PostgreSQL instance."
+  description = "The root username for the RDS PostgreSQL instance."
 }
 
 variable "password" {
-  description = "The master password for the RDS PostgreSQL instance."
+  description = "The root password for the RDS PostgreSQL instance."
 }
 
 variable "effective_cache_size" {

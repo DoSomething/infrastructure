@@ -5,7 +5,7 @@
 > :bulb: We use "lower-case" serverless – the [architecture](https://martinfowler.com/articles/serverless.html), not [the name-brand framework](https://serverless.com). ([Why?](https://github.com/DoSomething/infrastructure/issues/129))
 
 ### Step 1: Creating our Function
-We manage our serverless infrastructure with Terraform. To start, use the [`lambda_function`](https://github.com/DoSomething/infrastructure/tree/master/components/lambda_function) module to provision a
+We manage our serverless infrastructure with Terraform. To start, use the [`lambda_function`](https://github.com/DoSomething/infrastructure/tree/main/components/lambda_function) module to provision a
 new function. This will create a new function with the given name. It will also create a log group, execution role, deployment bucket, and limited deployment credentials.
 
 ```hcl
@@ -35,7 +35,7 @@ $ aws lambda invoke --function-name=hello-serverless /dev/stdout
 We're off to a great start! :rocket:
 
 ### Step 2: Add HTTP Endpoints (optional)
-Often, we'll want our functions to be accessible via the internet. To do so, we can use the [`api_gateway_proxy`](https://github.com/DoSomething/infrastructure/tree/master/components/api_gateway_proxy) module:
+Often, we'll want our functions to be accessible via the internet. To do so, we can use the [`api_gateway_proxy`](https://github.com/DoSomething/infrastructure/tree/main/components/api_gateway_proxy) module:
 
 ```hcl
 module "gateway" {
@@ -120,11 +120,11 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              only: main
 ```
 
 After adding this file to your application's repository, [add the app as a "project"](https://circleci.com/docs/2.0/project-build/#section=getting-started). Your first build may fail due to missing credentials - that's okay! Head to the project's "Build Settings" page and [import environment variables](https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project) from an existing serverless project, such as `dosomething/graphql`.
 
-Now, any commits to `master` [on this repository](https://github.com/DoSomething/hello-serverless) will automatically deploy [our Lambda function](https://hello-serverless.dosomething.org)!
+Now, any commits to the default branch [on this repository](https://github.com/DoSomething/hello-serverless) will automatically deploy [our Lambda function](https://hello-serverless.dosomething.org)!
 
 <a href="https://hello-serverless.dosomething.org"><img width="1375" alt="screen shot 2019-02-06 at 6 00 59 pm" src="https://user-images.githubusercontent.com/583202/52379750-59d2cb00-2a39-11e9-986b-88794d0406a1.png"></a>
