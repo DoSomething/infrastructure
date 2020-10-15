@@ -37,7 +37,7 @@ locals {
     "Referrer-Policy" = "\"strict-origin-when-cross-origin\""
 
     # Enforce HTTPS for all traffic (TODO: https://www.pivotaltracker.com/story/show/174911098)
-    "Strict-Transport-Security" = "\"max-age=300; includeSubDomains\"" # 5 minutes.
+    "Strict-Transport-Security" = "\"max-age=604800; includeSubDomains\"" # 1 week.
 
     # Prevent sniffing content types:
     "X-Content-Type-Options" = "\"nosniff\""
