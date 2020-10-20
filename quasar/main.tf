@@ -135,5 +135,5 @@ module "quasar_archive" {
 module "rds_export_role" {
   source = "../components/quasar_s3_export_role"
 
-  arn = module.quasar_archive.role_arn
+  arn = module.quasar_archive.bucket.arn
 }
