@@ -1,14 +1,3 @@
-resource "aws_s3_bucket_public_access_block" "private_policy" {
-  bucket = aws_s3_bucket.dosomething_quasar_archive.id
-
-  # We don't want to risk a bug causing individual
-  # archived files to be marked with "public" ACLs.
-  block_public_acls  = true
-  ignore_public_acls = true
-
-  block_public_policy = true
-}
-
 data "aws_iam_policy_document" "quasar_s3_export_role" {
   statement {
     effect  = "Allow"
