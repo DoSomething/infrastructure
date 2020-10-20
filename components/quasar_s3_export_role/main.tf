@@ -1,42 +1,12 @@
-resource "aws_s3_bucket" "dosomething_quasar_archive" {
-  bucket = "dosomething-quasar-archive"
-  acl    = "private"
-
-  lifecycle_rule {
-    id      = "archive"
-    enabled = true
-
-    prefix = "archive/"
-
-    tags = {
-      "rule" = "archive"
-    }
-
-    transition {
-      days          = 30
-      storage_class = "STANDARD_IA" # or "ONEZONE_IA"
-    }
-
-    transition {
-      days          = 30
-      storage_class = "GLACIER"
-    }
-
-    expiration {
-      days = 60
-    }
-
-  }
-}
-
 resource "aws_s3_bucket_public_access_block" "private_policy" {
   bucket = aws_s3_bucket.dosomething_quasar_archive.id
 
   # We don't want to risk a bug causing individual
-  # log files to be marked with "public" ACLs.
+  # archived files to be marked with "public" ACLs.
   block_public_acls  = true
   ignore_public_acls = true
 
+  block_public_policy = true
 }
 
 data "aws_iam_policy_document" "quasar_s3_export_role" {
