@@ -130,27 +130,6 @@ module "quasar_archive" {
   versioning = true
   archived   = true
   private    = true
-
-  lifecycle_rule {
-    id      = "archive"
-    enabled = true
-
-    prefix = "archive/"
-
-    tags = {
-      "rule" = "archive"
-    }
-
-    transition {
-      days          = 30
-      storage_class = "STANDARD_IA" # or "ONEZONE_IA"
-    }
-
-    transition {
-      days          = 45
-      storage_class = "GLACIER"
-    }
-  }
 }
 
 module "rds_export_role" {
