@@ -91,6 +91,7 @@ locals {
   feature_config_vars = {
     DS_ENABLE_PASSWORD_GRANT = false
     DS_ENABLE_RATE_LIMITING  = true
+    DS_ENABLE_CUSTOMER_IO    = var.environment != "development"
   }
 
   # This application is part of our backend stack.
