@@ -53,9 +53,9 @@ variable "vpc_security_group_ids" {
 locals {
   stack = "data"
 
-  # We keep backups for 14 days in producion, and otherwise the minimum
+  # We keep backups for 7 days in producion, and otherwise the minimum
   # amount in order to satisfy functionality.
-  backup_retention = var.environment == "production" ? 14 : 1
+  backup_retention = var.environment == "production" ? 7 : 1
 }
 
 resource "aws_db_parameter_group" "pg11" {
