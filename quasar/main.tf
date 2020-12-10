@@ -63,7 +63,7 @@ module "warehouse" {
   database_name        = "quasar_prod_warehouse"
   parameter_group_name = "quasar-prod-pg11"
   instance_class       = "db.m5.4xlarge"
-  engine_version       = "11.4"
+  engine_version       = "11.8"
 
   allocated_storage    = 4000
   effective_cache_size = 48 * 1000 * 1000 #48GB
@@ -84,7 +84,7 @@ module "warehouse-qa" {
   database_name        = "quasar" # TODO: This is misleading!
   parameter_group_name = "quasar-qa-pg11"
   instance_class       = "db.m5.xlarge"
-  engine_version       = "11.6"
+  engine_version       = "11.8"
 
   allocated_storage    = 4000
   effective_cache_size = 12 * 1000 * 1000 # 12GB
