@@ -176,7 +176,7 @@ module "storage" {
 
   private            = true
   replication_target = var.backup_storage_bucket
-  versioning         = true
+  versioning         = var.environment == "production"
 }
 
 output "name" {
