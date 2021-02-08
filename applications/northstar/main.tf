@@ -35,6 +35,15 @@ variable "name" {
   description = "The application name."
 }
 
+variable "storage_name" {
+  description = "The storage bucket name."
+}
+
+variable "backup_storage_bucket" {
+  description = "Optionally, the bucket to replicate storage backups to."
+  default     = null
+}
+
 variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
@@ -160,13 +169,14 @@ module "storage" {
   source = "../../components/s3_bucket"
 
   application = var.name
-  name        = var.name
+  name        = var.storage_name
   environment = var.environment
   stack       = local.stack
+  user        = module.iam_user.name
 
-  user       = module.iam_user.name
-  private    = true
-  versioning = true
+  private            = true
+  replication_target = var.backup_storage_bucket
+  versioning         = true
 }
 
 output "name" {

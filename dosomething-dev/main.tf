@@ -99,6 +99,7 @@ module "northstar" {
   environment            = "development"
   name                   = "dosomething-northstar-dev"
   domain                 = "identity-dev.dosomething.org"
+  storage_name           = "dosomething-rogue-dev"
   pipeline               = var.northstar_pipeline
   papertrail_destination = var.papertrail_destination
 }
