@@ -114,8 +114,10 @@ module "northstar" {
   environment            = "production"
   name                   = "dosomething-northstar"
   domain                 = "identity.dosomething.org"
+  storage_name           = "dosomething-rogue"
   pipeline               = var.northstar_pipeline
   papertrail_destination = var.papertrail_destination
+  backup_storage_bucket  = module.rogue_backup.bucket
 }
 
 module "phoenix" {
@@ -169,7 +171,6 @@ module "rogue" {
   graphql_url            = "https://graphql.dosomething.org/graphql"
   blink_url              = "https://blink.dosomething.org/api/"
   papertrail_destination = var.papertrail_destination
-  backup_storage_bucket  = module.rogue_backup.bucket
 }
 
 # We use this Lambda function to forward logs to Papertrail

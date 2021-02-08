@@ -66,11 +66,6 @@ variable "papertrail_destination" {
   description = "The Papertrail log destination for this application."
 }
 
-variable "backup_storage_bucket" {
-  description = "Optionally, the bucket to replicate storage backups to."
-  default     = null
-}
-
 variable "deprecated" {
   description = "Deprecate this app, removing database users & allowing deletion."
   default     = false
@@ -108,6 +103,14 @@ locals {
     DS_ENABLE_BLINK        = var.environment != "development" # TODO: Remove after updating app to read 'DS_ENABLE_CUSTOMER_IO'.
     DS_ENABLE_CUSTOMER_IO  = var.environment != "development"
     DS_ENABLE_GAMBIT_RELAY = var.gambit_url != null
+
+    # S3 settings:
+    STORAGE_DRIVER    = "s3"
+    FILESYSTEM_DRIVER = "s3"
+    S3_BUCKET         = var.name
+    AWS_S3_BUCKET     = var.name
+    S3_REGION         = "us-east-1"
+    AWS_S3_REGION     = "us-east-1"
   }
 
   # This application is part of our backend stack.
@@ -140,7 +143,6 @@ module "app" {
     module.database.config_vars,
     module.queue.config_vars,
     module.iam_user.config_vars,
-    module.storage.config_vars,
     local.extra_config_vars,
   )
 
@@ -182,17 +184,16 @@ module "queue" {
   user = module.iam_user.name
 }
 
-module "storage" {
-  source = "../../components/s3_bucket"
+data "aws_s3_bucket" "bucket" {
+  bucket = var.name
+}
 
-  application = var.name
-  name        = var.name
-  environment = var.environment
-  stack       = local.stack
-
+resource "aws_iam_user_policy" "s3_policy" {
+  name = "${var.name}-s3"
   user = module.iam_user.name
-
-  replication_target = var.backup_storage_bucket
+  policy = templatefile("${path.module}/s3-iam-policy.json.tpl", {
+    bucket_arn = data.aws_s3_bucket.bucket.arn
+  })
 }
 
 output "name" {

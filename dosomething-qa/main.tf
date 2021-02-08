@@ -102,10 +102,11 @@ module "graphql" {
 module "northstar" {
   source = "../applications/northstar"
 
-  environment = "qa"
-  name        = "dosomething-northstar-qa"
-  domain      = "identity-qa.dosomething.org"
-  pipeline    = var.northstar_pipeline
+  environment  = "qa"
+  name         = "dosomething-northstar-qa"
+  domain       = "identity-qa.dosomething.org"
+  storage_name = "dosomething-rogue-qa"
+  pipeline     = var.northstar_pipeline
 
   papertrail_destination = var.papertrail_destination
 }
