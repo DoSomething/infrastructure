@@ -141,6 +141,7 @@ module "phoenix_preview" {
   web_size               = "Standard-1x"
   pipeline               = var.phoenix_pipeline
   papertrail_destination = var.papertrail_destination
+  rogue_url              = "https://identity.dosomething.org"
 
   use_contentful_preview_api = true
 }
