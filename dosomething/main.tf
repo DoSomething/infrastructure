@@ -106,7 +106,7 @@ module "graphql" {
   name        = "dosomething-graphql"
   domain      = "graphql.dosomething.org"
   logger      = module.papertrail
-  rogue_url   = "https://activity.dosomething.org"
+  rogue_url   = "https://identity.dosomething.org"
 }
 
 module "northstar" {
@@ -128,7 +128,7 @@ module "phoenix" {
   name                   = "dosomething-phoenix"
   domain                 = "www.dosomething.org"
   pipeline               = var.phoenix_pipeline
-  rogue_url              = "https://activity.dosomething.org"
+  rogue_url              = "https://identity.dosomething.org"
   papertrail_destination = var.papertrail_destination
 }
 
