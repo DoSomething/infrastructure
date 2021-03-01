@@ -106,6 +106,7 @@ module "graphql" {
   name        = "dosomething-graphql"
   domain      = "graphql.dosomething.org"
   logger      = module.papertrail
+  rogue_url   = "https://identity.dosomething.org"
 }
 
 module "northstar" {
@@ -127,6 +128,7 @@ module "phoenix" {
   name                   = "dosomething-phoenix"
   domain                 = "www.dosomething.org"
   pipeline               = var.phoenix_pipeline
+  rogue_url              = "https://identity.dosomething.org"
   papertrail_destination = var.papertrail_destination
 }
 
@@ -139,6 +141,7 @@ module "phoenix_preview" {
   web_size               = "Standard-1x"
   pipeline               = var.phoenix_pipeline
   papertrail_destination = var.papertrail_destination
+  rogue_url              = "https://identity.dosomething.org"
 
   use_contentful_preview_api = true
 }

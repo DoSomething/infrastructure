@@ -9,6 +9,10 @@ variable "name" {
   description = "The application name."
 }
 
+variable "rogue_url" {
+  description = "The URL for our activity API."
+}
+
 # Optional variables:
 variable "domain" {
   description = "The domain this application will be accessible at, e.g. graphql-lambda.dosomething.org"
@@ -107,6 +111,9 @@ module "app" {
     # TODO: Remove Gambit Conversations vars once https://github.com/DoSomething/graphql/pull/57 is deployed everywhere.
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_USER" = data.aws_ssm_parameter.gambit_username.value
     "${upper(local.gambit_env)}_GAMBIT_CONVERSATIONS_PASS" = data.aws_ssm_parameter.gambit_password.value
+
+    # Override Rogue URL for this environment:
+    "${local.ENV}_ROGUE_URL" = var.rogue_url
 
     AIRTABLE_API_KEY = data.aws_ssm_parameter.airtable_api_key.value
 
