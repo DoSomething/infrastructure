@@ -91,6 +91,7 @@ module "graphql" {
   name        = "dosomething-graphql-dev"
   domain      = "graphql-dev.dosomething.org"
   logger      = module.papertrail
+  rogue_url   = "https://activity-dev.dosomething.org"
 }
 
 module "northstar" {

@@ -106,6 +106,7 @@ module "graphql" {
   name        = "dosomething-graphql"
   domain      = "graphql.dosomething.org"
   logger      = module.papertrail
+  rogue_url   = "https://activity.dosomething.org"
 }
 
 module "northstar" {
