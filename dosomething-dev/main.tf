@@ -112,6 +112,7 @@ module "phoenix" {
   name                   = "dosomething-phoenix-dev"
   domain                 = "dev.dosomething.org"
   pipeline               = var.phoenix_pipeline
+  rogue_url              = "https://activity-dev.dosomething.org"
   papertrail_destination = var.papertrail_destination
 }
 
