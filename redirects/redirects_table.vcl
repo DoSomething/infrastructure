@@ -35,10 +35,20 @@ table redirects {
   "www-preview.dosomething.org": "https://preview.dosomething.org",
   "www-dev.dosomething.org": "https://dev.dosomething.org",
 
-  # Rogue:
+  # Rogue (old):
   "rogue.dosomething.org": "https://activity.dosomething.org",
   "rogue-thor.dosomething.org": "https://activity-qa.dosomething.org",
   "rogue-qa.dosomething.org": "https://activity-dev.dosomething.org",
+
+  # Rogue:
+  "activity.dosomething.org": "https://identity.dosomething.org/admin",
+  "activity-qa.dosomething.org": "https://identity-qa.dosomething.org/admin",
+  "activity-dev.dosomething.org": "https://identity-dev.dosomething.org/admin",
+
+  # Admin:
+  "admin.dosomething.org": "https://identity.dosomething.org/admin",
+  "admin-qa.dosomething.org": "https://identity-qa.dosomething.org/admin",
+  "admin-dev.dosomething.org": "https://identity-dev.dosomething.org/admin",
   
   # etc:
   "api.dosomething.org": "https://graphql.dosomething.org",

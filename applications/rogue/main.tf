@@ -134,10 +134,8 @@ module "app" {
   pipeline    = var.pipeline
   environment = var.environment
 
-  web_size = var.environment == "production" ? "Standard-2x" : "Standard-1x"
-
-  # We use autoscaling in production, so don't try to manage dynos there.
-  ignore_web = var.environment == "production"
+  web_scale   = 0
+  queue_scale = 0
 
   config_vars = merge(
     module.database.config_vars,
@@ -145,9 +143,6 @@ module "app" {
     module.iam_user.config_vars,
     local.extra_config_vars,
   )
-
-  # We don't run a queue process on development right now. @TODO: Should we?
-  queue_scale = var.environment == "development" ? 0 : 1
 
   with_redis = true
 

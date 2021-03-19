@@ -78,7 +78,6 @@ module "fastly-backend" {
 
   applications = [
     module.northstar,
-    module.rogue,
   ]
 
   papertrail_destination = var.papertrail_destination_fastly
