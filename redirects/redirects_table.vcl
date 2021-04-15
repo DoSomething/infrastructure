@@ -60,4 +60,9 @@ table redirects {
   "www.fourleggedfinishers.com": "https://www.dosomething.org/us/campaigns/four-legged-finishers#",
   "www.fourleggedfinishers.org": "https://www.dosomething.org/us/campaigns/four-legged-finishers#",
   "www.catsgonegood.com": "https://www.celebsgonegood.com",
+
+  # instapage:
+  "lets.dosomething.org": "https://www.dosomething.org/us/articles#",
+  "join.dosomething.org": "https://www.dosomething.org/us/about#",
+  "vote.dosomething.org": "https://www.dosomething.org/us/vote#",
 }
