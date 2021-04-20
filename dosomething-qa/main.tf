@@ -126,8 +126,8 @@ module "phoenix" {
 module "rogue" {
   source = "../applications/rogue"
 
-  environment   = "qa"
-  name          = "dosomething-rogue-qa"
+  environment = "qa"
+  name        = "dosomething-rogue-qa"
 }
 
 module "papertrail" {

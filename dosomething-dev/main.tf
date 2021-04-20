@@ -118,8 +118,8 @@ module "phoenix" {
 module "rogue" {
   source = "../applications/rogue"
 
-  environment            = "development"
-  name                   = "dosomething-rogue-dev"
+  environment = "development"
+  name        = "dosomething-rogue-dev"
 }
 
 module "papertrail" {

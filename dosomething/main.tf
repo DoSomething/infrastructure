@@ -164,8 +164,8 @@ module "rogue_backup" {
 module "rogue" {
   source = "../applications/rogue"
 
-  environment            = "production"
-  name                   = "dosomething-rogue"
+  environment = "production"
+  name        = "dosomething-rogue"
 }
 
 # We use this Lambda function to forward logs to Papertrail
