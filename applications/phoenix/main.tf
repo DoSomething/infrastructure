@@ -84,10 +84,6 @@ locals {
     CONTENTFUL_CACHE           = false == var.use_contentful_preview_api
   }
 
-  extra_config_vars = {
-    ROGUE_URL = var.rogue_url
-  }
-
   # This application is part of our frontend stack.
   stack = "web"
 }
@@ -101,7 +97,7 @@ module "app" {
   pipeline    = var.pipeline
   environment = var.environment
 
-  config_vars = merge(module.database.config_vars, local.contentful_config_vars, local.extra_config_vars)
+  config_vars = merge(module.database.config_vars, local.contentful_config_vars)
 
   web_size = coalesce(
     var.web_size,
