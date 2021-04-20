@@ -128,14 +128,6 @@ module "rogue" {
 
   environment   = "qa"
   name          = "dosomething-rogue-qa"
-  domain        = "activity-qa.dosomething.org"
-  pipeline      = var.rogue_pipeline
-  northstar_url = "https://identity-qa.dosomething.org"
-  gambit_url    = "https://gambit-conversations-staging.herokuapp.com"
-  graphql_url   = "https://graphql-qa.dosomething.org/graphql"
-  blink_url     = "https://blink-staging.dosomething.org/api/"
-
-  papertrail_destination = var.papertrail_destination
 }
 
 module "papertrail" {
