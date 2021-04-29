@@ -132,7 +132,6 @@ module "app" {
   queue_scale = 1
 
   with_redis = true
-  redis_type = var.environment == "production" ? "premium-1" : "hobby-dev"
 
   papertrail_destination = var.papertrail_destination
   with_newrelic          = coalesce(var.with_newrelic, var.environment == "production")
