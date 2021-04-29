@@ -5,7 +5,6 @@ variable "papertrail_destination" {}
 variable "papertrail_destination_fastly" {}
 variable "northstar_pipeline" {}
 variable "phoenix_pipeline" {}
-variable "rogue_pipeline" {}
 
 terraform {
   backend "remote" {
