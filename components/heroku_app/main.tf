@@ -124,9 +124,9 @@ locals {
     }
   }
 
-  # By default, use a paid Heroku Redis add-on plan, with 50MB storage and high
-  # availability, for production instances. Can be overridden with var.redis_type.
-  redis_default = var.environment == "production" ? "premium-0" : "hobby-dev"
+  # By default, use a paid Heroku Redis add-on plan, with 50MB storage and high availability
+  # for our production & QA instances. This can be overridden with var.redis_type.
+  redis_default = var.environment != "development" ? "premium-0" : "hobby-dev"
 
   # Decide which buildpacks to use based on our framework:
   buildpacks = {

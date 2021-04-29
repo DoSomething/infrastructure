@@ -58,20 +58,12 @@ resource "heroku_pipeline" "northstar" {
   name = "northstar"
 }
 
-resource "heroku_pipeline" "rogue" {
-  name = "rogue"
-}
-
 resource "heroku_pipeline" "phoenix" {
   name = "phoenix"
 }
 
 output "northstar_pipeline" {
   value = "${heroku_pipeline.northstar.id}"
-}
-
-output "rogue_pipeline" {
-  value = "${heroku_pipeline.rogue.id}"
 }
 
 output "phoenix_pipeline" {
