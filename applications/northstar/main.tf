@@ -74,6 +74,14 @@ data "aws_ssm_parameter" "mandrill_api_key" {
   name = "/mandrill/api-key"
 }
 
+resource "random_string" "callpower_api_key" {
+  length = 32
+}
+
+resource "random_string" "softedge_api_key" {
+  length = 32
+}
+
 locals {
   database_config_vars = {
     DB_HOST      = data.aws_ssm_parameter.database_host.value
@@ -91,6 +99,11 @@ locals {
     EMAIL_NAME      = "DoSomething.org"
     EMAIL_ADDRESS   = "no-reply@dosomething.org"
     MANDRILL_SECRET = data.aws_ssm_parameter.mandrill_api_key.value
+  }
+
+  secret_config_vars = {
+    CALLPOWER_API_KEY = random_string.callpower_api_key.result
+    SOFTEDGE_API_KEY  = random_string.softedge_api_key.result
   }
 
   queue_low_config_vars = {
@@ -124,6 +137,7 @@ module "app" {
     local.database_config_vars,
     local.feature_config_vars,
     local.mail_config_vars,
+    local.secret_config_vars,
   )
 
   # We use autoscaling in production, so don't try to manage dynos there.
