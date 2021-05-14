@@ -70,12 +70,6 @@ module "bertly" {
   logger        = module.papertrail
 }
 
-module "chompy" {
-  source = "../applications/chompy"
-
-  name = "dosomething-chompy"
-}
-
 module "fastly-frontend" {
   source = "../components/fastly_frontend"
   name   = "Terraform: Frontend"
