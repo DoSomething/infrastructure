@@ -27,6 +27,12 @@ variable "roles" {
   default     = []
 }
 
+variable "temporary_paths" {
+  description = "Automatically delete files in the following paths after 14 days."
+  type        = list(string)
+  default     = []
+}
+
 variable "versioning" {
   description = "Enable versioning on this bucket. See: https://goo.gl/idPRVV"
   default     = false
@@ -63,11 +69,29 @@ resource "aws_s3_bucket" "bucket" {
   }
 
   dynamic "lifecycle_rule" {
+    for_each = var.temporary_paths
+
+    content {
+      prefix  = lifecycle_rule.value
+      enabled = true
+
+      # Delete files in this path after two weeks:
+      expiration {
+        days = 14
+      }
+
+      # If versioned, delete non-current versions at this path after 3 months:
+      noncurrent_version_expiration {
+        days = 90
+      }
+    }
+  }
+
+  dynamic "lifecycle_rule" {
     # Hack: only attach a lifecycle rule if we are archiving to Glacier.
     for_each = var.archived ? [1] : []
 
     content {
-      id      = random_id.lifecycle_rule_id[0].b64_std
       enabled = true
 
       # Since we can't replicate directly into Glacier, set a lifecycle
@@ -90,7 +114,6 @@ resource "aws_s3_bucket" "bucket" {
       role = aws_iam_role.replication[0].arn
 
       rules {
-        id     = random_id.replication_rules[0].b64_std
         status = "Enabled"
 
         destination {
@@ -106,12 +129,6 @@ resource "aws_s3_bucket" "bucket" {
     Environment = var.environment
     Stack       = var.stack
   }
-}
-
-# Glacier:
-resource "random_id" "lifecycle_rule_id" {
-  count       = var.archived == true ? 1 : 0
-  byte_length = 32
 }
 
 # IAM policy:
@@ -148,11 +165,6 @@ resource "aws_s3_bucket_public_access_block" "private_policy" {
 }
 
 # Replication rules:
-resource "random_id" "replication_rules" {
-  count       = var.replication_target != null ? 1 : 0
-  byte_length = 32
-}
-
 resource "aws_iam_role" "replication" {
   count = var.replication_target != null ? 1 : 0
 
