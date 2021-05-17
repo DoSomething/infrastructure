@@ -27,6 +27,12 @@ variable "roles" {
   default     = []
 }
 
+variable "temporary_paths" {
+  description = "Automatically delete files in the following paths after 14 days."
+  type        = list(string)
+  default     = []
+}
+
 variable "versioning" {
   description = "Enable versioning on this bucket. See: https://goo.gl/idPRVV"
   default     = false
@@ -60,6 +66,26 @@ resource "aws_s3_bucket" "bucket" {
   versioning {
     # Versioning must be enabled if we have a replication target.
     enabled = var.versioning || var.replication_target != null
+  }
+
+  dynamic "lifecycle_rule" {
+    for_each = var.temporary_paths
+
+    content {
+      id      = md5(lifecycle_rule.value)
+      prefix  = lifecycle_rule.value
+      enabled = true
+
+      # Delete files in this path after two weeks:
+      expiration {
+        days = 14
+      }
+
+      # If versioned, delete non-current versions at this path after 3 months:
+      noncurrent_version_expiration {
+        days = 90
+      }
+    }
   }
 
   dynamic "lifecycle_rule" {
