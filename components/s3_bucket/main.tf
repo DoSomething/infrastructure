@@ -72,7 +72,6 @@ resource "aws_s3_bucket" "bucket" {
     for_each = var.temporary_paths
 
     content {
-      id      = md5(lifecycle_rule.value)
       prefix  = lifecycle_rule.value
       enabled = true
 
@@ -93,7 +92,6 @@ resource "aws_s3_bucket" "bucket" {
     for_each = var.archived ? [1] : []
 
     content {
-      id      = random_id.lifecycle_rule_id[0].b64_std
       enabled = true
 
       # Since we can't replicate directly into Glacier, set a lifecycle
@@ -116,7 +114,6 @@ resource "aws_s3_bucket" "bucket" {
       role = aws_iam_role.replication[0].arn
 
       rules {
-        id     = random_id.replication_rules[0].b64_std
         status = "Enabled"
 
         destination {
@@ -132,12 +129,6 @@ resource "aws_s3_bucket" "bucket" {
     Environment = var.environment
     Stack       = var.stack
   }
-}
-
-# Glacier:
-resource "random_id" "lifecycle_rule_id" {
-  count       = var.archived == true ? 1 : 0
-  byte_length = 32
 }
 
 # IAM policy:
@@ -174,11 +165,6 @@ resource "aws_s3_bucket_public_access_block" "private_policy" {
 }
 
 # Replication rules:
-resource "random_id" "replication_rules" {
-  count       = var.replication_target != null ? 1 : 0
-  byte_length = 32
-}
-
 resource "aws_iam_role" "replication" {
   count = var.replication_target != null ? 1 : 0
 
