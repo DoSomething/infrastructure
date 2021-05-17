@@ -190,6 +190,7 @@ module "storage" {
   private            = true
   replication_target = var.backup_storage_bucket
   versioning         = var.environment == "production"
+  temporary_paths    = ["temporary/"]
 }
 
 output "name" {
