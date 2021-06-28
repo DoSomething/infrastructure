@@ -49,6 +49,10 @@ table redirects {
   "admin.dosomething.org": "https://identity.dosomething.org/admin",
   "admin-qa.dosomething.org": "https://identity-qa.dosomething.org/admin",
   "admin-dev.dosomething.org": "https://identity-dev.dosomething.org/admin",
+
+  # Chompy:
+  "importer.dosomething.org": "https://identity.dosomething.org/admin/imports",
+  "importer-qa.dosomething.org": "https://identity-qa.dosomething.org/admin/imports",
   
   # etc:
   "api.dosomething.org": "https://graphql.dosomething.org",
