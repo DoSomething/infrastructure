@@ -94,7 +94,7 @@ locals {
   }
 
   mail_config_vars = {
-    MAIL_DRIVER     = "mandrill"
+    MAIL_MAILER     = "mandrill"
     MAIL_HOST       = "smtp.mandrillapp.com"
     EMAIL_NAME      = "DoSomething.org"
     EMAIL_ADDRESS   = "no-reply@dosomething.org"
