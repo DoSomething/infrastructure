@@ -122,6 +122,12 @@ module "database" {
   instance_class = var.environment == "production" ? "db.t2.medium" : "db.t2.micro"
 }
 
+module "ghost_inspector_webhook" {
+  source       = "../../components/ghost_inspector_webhook"
+  name         = var.name
+  environment  = var.environment
+}
+
 output "name" {
   value = var.name
 }

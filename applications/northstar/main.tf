@@ -151,6 +151,12 @@ module "app" {
   with_newrelic          = coalesce(var.with_newrelic, var.environment == "production")
 }
 
+module "ghost_inspector_webhook" {
+  source       = "../../components/ghost_inspector_webhook"
+  name         = var.name
+  environment  = var.environment
+}
+
 module "iam_user" {
   source = "../../components/iam_app_user"
   name   = var.name
