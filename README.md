@@ -18,7 +18,7 @@ credentials "app.terraform.io" {
 }
 ```
 
-You can run `terraform fmt` at any time to format your code, or install the Terraform extension [for your editor](https://github.com/hashicorp/terraform-ls/blob/main/docs/USAGE.md).
+Run `make init` from this directory to install a [githook](https://github.com/DoSomething/infrastructure/blob/main/.githooks/pre-commit) to check formatting before you commit changes. You can run `make format` at any time to format your code, or install the Terraform extension [for your editor](https://github.com/hashicorp/terraform-ls/blob/main/docs/USAGE.md).
 
 Alright, now you're ready to build some infrastructure!! 🏗
 

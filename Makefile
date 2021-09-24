@@ -10,3 +10,6 @@ help:
 init: ## Initialize Terraform, on first-use or when adding modules or plugins.
 	@echo "$(BOLD)Configuring git hooks...$(RESET)"
 	@git config core.hooksPath .githooks
+
+format: ## Format your code automatically.
+	@terraform fmt -recursive
