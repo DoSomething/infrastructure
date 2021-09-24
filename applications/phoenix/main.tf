@@ -123,9 +123,9 @@ module "database" {
 }
 
 module "ghost_inspector_webhook" {
-  source       = "../../components/ghost_inspector_webhook"
-  name         = var.name
-  environment  = var.environment
+  source      = "../../components/ghost_inspector_webhook"
+  name        = var.name
+  environment = var.environment
 }
 
 output "name" {
