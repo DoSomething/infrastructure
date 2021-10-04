@@ -152,9 +152,9 @@ module "app" {
 }
 
 module "ghost_inspector_webhook" {
-  source       = "../../components/ghost_inspector_webhook"
-  name         = var.name
-  environment  = var.environment
+  source      = "../../components/ghost_inspector_webhook"
+  name        = var.name
+  environment = var.environment
 }
 
 module "iam_user" {

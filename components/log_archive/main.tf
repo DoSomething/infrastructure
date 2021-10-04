@@ -1,7 +1,3 @@
-variable "name" {
-  description = "The name for the archive bucket (e.g. dosomething-papertrail)."
-}
-
 resource "aws_s3_bucket" "archive" {
   bucket = var.name
   acl    = "private"
