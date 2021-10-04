@@ -4,7 +4,7 @@ variable "name" {
 }
 
 variable "application" {
-  description = "The application this queue is provisioned for (e.g. 'dosomething-rogue')."
+  description = "The application this queue is provisioned for (e.g. 'dosomething-northstar')."
 }
 
 variable "environment" {
