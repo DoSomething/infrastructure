@@ -9,9 +9,9 @@ For all options, see the [variables](https://github.com/DoSomething/infrastructu
 To create a new IAM user for the given application:
 
 ```hcl
-module "log_archive" {
-  source = "../components/log_archive"
-  name   = "dosomething-papertrail"
+module "iam_user" {
+  source = "../../components/iam_app_user"
+  name   = var.name
 }
 ```
 
