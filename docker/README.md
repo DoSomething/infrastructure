@@ -4,6 +4,10 @@ This is **Dockerfile**, the DoSomething.org base image for services. It's our si
 
 To learn more about: # TODO
 
+### Build
+
+`docker build -f Dockerfile -t dosomething/infrastructure:php_base .`  
+
 ### Optimization
 
 We must consider to build tighter images - on alpine
