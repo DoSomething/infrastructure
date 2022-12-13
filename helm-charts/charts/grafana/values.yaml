@@ -1,0 +1,99 @@
+rbac:
+  create: true
+  pspEnabled: true
+  pspUseAppArmor: true
+  namespaced: false
+  extraRoleRules: []
+  extraClusterRoleRules: []
+serviceAccount:
+  create: true
+  name:
+  nameTest:
+  labels: {}
+  autoMount: true
+
+replicas: 1
+
+headlessService: false
+
+autoscaling:
+  enabled: false
+
+podDisruptionBudget: {}
+
+deploymentStrategy:
+  type: RollingUpdate
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 60
+  timeoutSeconds: 30
+  failureThreshold: 10
+
+
+image:
+  repository: grafana/grafana
+  tag: ""
+  sha: ""
+  pullPolicy: IfNotPresent
+
+securityContext:
+  runAsUser: 472
+  runAsGroup: 472
+  fsGroup: 472
+
+downloadDashboardsImage:
+  repository: curlimages/curl
+  tag: 7.85.0
+  sha: ""
+  pullPolicy: IfNotPresent
+
+downloadDashboards:
+  env: {}
+  envFromSecret: ""
+  resources: {}
+  securityContext: {}
+
+
+
+podPortName: grafana
+
+ingress:
+  enabled: true
+  annotations: 
+    kubernetes.io/ingress.class: external
+    cert-manager.io/cluster-issuer: letsencrypt-dev-external
+  labels:
+  path: /
+  pathType: Prefix
+  hosts:
+    - "grafana.nyc.log-stack.dosomething.org"
+  extraPaths: []
+  tls: 
+    - secretName: grafana.nyc.log-stack.dosomething.org
+      hosts:
+        - grafana.nyc.log-stack.dosomething.org
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+extraInitContainers: []
+extraContainers: ""
+extraContainerVolumes: []
+
+adminUser: dosomethingadmin
+
+admin:
+  existingSecret: "grafana"
+  userKey: admin-user
+  passwordKey: admin-password
+
