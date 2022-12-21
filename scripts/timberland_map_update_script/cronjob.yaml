@@ -1,0 +1,49 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-timberland
+  namespace: prod
+spec:
+  schedule: "*/12 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: job-timberland
+            image: dosomething/python311:latest
+            command: ["python", "timberland_update_script.py"]
+            volumeMounts:
+            - name: job-timberland-files 
+              mountPath: "/app/"
+              readOnly: true
+          restartPolicy: Never
+          volumes:
+          - name: job-timberland-files 
+            secret:
+              secretName: job-timberland-files
+#---
+#apiVersion: batch/v1
+#kind: Job
+#metadata:
+#  name: job-timberland
+#  namespace: prod
+#spec:
+#  backoffLimit: 0
+#  template:
+#    spec:
+#      containers:
+#      - name: job-timberland
+#        image: dosomething/python311:latest
+#        #command: ["python","timberland_update_script.py"]
+#        command: ["ls","/app"]
+#        volumeMounts:
+#        - name: job-timberland-files 
+#          mountPath: "/app/"
+#          readOnly: true
+#      restartPolicy: Never
+#      volumes:
+#      - name: job-timberland-files 
+#        secret:
+#          secretName: job-timberland-files
