@@ -1,0 +1,61 @@
+controller:
+  ingressClass: external
+  service:
+    enabled: true
+
+    annotations: {}
+
+    labels: {}
+    ## Deprecated, instead simply do not provide a clusterIP value
+    omitClusterIP: false
+    # clusterIP: ""
+
+    ## List of IP addresses at which the controller services are available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+
+    enableHttp: true
+    enableHttps: true
+
+    ## Set external traffic policy to: "Local" to preserve source IP on
+    ## providers supporting it
+    ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
+    externalTrafficPolicy: ""
+
+    # Must be either "None" or "ClientIP" if set. Kubernetes will default to "None".
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+    sessionAffinity: ""
+
+    healthCheckNodePort: 0
+
+    ports:
+      http: 80
+      https: 443
+
+    targetPorts:
+      http: http
+      https: https
+
+    type: LoadBalancer
+
+    # type: NodePort
+    # nodePorts:
+    #   http: 32080
+    #   https: 32443
+    #   tcp:
+    #     8080: 32808
+    nodePorts:
+      http: ""
+      https: ""
+      tcp: {}
+      udp: {}
+
+    ## Enables an additional internal load balancer (besides the external one).
+    ## Annotations are mandatory for the load balancer to come up. Varies with the cloud service.
+    internal:
+      enabled: false
+      annotations: {}

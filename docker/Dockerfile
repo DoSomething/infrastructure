@@ -1,0 +1,43 @@
+# Phase 1 - create php container
+FROM php:7.4-fpm as php_base
+
+USER root
+
+WORKDIR /var/www/html
+
+ARG NR_INSTALL_SILENT=true
+ARG NR_INSTALL_KEY=""
+
+# Install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install dependencies
+RUN apt-get update \
+	# gd
+	&& apt-get install -y --no-install-recommends build-essential  openssl nginx libfreetype6-dev libjpeg-dev libpng-dev libwebp-dev zlib1g-dev libzip-dev gcc g++ make vim unzip curl git jpegoptim optipng pngquant gifsicle locales libonig-dev libzstd-dev libmagickwand-dev gettext gnupg wget libssl-dev pkg-config \
+	&& docker-php-ext-configure gd  \
+	&& docker-php-ext-install gd \
+	# gmp
+	&& apt-get install -y --no-install-recommends libgmp-dev \
+    && echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
+    && wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - \
+    && apt-get update \
+    && apt-get install newrelic-php5 -y --no-install-recommends \ 
+	&& docker-php-ext-install gmp \
+	# pdo_mysql
+	&& docker-php-ext-install pdo_mysql mbstring \
+	# pdo
+	&& docker-php-ext-install pdo \
+	# opcache
+	&& docker-php-ext-enable opcache \
+	# zip
+	&& docker-php-ext-install zip \
+    && newrelic-install install \
+    && pecl install  "mongodb-1.7.1" redis \
+    && echo "" | pecl install imagick-beta \
+    && docker-php-ext-install bcmath exif gettext \
+    && docker-php-ext-enable redis mongodb imagick \
+	&& apt-get autoclean -y \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /tmp/pear/
+

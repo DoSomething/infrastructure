@@ -1,0 +1,166 @@
+rbac:
+  create: true
+  pspEnabled: true
+  pspUseAppArmor: true
+  namespaced: false
+  extraRoleRules: []
+  extraClusterRoleRules: []
+serviceAccount:
+  create: true
+  name:
+  nameTest:
+  labels: {}
+  autoMount: true
+
+replicas: 1
+
+headlessService: false
+
+autoscaling:
+  enabled: false
+
+podDisruptionBudget: {}
+
+deploymentStrategy:
+  type: RollingUpdate
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 60
+  timeoutSeconds: 30
+  failureThreshold: 10
+
+
+image:
+  repository: grafana/grafana
+  tag: ""
+  sha: ""
+  pullPolicy: IfNotPresent
+
+securityContext:
+  runAsUser: 472
+  runAsGroup: 472
+  fsGroup: 472
+
+downloadDashboardsImage:
+  repository: curlimages/curl
+  tag: 7.85.0
+  sha: ""
+  pullPolicy: IfNotPresent
+
+downloadDashboards:
+  env: {}
+  envFromSecret: ""
+  resources: {}
+  securityContext: {}
+
+
+
+podPortName: grafana
+
+ingress:
+  enabled: true
+  annotations: 
+    kubernetes.io/ingress.class: external
+    cert-manager.io/cluster-issuer: letsencrypt-dev-external
+  labels:
+  path: /
+  pathType: Prefix
+  hosts:
+    - "grafana.nyc.log-stack.dosomething.org"
+  extraPaths: []
+  tls: 
+    - secretName: grafana.nyc.log-stack.dosomething.org
+      hosts:
+        - grafana.nyc.log-stack.dosomething.org
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+extraInitContainers: []
+extraContainers: ""
+extraContainerVolumes: []
+
+adminUser: dosomethingadmin
+
+admin:
+  existingSecret: "grafana"
+  userKey: admin-user
+  passwordKey: admin-password
+
+plugins:
+  - digrich-bubblechart-panel
+  - grafana-clock-panel
+  - redis-datasource
+  - grafana-github-datasource
+  - grafana-clickhouse-datasource
+  - grafana-bigquery-datasource
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: prometheus
+      type: prometheus
+      url: http://prometheus-server
+      access: proxy
+      isDefault: true
+    - name: cloudwatch
+      type: cloudwatch
+      access: proxy
+      uid: cloudwatch
+      editable: true
+      jsonData:
+        authType: default
+        defaultRegion: us-east-1
+    - name: loki
+      type: loki
+      url: http://loki:3100
+      access: proxy 
+    - name: alertmanager
+      type: alertmanager
+      url: http://alertmanager
+      access: proxy
+    - name: redis
+      type: redis
+      url: redis://keydb.keydb.svc:6379
+      access: proxy
+
+## Grafana's primary configuration
+## NOTE: values in map will be converted to ini format
+## ref: http://docs.grafana.org/installation/configuration/
+##
+grafana.ini:
+  paths:
+    data: /var/lib/grafana/
+    logs: /var/log/grafana
+    plugins: /var/lib/grafana/plugins
+    provisioning: /etc/grafana/provisioning
+  analytics:
+    check_for_updates: true
+  log:
+    mode: console
+  grafana_net:
+    url: https://grafana.net
+  server:
+    root_url: https://grafana.nyc.log-stack.dosomething.org
+  auth.github:
+     enabled: true
+     allow_sign_up: true
+     scopes: user:email,read:org
+     auth_url: https://github.com/login/oauth/authorize
+     token_url: https://github.com/login/oauth/access_token
+     client_id: 
+     client_secret:
+     api_url: https://api.github.com/user
+     allowed_organizations: DoSomething
+     ;team_ids:
