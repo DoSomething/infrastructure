@@ -1,0 +1,48 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pgsql-cleanup-prod
+  namespace: jobs
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: pgsql-cleanup-prod
+        image: jbergknoff/postgresql-client
+        env:
+        - name: "PGPASSWORD"
+          value: "slH40EHz9InRm1Lm2b4z"
+        #command: []
+        args:
+        - --host=quasar-prod.c9ajz690mens.us-east-1.rds.amazonaws.com
+        - --port=5432
+        - --username=quasar_prod_admin
+        - --dbname=quasar_prod_warehouse
+        - --command=DELETE FROM ft_snowplow.event WHERE collector_tstamp < NOW() - INTERVAL '2 YEARS';
+#---
+#apiVersion: batch/v1
+#kind: Job
+#metadata:
+#  name: job-timberland
+#  namespace: prod
+#spec:
+#  backoffLimit: 0
+#  template:
+#    spec:
+#      containers:
+#      - name: job-timberland
+#        image: dosomething/python311:latest
+#        #command: ["python","timberland_update_script.py"]
+#        command: ["ls","/app"]
+#        volumeMounts:
+#        - name: job-timberland-files 
+#          mountPath: "/app/"
+#          readOnly: true
+#      restartPolicy: Never
+#      volumes:
+#      - name: job-timberland-files 
+#        secret:
+#          secretName: job-timberland-files
