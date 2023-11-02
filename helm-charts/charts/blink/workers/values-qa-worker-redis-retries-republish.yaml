@@ -13,7 +13,7 @@ imagePullSecrets: {}
 
 shortCommit: ""
 nameOverride: ""
-fullnameOverride: "blink-dosomething-customer-io-gambit-broadcast"
+fullnameOverride: "blink-dosomething-redis-retries-republish"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -66,8 +66,7 @@ deployment:
         name: blink
   command: ["/bin/sh","-c"]
   args: 
-    - "npm run worker customer-io-gambit-broadcast;"
-    
+    - "npm run worker redis-retries-republish;"
 
 autoscaling:
   enabled: false
